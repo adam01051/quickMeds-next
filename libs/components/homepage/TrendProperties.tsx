@@ -24,7 +24,7 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 	/** APOLLO REQUESTS **/
 	/** HANDLERS **/
 	const {
-		loading: getProperties,
+		loading: getPropertiesLoading,
 		data: getPropertiesData,
 		error: getPropertyError,
 		refetch: getProperiesRefetch,
@@ -33,7 +33,7 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setTrendProperties(data?.dataProperties?.list);
+		setTrendProperties(data?.getProperties?.list);
 		},
 	});
 
