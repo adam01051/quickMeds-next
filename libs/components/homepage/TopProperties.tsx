@@ -8,6 +8,9 @@ import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopPropertyCard from './TopPropertyCard';
 import { PropertiesInquiry } from '../../types/property/property.input';
 import { Property } from '../../types/property/property';
+import { T } from '../../types/common';
+import { useQuery } from '@apollo/client';
+import { GET_PROPERTIES } from '../../../apollo/user/query';
 
 interface TopPropertiesProps {
 	initialInput: PropertiesInquiry;
@@ -20,6 +23,21 @@ const TopProperties = (props: TopPropertiesProps) => {
 
 	/** APOLLO REQUESTS **/
 	/** HANDLERS **/
+		const {
+			loading: getPropertiesLoading,
+			data: getPropertiesData,
+			error: getPropertyError,
+			refetch: getProperiesRefetch,
+		} = useQuery(GET_PROPERTIES, {
+			fetchPolicy: 'cache-and-network',
+			variables: { input: initialInput },
+			notifyOnNetworkStatusChange: true,
+			onCompleted: (data: T) => {
+			setTopProperties(data?.getProperties?.list);
+			},
+		});
+	
+
 
 	if (device === 'mobile') {
 		return (
