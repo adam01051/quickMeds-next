@@ -9,8 +9,11 @@ import TopPropertyCard from './TopPropertyCard';
 import { PropertiesInquiry } from '../../types/property/property.input';
 import { Property } from '../../types/property/property';
 import { T } from '../../types/common';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { Message } from '../../enums/common.enum';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 interface TopPropertiesProps {
 	initialInput: PropertiesInquiry;
@@ -20,14 +23,16 @@ const TopProperties = (props: TopPropertiesProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const [topProperties, setTopProperties] = useState<Property[]>([]);
+	const [likeTargetProperty] =useMutation(LIKE_TARGET_PROPERTY);
 
 	/** APOLLO REQUESTS **/
+	
 	/** HANDLERS **/
 		const {
 			loading: getPropertiesLoading,
 			data: getPropertiesData,
 			error: getPropertyError,
-			refetch: getProperiesRefetch,
+			refetch: getPropertiesRefetch,
 		} = useQuery(GET_PROPERTIES, {
 			fetchPolicy: 'cache-and-network',
 			variables: { input: initialInput },
@@ -37,6 +42,22 @@ const TopProperties = (props: TopPropertiesProps) => {
 			},
 		});
 	
+		const likePropertyHandler =async (user:T,id:string)=>{
+		try {
+			if(!id) return;
+			if(!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
+		await likeTargetProperty({
+	  variables: { input: id },
+	});
+			await getPropertiesRefetch({input:initialInput});
+			await sweetTopSmallSuccessAlert("success",800);
+	
+		} catch (error:any) {
+			console.log("error in likePropertHandler", error.message);
+			sweetMixinErrorAlert(error.message).then();
+	
+		}
+		};
 
 
 	if (device === 'mobile') {
@@ -57,7 +78,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 							{topProperties.map((property: Property) => {
 								return (
 									<SwiperSlide className={'top-property-slide'} key={property?._id}>
-										<TopPropertyCard property={property} />
+										{/* <TopPropertyCard property={property} /> */}
 									</SwiperSlide>
 								);
 							})}
@@ -100,7 +121,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 							{topProperties.map((property: Property) => {
 								return (
 									<SwiperSlide className={'top-property-slide'} key={property?._id}>
-										<TopPropertyCard property={property} />
+										<TopPropertyCard property={property} likePropertyHandler = {likePropertyHandler} />
 									</SwiperSlide>
 								);
 							})}
