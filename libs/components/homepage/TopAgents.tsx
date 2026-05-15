@@ -24,19 +24,21 @@ const TopAgents = (props: TopAgentsProps) => {
 
 	/** APOLLO REQUESTS **/
 	/** HANDLERS **/
+
+
 		const {
-			loading: getAgentsLoading,
-			data: getAgentsData,
-			error: getAgentsError,
-			refetch: getAgentsRefetch,
-		} = useQuery(GET_AGENTS, {
-			fetchPolicy: 'cache-and-network',
-			variables: { input: initialInput },
-			notifyOnNetworkStatusChange: true,
-			onCompleted: (data: T) => {
-			setTopAgents(data?.getAgents?.list);
-			},
-		});
+    loading: getAgentsLoading,
+    data: getAgentsData,
+    error: getAgentsError,
+    refetch: getAgentsRefetch,
+  } = useQuery(GET_AGENTS, {
+    fetchPolicy: 'cache-and-network',
+    variables: { input: initialInput },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (data: T) => {
+      setTopAgents(data?.getAgents?.list);
+    },
+  });
 
 	if (device === 'mobile') {
 		return (
