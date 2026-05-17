@@ -12,6 +12,7 @@ import { PropertiesInquiry } from '../../types/property/property.input';
 import { useQuery } from '@apollo/client';
 import { GET_PROPERTIES } from '../../../apollo/user/query';
 import { T } from '../../types/common';
+import router from 'next/router';
 
 interface PopularPropertiesProps {
 	initialInput: PropertiesInquiry;
@@ -23,6 +24,8 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 	const [popularProperties, setPopularProperties] = useState<Property[]>([]);
 
 	/** APOLLO REQUESTS **/
+
+	
 	/** HANDLERS **/
 	const {
 		loading: getPropertiesLoading,
@@ -44,7 +47,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 
 	if (device === 'mobile') {
 		return (
-			<Stack className={'popular-properties'}>
+			<Stack className={'popular-properties'} >
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<span>Popular properties</span>
