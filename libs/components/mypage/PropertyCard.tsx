@@ -110,14 +110,14 @@ export const PropertyCard = (props: PropertyCardProps) => {
 									Sold
 								</MenuItem>
 							</>
-						)}
+						)} 
 					</Menu>
 				)}
 
 				<Stack className="views-box">
 					<Typography className="views">{property.propertyViews.toLocaleString()}</Typography>
 				</Stack>
-				{!memberPage && (
+				{!memberPage && property.propertyStatus === PropertyStatus.ACTIVE &&(
 					<Stack className="action-box">
 						<IconButton className="icon-button" onClick={() => pushEditProperty(property._id)}>
 							<ModeIcon className="buttons" />
