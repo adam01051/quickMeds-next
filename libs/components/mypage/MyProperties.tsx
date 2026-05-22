@@ -103,13 +103,13 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 					<Stack className="tab-name-box">
 						<Typography
 							onClick={() => changeStatusHandler(PropertyStatus.ACTIVE)}
-							className={searchFilter.search.propertyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
+							className={searchFilter?.search?.propertyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
 						>
 							On Sale
 						</Typography>
 						<Typography
 							onClick={() => changeStatusHandler(PropertyStatus.SOLD)}
-							className={searchFilter.search.propertyStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
+							className={searchFilter?.search?.propertyStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
 						>
 							On Sold
 						</Typography>
@@ -120,7 +120,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 							<Typography className="title-text">Date Published</Typography>
 							<Typography className="title-text">Status</Typography>
 							<Typography className="title-text">View</Typography>
-							{searchFilter.search.propertyStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
+							{searchFilter?.search?.propertyStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
 						</Stack>
 
 						{agentProperties?.length === 0 ? (
