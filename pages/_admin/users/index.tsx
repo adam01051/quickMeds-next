@@ -32,7 +32,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [searchText, setSearchText] = useState('');
 	const [searchType, setSearchType] = useState('ALL');
 
-	/** APOLLO REQUESTS **/
+
 	/** APOLLO REQUESTS **/
 	const [updateMemberByAdmin] = useMutation(UPDATE_MEMBER_BY_ADMIN);
 
@@ -168,7 +168,7 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 						<Box component={'div'}>
 							<List className={'tab-menu'}>
 								<ListItem
-									onClick={(e) => tabChangeHandler(e, 'ALL')}
+									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
 									value="ALL"
 									className={value === 'ALL' ? 'li on' : 'li'}
 								>
