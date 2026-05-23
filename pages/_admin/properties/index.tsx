@@ -102,12 +102,13 @@ const {
 	const removePropertyHandler = async (id: string) => {
 		try {
 			if (await sweetConfirmAlert('Are you sure to remove?')) {
-			}
-			await removePropertyByAdmin({
+				await removePropertyByAdmin({
 				variables:{
 					input:id,
 				}
 			})
+			}
+			
 			menuIconCloseHandler();
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
