@@ -7,6 +7,12 @@ import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
 import { useRouter } from 'next/router';
 import ScrollableFeed from 'react-scrollable-feed';
 import { RippleBadge } from '../../scss/MaterialTheme/styled';
+import { useReactiveVar } from '@apollo/client';
+import { socketVar, userVar } from '../../apollo/store';
+import { Member } from '../types/member/member';
+import { Messages, REACT_APP_API_URL } from '../config';
+import { LoggingWebSocket } from '../../apollo/client';
+import { sweetErrorAlert } from '../sweetAlert';
 
 const NewMessage = (type: any) => {
 	if (type === 'right') {
@@ -31,17 +37,57 @@ const NewMessage = (type: any) => {
 		);
 	}
 };
+interface MessagePayload {
+	event: string;
+	text: string;
+	memberData: Member;
+}
+
+interface InfoPayload {
+	event: string;
+	totalClients: number;
+	memberData: Member;
+	action: string;
+}
 
 const Chat = () => {
 	const chatContentRef = useRef<HTMLDivElement>(null);
-	const [messagesList, setMessagesList] = useState([]);
+	const [messagesList, setMessagesList] = useState<MessagePayload[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<number>(0);
 	const textInput = useRef(null);
-	const [message, setMessage] = useState<string>('');
+	const [messageInput, setMessageInput] = useState<string>('');
 	const [open, setOpen] = useState(false);
 	const [openButton, setOpenButton] = useState(false);
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
+	const socket = useReactiveVar(socketVar);
 
+	useEffect(() => {
+		if (!socket) return;
+
+		socket.onmessage = (msg) => {
+			const data = JSON.parse(msg.data);
+			console.log('WebSocket message:', data);
+
+			switch (data.event) {
+				case 'info':
+					const newInfo: InfoPayload = data;
+					setOnlineUsers(newInfo.totalClients);
+					break;
+
+				case 'getMessages':
+					const list: MessagePayload[] = data.list;
+					setMessagesList(list);
+					break;
+
+				case 'message':
+					const newMessage: MessagePayload = data;
+					messagesList.push(newMessage);
+					setMessagesList([...messagesList]);
+					break;
+			}
+		};
+	}, [socket]);
 	/** LIFECYCLES **/
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -49,6 +95,11 @@ const Chat = () => {
 		}, 100);
 		return () => clearTimeout(timeoutId);
 	}, []);
+	useEffect(() => {
+	if (socket) return;
+
+	new LoggingWebSocket();
+}, [socket]);
 
 	useEffect(() => {
 		setOpenButton(false);
@@ -62,9 +113,9 @@ const Chat = () => {
 	const getInputMessageHandler = useCallback(
 		(e: any) => {
 			const text = e.target.value;
-			setMessage(text);
+			setMessageInput(text);
 		},
-		[message],
+		[messageInput],
 	);
 
 	const getKeyHandler = (e: any) => {
@@ -77,8 +128,24 @@ const Chat = () => {
 		}
 	};
 
-	const onClickHandler = () => {};
+	const onClickHandler = () => {
+		if (!socket || socket.readyState !== WebSocket.OPEN) return;
+		if (!messageInput) sweetErrorAlert(Messages.error4);
+		else{
+				socket.send(
+			JSON.stringify({
+				event: 'message',
+				data: messageInput,
+			}),
+		);
+setMessageInput('');
+		}
 
+
+	
+
+		
+	};
 	return (
 		<Stack className="chatting">
 			{openButton ? (
@@ -89,7 +156,7 @@ const Chat = () => {
 			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
 				<Box className={'chat-top'} component={'div'}>
 					<div style={{ fontFamily: 'Nunito' }}>Online Chat</div>
-				<RippleBadge style = {{margin:"-18px 0 0 21px"}} badgeContent={onlineUsers} />
+					<RippleBadge style={{ margin: '-18px 0 0 21px' }} badgeContent={onlineUsers} />
 				</Box>
 				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
 					<ScrollableFeed>
@@ -97,9 +164,12 @@ const Chat = () => {
 							<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
 								<div className={'welcome'}>Welcome to Live chat!</div>
 							</Box>
-							{messagesList}
-							<>
-								<Box
+							{messagesList.map((ele: MessagePayload) => {
+								const { text, memberData } = ele;
+								const memberImage = memberData?.memberImage
+									? `${REACT_APP_API_URL}/${memberData.memberImage}`
+									: `/img/profile/defaultUser.svg`;
+									return memberData?._id === user?._id?(<Box
 									component={'div'}
 									flexDirection={'row'}
 									style={{ display: 'flex' }}
@@ -107,12 +177,15 @@ const Chat = () => {
 									justifyContent={'flex-end'}
 									sx={{ m: '10px 0px' }}
 								>
-									<div className={'msg-right'}></div>
-								</Box>
+									<div className={'msg-right'}>{text}</div>
+								</Box>):(
 								<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
-									<Avatar alt={'jonik'} src={'/img/profile/defaultUser.svg'} />
-									<div className={'msg-left'}>Hi</div>
-								</Box>
+									<Avatar alt={'jonik'} src={memberImage} />
+									<div className={'msg-left'}>{text}</div>
+								</Box>)
+							})}
+							<>
+								
 							</>
 						</Stack>
 					</ScrollableFeed>
@@ -126,6 +199,7 @@ const Chat = () => {
 						placeholder={'Type message'}
 						onChange={getInputMessageHandler}
 						onKeyDown={getKeyHandler}
+						value={messageInput}
 					/>
 					<button className={'send-msg-btn'} onClick={onClickHandler}>
 						<SendIcon style={{ color: '#fff' }} />
