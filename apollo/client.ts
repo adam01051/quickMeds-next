@@ -11,8 +11,6 @@ import { socketVar } from './store';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
-const CHAT_WS_URL = process.env.REACT_APP_API_CHAT_WS ?? 'ws://127.0.0.1:3007';
-const GRAPHQL_WS_URL = process.env.REACT_APP_API_GRAPHQL_WS ?? 'ws://127.0.0.1:3007/graphql';
 
 function getHeaders() {
 	const headers = {} as HeadersInit;
@@ -39,7 +37,7 @@ const tokenRefreshLink = new TokenRefreshLink({
 export class LoggingWebSocket {
 	private socket: WebSocket;
 
-	constructor(url: string = CHAT_WS_URL) {
+	constructor(url:string) {
 		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
 		socketVar(this.socket);
 
@@ -90,7 +88,7 @@ function createIsomorphicLink() {
 
 		/* WEBSOCKET SUBSCRIPTION LINK */
 		const wsLink = new WebSocketLink({
-			uri: GRAPHQL_WS_URL,
+			uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
 			options: {
 				reconnect: false,
 				timeout: 30000,
@@ -98,6 +96,7 @@ function createIsomorphicLink() {
 					return { headers: getHeaders() };
 				},
 			},
+			webSocketImpl:LoggingWebSocket
 		});
 
 		const errorLink = onError(({ graphQLErrors, networkError, response }) => {

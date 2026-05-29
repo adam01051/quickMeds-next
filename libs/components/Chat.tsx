@@ -98,7 +98,7 @@ const Chat = () => {
 	useEffect(() => {
 	if (socket) return;
 
-	new LoggingWebSocket();
+
 }, [socket]);
 
 	useEffect(() => {
