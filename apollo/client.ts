@@ -151,3 +151,12 @@ export function initializeApollo(initialState = null) {
 export function useApollo(initialState: any) {
 	return useMemo(() => initializeApollo(initialState), [initialState]);
 }
+
+
+
+
+//client  to one client 
+
+//broadcast - all except me
+
+//emit  to all
