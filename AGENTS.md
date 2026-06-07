@@ -17,7 +17,7 @@ Before making any changes, read:
 - docs/ai/BACKEND_MIGRATION.md
 - docs/ai/DECIONS.md
 - docs/ai/FRONTEND_MIGRATION.md
-- and etc inside of petoria/docs/ai
+- and etc inside of quickMeds/docs/ai
 
 ## Workflow
 
@@ -27,3 +27,16 @@ Before making any changes, read:
 4. Run typecheck after each phase.
 5. Do not remove working logic unless replaced safely.
 6. Update quickMeds/docs/ai/COMPLETED_TASKS.md after major changes.
+
+
+
+##  Package Manager
+
+
+- use Yarn for all frontend commands
+- do not use npm or pnpm
+- install dependencies with:
+```` bash
+yarn install
+````
+
