@@ -1,21 +1,21 @@
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import { PharmacyLocation, PharmacyStatus, PharmacyType } from '../../enums/property.enum';
 
-export interface PropertyUpdate {
+export interface PharmacyUpdate {
 	_id: string;
-	propertyType?: PropertyType;
-	propertyStatus?: PropertyStatus;
-	propertyLocation?: PropertyLocation;
-	propertyAddress?: string;
-	propertyTitle?: string;
-	propertyPrice?: number;
-	propertySquare?: number;
-	propertyBeds?: number;
-	propertyRooms?: number;
-	propertyImages?: string[];
-	propertyDesc?: string;
-	propertyBarter?: boolean;
-	propertyRent?: boolean;
-	soldAt?: Date;
+	pharmacyType?: PharmacyType;
+	pharmacyStatus?: PharmacyStatus;
+	pharmacyLocation?: PharmacyLocation;
+	pharmacyAddress?: string;
+	pharmacyName?: string;
+	pharmacyDeliveryFee?: number;
+	pharmacyLatitude?: number;
+	pharmacyLongitude?: number;
+	pharmacyMedicationCount?: number;
+	pharmacyImages?: string[];
+	pharmacyDesc?: string;
+	acceptsInsurance?: boolean;
+	hasDelivery?: boolean;
+	verifiedAt?: Date;
 	deletedAt?: Date;
-	constructedAt?: Date;
+	openedAt?: Date;
 }

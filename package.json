@@ -1,5 +1,5 @@
 {
-	"name": "nestar-next",
+	"name": "quickmeds-next",
 	"version": "2.2.0",
 	"private": true,
 	"license": "ITC",
@@ -8,6 +8,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"typecheck": "tsc --noEmit",
 		"changelog": "standard-version --skip.tag"
 	},
 	"dependencies": {

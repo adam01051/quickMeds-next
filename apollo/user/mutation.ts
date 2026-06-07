@@ -19,7 +19,7 @@ export const SIGN_UP = gql`
 			memberDesc
 			memberWarnings
 			memberBlocks
-			memberProperties
+			memberPharmacies
 			memberRank
 			memberArticles
 			memberPoints
@@ -48,7 +48,7 @@ export const LOGIN = gql`
 			memberDesc
 			memberWarnings
 			memberBlocks
-			memberProperties
+			memberPharmacies
 			memberRank
 			memberPoints
 			memberLikes
@@ -74,7 +74,7 @@ export const UPDATE_MEMBER = gql`
 			memberImage
 			memberAddress
 			memberDesc
-			memberProperties
+			memberPharmacies
 			memberRank
 			memberArticles
 			memberPoints
@@ -105,7 +105,7 @@ export const LIKE_TARGET_MEMBER = gql`
 			memberDesc
 			memberWarnings
 			memberBlocks
-			memberProperties
+			memberPharmacies
 			memberRank
 			memberPoints
 			memberLikes
@@ -119,90 +119,90 @@ export const LIKE_TARGET_MEMBER = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *        PHARMACY        *
  *************************/
 
-export const CREATE_PROPERTY = gql`
-	mutation CreateProperty($input: PropertyInput!) {
-		createProperty(input: $input) {
+export const CREATE_PHARMACY = gql`
+	mutation CreatePharmacy($input: PharmacyInput!) {
+		createPharmacy(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 		}
 	}
 `;
 
-export const UPDATE_PROPERTY = gql`
-	mutation UpdateProperty($input: PropertyUpdate!) {
-		updateProperty(input: $input) {
+export const UPDATE_PHARMACY = gql`
+	mutation UpdatePharmacy($input: PharmacyUpdate!) {
+		updatePharmacy(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 		}
 	}
 `;
 
-export const LIKE_TARGET_PROPERTY = gql`
-	mutation LikeTargetProperty($input: String!) {
-		likeTargetProperty(propertyId: $input) {
+export const LIKE_TARGET_PHARMACY = gql`
+	mutation LikeTargetPharmacy($input: String!) {
+		likeTargetPharmacy(pharmacyId: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 		}

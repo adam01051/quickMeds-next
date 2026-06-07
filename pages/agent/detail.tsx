@@ -12,14 +12,14 @@ import { Property } from '../../libs/types/property/property';
 import { Member } from '../../libs/types/member/member';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { userVar } from '../../apollo/store';
-import { PropertiesInquiry } from '../../libs/types/property/property.input';
+import { PharmaciesInquiry } from '../../libs/types/property/property.input';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
-import { GET_COMMENTS, GET_MEMBER, GET_PROPERTIES } from '../../apollo/user/query';
+import { CREATE_COMMENT, LIKE_TARGET_PHARMACY } from '../../apollo/user/mutation';
+import { GET_COMMENTS, GET_MEMBER, GET_PHARMACIES } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -34,7 +34,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	const user = useReactiveVar(userVar);
 	const [agentId, setAgentId] = useState<string | null>(null);
 	const [agent, setAgent] = useState<Member | null>(null);
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
+	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>(initialInput);
 	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
 	const [propertyTotal, setPropertyTotal] = useState<number>(0);
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
@@ -49,7 +49,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 
 	/** APOLLO REQUESTS **/
 const [createComment] = useMutation(CREATE_COMMENT);
-const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
 
 const {
   loading: getMemberLoading,
@@ -82,18 +82,18 @@ const {
 });
 
 const {
-  loading: getPropertiesLoading,
-  data: getPropertiesData,
-  error: getPropertiesError,
-  refetch: getPropertiesRefetch,
-} = useQuery(GET_PROPERTIES, {
+  loading: getPharmaciesLoading,
+  data: getPharmaciesData,
+  error: getPharmaciesError,
+  refetch: getPharmaciesRefetch,
+} = useQuery(GET_PHARMACIES, {
   fetchPolicy: 'network-only',
   variables: { input: searchFilter },
   skip: !searchFilter.search.memberId,
   notifyOnNetworkStatusChange: true,
   onCompleted: (data: T) => {
-    setAgentProperties(data?.getProperties?.list);
-    setPropertyTotal(data?.getProperties?.metaCounter[0]?.total ?? 0);
+    setAgentProperties(data?.getPharmacies?.list);
+    setPropertyTotal(data?.getPharmacies?.metaCounter[0]?.total ?? 0);
   },
 });
 
@@ -119,12 +119,12 @@ const {
 
 	useEffect(() => {
 		if(searchFilter.search.memberId){
-			getPropertiesRefetch({varables:{input:searchFilter}}).then();
+			getPharmaciesRefetch({ input: searchFilter }).then();
 		}
 	}, [searchFilter]);
 	useEffect(() => {
 		if(commentInquiry.search.commentRefId){
-			getPropertiesRefetch({varables:{input:commentInquiry}}).then();
+			getCommentsRefetch({ input: commentInquiry }).then();
 		}
 	}, [commentInquiry]);
 
@@ -173,12 +173,12 @@ const likePropertyHandler = async (user: any, id: string) => {
     if (!id) return;
     if (!user._id) throw new Error(Messages.error2);
 
-    await likeTargetProperty({
+    await likeTargetPharmacy({
       variables: {
         input: id,
       },
     });
-    await getPropertiesRefetch({ input: searchFilter });
+    await getPharmaciesRefetch({ input: searchFilter });
     await sweetTopSmallSuccessAlert('success', 800);
   } catch (err: any) {
     console.log('ERROR, likePropertyHandler:', err.message);
@@ -196,7 +196,7 @@ const likePropertyHandler = async (user: any, id: string) => {
 
 
 	if (device === 'mobile') {
-		return <div>AGENT DETAIL PAGE MOBILE</div>;
+		return <div>PHARMACY OWNER DETAIL MOBILE</div>;
 	} else {
 		return (
 			<Stack className={'agent-detail-page'}>
@@ -237,13 +237,13 @@ const likePropertyHandler = async (user: any, id: string) => {
 										/>
 									</Stack>
 									<span>
-										Total {propertyTotal} propert{propertyTotal > 1 ? 'ies' : 'y'} available
+										Total {propertyTotal} pharmacies available
 									</span>
 								</>
 							) : (
 								<div className={'no-data'}>
 									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No properties found!</p>
+									<p>No pharmacies found!</p>
 								</div>
 							)}
 						</Stack>

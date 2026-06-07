@@ -1,23 +1,22 @@
-export enum PropertyType {
-	APARTMENT = 'APARTMENT',
-	VILLA = 'VILLA',
-	HOUSE = 'HOUSE',
+export enum PharmacyType {
+	RETAIL = 'RETAIL',
+	HOSPITAL = 'HOSPITAL',
+	COMPOUNDING = 'COMPOUNDING',
+	ONLINE = 'ONLINE',
 }
 
-export enum PropertyStatus {
+export enum PharmacyStatus {
+	HOLD = 'HOLD',
 	ACTIVE = 'ACTIVE',
-	SOLD = 'SOLD',
+	CLOSED = 'CLOSED',
 	DELETE = 'DELETE',
 }
 
-export enum PropertyLocation {
-	SEOUL = 'SEOUL',
-	BUSAN = 'BUSAN',
-	INCHEON = 'INCHEON',
-	DAEGU = 'DAEGU',
-	GYEONGJU = 'GYEONGJU',
-	GWANGJU = 'GWANGJU',
-	CHONJU = 'CHONJU',
-	DAEJON = 'DAEJON',
-	JEJU = 'JEJU',
+export enum PharmacyLocation {
+	DOWNTOWN = 'DOWNTOWN',
+	NORTH_SIDE = 'NORTH_SIDE',
+	SOUTH_SIDE = 'SOUTH_SIDE',
+	EAST_SIDE = 'EAST_SIDE',
+	WEST_SIDE = 'WEST_SIDE',
+	CENTRAL = 'CENTRAL',
 }

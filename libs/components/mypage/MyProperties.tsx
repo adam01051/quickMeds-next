@@ -5,37 +5,37 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from './PropertyCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { Property } from '../../types/property/property';
-import { AgentPropertiesInquiry } from '../../types/property/property.input';
+import { AgentPharmaciesInquiry } from '../../types/property/property.input';
 import { T } from '../../types/common';
-import { PropertyStatus } from '../../enums/property.enum';
+import { PharmacyStatus } from '../../enums/property.enum';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
-import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
+import { GET_AGENT_PHARMACIES } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
-import { UPDATE_PROPERTY } from '../../../apollo/user/mutation';
+import { UPDATE_PHARMACY } from '../../../apollo/user/mutation';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<AgentPropertiesInquiry>(initialInput);
+	const [searchFilter, setSearchFilter] = useState<AgentPharmaciesInquiry>(initialInput);
 	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 
 	/** APOLLO REQUESTS **/
-	const [updateProperty]  =useMutation(UPDATE_PROPERTY);
+	const [updatePharmacy]  =useMutation(UPDATE_PHARMACY);
 	const {
-		loading: getAgentPropertiesLoading,
-		data: getAgentPropertiesData,
-		error: getAgentPropertiesError,
-		refetch: getAgentPropertiesRefetch,
-	} = useQuery(GET_AGENT_PROPERTIES, {
+		loading: getAgentPharmaciesLoading,
+		data: getAgentPharmaciesData,
+		error: getAgentPharmaciesError,
+		refetch: getAgentPharmaciesRefetch,
+	} = useQuery(GET_AGENT_PHARMACIES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProperties(data?.getAgentProperties?.list);
-			setTotal(data?.getAgentProperties?.metaCounter[0]?.total);
+			setAgentProperties(data?.getAgentPharmacies?.list);
+			setTotal(data?.getAgentPharmacies?.metaCounter[0]?.total);
 		},
 	});
 
@@ -44,41 +44,41 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	const changeStatusHandler = (value: PropertyStatus) => {
-		setSearchFilter({ ...searchFilter, search: { propertyStatus: value } });
+	const changeStatusHandler = (value: PharmacyStatus) => {
+		setSearchFilter({ ...searchFilter, search: { pharmacyStatus: value } });
 	};
 
 	const deletePropertyHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('are you sure to delete this property')) {
-				await updateProperty({
+			if (await sweetConfirmAlert('are you sure to delete this pharmacy')) {
+				await updatePharmacy({
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: 'DELETE',
+							pharmacyStatus: 'DELETE',
 						},
 					},
 				});
 			}
-			await getAgentPropertiesRefetch({ input: searchFilter });
+			await getAgentPharmaciesRefetch({ input: searchFilter });
 		} catch (error) {
 			await sweetErrorHandling(error);
 		}
 	};
 
-	const updatePropertyHandler = async (status: string, id: string) => {
+	const updatePharmacyHandler = async (status: string, id: string) => {
 		try {
 			if (await sweetConfirmAlert(`are you sure change to ${status} status`)) {
-				await updateProperty({
+				await updatePharmacy({
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: status,
+							pharmacyStatus: status,
 						},
 					},
 				});
 			}
-			await getAgentPropertiesRefetch({ input: searchFilter });
+			await getAgentPharmaciesRefetch({ input: searchFilter });
 		} catch (error) {
 			await sweetErrorHandling(error);
 		}
@@ -89,44 +89,50 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	}
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return <div>QUICKMEDS PHARMACIES MOBILE</div>;
 	} else {
 		return (
 			<div id="my-property-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">My Properties</Typography>
+						<Typography className="main-title">My Pharmacies</Typography>
 						<Typography className="sub-title">We are glad to see you again!</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="property-list-box">
 					<Stack className="tab-name-box">
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.ACTIVE)}
-							className={searchFilter?.search?.propertyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(PharmacyStatus.HOLD)}
+							className={searchFilter?.search?.pharmacyStatus === 'HOLD' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sale
+							Hold
 						</Typography>
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.SOLD)}
-							className={searchFilter?.search?.propertyStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(PharmacyStatus.ACTIVE)}
+							className={searchFilter?.search?.pharmacyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
 						>
-							On Sold
+							Active
+						</Typography>
+						<Typography
+							onClick={() => changeStatusHandler(PharmacyStatus.CLOSED)}
+							className={searchFilter?.search?.pharmacyStatus === 'CLOSED' ? 'active-tab-name' : 'tab-name'}
+						>
+							Closed
 						</Typography>
 					</Stack>
 					<Stack className="list-box">
 						<Stack className="listing-title-box">
-							<Typography className="title-text">Listing title</Typography>
+							<Typography className="title-text">Pharmacy name</Typography>
 							<Typography className="title-text">Date Published</Typography>
 							<Typography className="title-text">Status</Typography>
 							<Typography className="title-text">View</Typography>
-							{searchFilter?.search?.propertyStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
+							{searchFilter?.search?.pharmacyStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
 						</Stack>
 
 						{agentProperties?.length === 0 ? (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Property found!</p>
+								<p>No pharmacy found!</p>
 							</div>
 						) : (
 							agentProperties.map((property: Property) => {
@@ -134,7 +140,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									<PropertyCard
 										property={property}
 										deletePropertyHandler={deletePropertyHandler}
-										updatePropertyHandler={updatePropertyHandler}
+										updatePharmacyHandler={updatePharmacyHandler}
 									/>
 								);
 							})
@@ -152,7 +158,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} property available</Typography>
+									<Typography>{total} pharmacies available</Typography>
 								</Stack>
 							</Stack>
 						)}
@@ -169,7 +175,7 @@ MyProperties.defaultProps = {
 		limit: 5,
 		sort: 'createdAt',
 		search: {
-			propertyStatus: 'ACTIVE',
+			pharmacyStatus: 'ACTIVE',
 		},
 	},
 };

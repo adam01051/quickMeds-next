@@ -6,18 +6,18 @@ import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 import { Property } from '../../types/property/property';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PharmaciesInquiry } from '../../types/property/property.input';
 import TrendPropertyCard from './TrendPropertyCard';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { GET_PHARMACIES } from '../../../apollo/user/query';
 import { T } from '../../types/common';
-import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { LIKE_TARGET_PHARMACY } from '../../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { Message } from '../../enums/common.enum';
 
 
 interface TrendPropertiesProps {
-	initialInput: PropertiesInquiry;
+	initialInput: PharmaciesInquiry;
 }
 
 const TrendProperties = (props: TrendPropertiesProps) => {
@@ -26,19 +26,19 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 	const [trendProperties, setTrendProperties] = useState<Property[]>([]);
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProperty] =useMutation(LIKE_TARGET_PROPERTY);
+	const [likeTargetPharmacy] =useMutation(LIKE_TARGET_PHARMACY);
 	/** HANDLERS **/
 	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertyError,
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+		loading: getPharmaciesLoading,
+		data: getPharmaciesData,
+		error: getPharmacyError,
+		refetch: getPharmaciesRefetch,
+	} = useQuery(GET_PHARMACIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-		setTrendProperties(data?.getProperties?.list);
+		setTrendProperties(data?.getPharmacies?.list);
 		},
 	});
 
@@ -48,10 +48,10 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 	try {
 		if(!id) return;
 		if(!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
-	await likeTargetProperty({
+	await likeTargetPharmacy({
   variables: { input: id },
 });
-		await getPropertiesRefetch({input:initialInput});
+		await getPharmaciesRefetch({input:initialInput});
 		await sweetTopSmallSuccessAlert("success",800);
 
 	} catch (error:any) {
@@ -71,7 +71,7 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 			<Stack className={'trend-properties'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Trend Properties</span>
+						<span>Trending pharmacies</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						{trendProperties.length === 0 ? (
@@ -105,7 +105,7 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Trend Properties</span>
+							<span>Trending pharmacies</span>
 							<p>Trend is based on likes</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
@@ -155,7 +155,7 @@ TrendProperties.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 8,
-		sort: 'propertyLikes',
+		sort: 'pharmacyLikes',
 		direction: 'DESC',
 		search: {},
 	},

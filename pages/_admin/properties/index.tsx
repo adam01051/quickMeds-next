@@ -9,62 +9,62 @@ import MenuItem from '@mui/material/MenuItem';
 import { TabContext } from '@mui/lab';
 import TablePagination from '@mui/material/TablePagination';
 import { PropertyPanelList } from '../../../libs/components/admin/properties/PropertyList';
-import { AllPropertiesInquiry } from '../../../libs/types/property/property.input';
+import { AllPharmaciesInquiry } from '../../../libs/types/property/property.input';
 import { Property } from '../../../libs/types/property/property';
-import { PropertyLocation, PropertyStatus } from '../../../libs/enums/property.enum';
+import { PharmacyLocation, PharmacyStatus } from '../../../libs/enums/property.enum';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
-import { PropertyUpdate } from '../../../libs/types/property/property.update';
+import { PharmacyUpdate } from '../../../libs/types/property/property.update';
 import { useMutation, useQuery } from '@apollo/client';
-import { REMOVE_PROPERTY_BY_ADMIN, UPDATE_PROPERTY_BY_ADMIN } from '../../../apollo/admin/mutation';
-import { GET_ALL_PROPERTIES_BY_ADMIN } from '../../../apollo/admin/query';
+import { REMOVE_PHARMACY_BY_ADMIN, UPDATE_PHARMACY_BY_ADMIN } from '../../../apollo/admin/mutation';
+import { GET_ALL_PHARMACIES_BY_ADMIN } from '../../../apollo/admin/query';
 import { T } from '../../../libs/types/common';
 
 const AdminProperties: NextPage = ({ initialInquiry, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
-	const [propertiesInquiry, setPropertiesInquiry] = useState<AllPropertiesInquiry>(initialInquiry);
+	const [propertiesInquiry, setPharmaciesInquiry] = useState<AllPharmaciesInquiry>(initialInquiry);
 	const [properties, setProperties] = useState<Property[]>([]);
 	const [propertiesTotal, setPropertiesTotal] = useState<number>(0);
 	const [value, setValue] = useState(
-		propertiesInquiry?.search?.propertyStatus ? propertiesInquiry?.search?.propertyStatus : 'ALL',
+		propertiesInquiry?.search?.pharmacyStatus ? propertiesInquiry?.search?.pharmacyStatus : 'ALL',
 	);
 	const [searchType, setSearchType] = useState('ALL');
 
 	/** APOLLO REQUESTS **/
 /** APOLLO REQUESTS **/
-const [updatePropertyByAdmin] = useMutation(UPDATE_PROPERTY_BY_ADMIN);
-const [removePropertyByAdmin] = useMutation(REMOVE_PROPERTY_BY_ADMIN);
+const [updatePharmacyByAdmin] = useMutation(UPDATE_PHARMACY_BY_ADMIN);
+const [removePharmacyByAdmin] = useMutation(REMOVE_PHARMACY_BY_ADMIN);
 
 const {
-  loading: getAllPropertiesByAdminLoading,
-  data: getAllPropertiesByAdminData,
-  error: getAllPropertiesByAdminError,
-  refetch: getAllPropertiesByAdminRefetch,
-} = useQuery(GET_ALL_PROPERTIES_BY_ADMIN, {
+  loading: getAllPharmaciesByAdminLoading,
+  data: getAllPharmaciesByAdminData,
+  error: getAllPharmaciesByAdminError,
+  refetch: getAllPharmaciesByAdminRefetch,
+} = useQuery(GET_ALL_PHARMACIES_BY_ADMIN, {
   fetchPolicy: 'network-only',
   variables: { input: propertiesInquiry },
   notifyOnNetworkStatusChange: true,
   onCompleted: (data: T) => {
-    setProperties(data?.getAllPropertiesByAdmin?.list);
-    setPropertiesTotal(data?.getAllPropertiesByAdmin?.metaCounter[0]?.total ?? 0);
+    setProperties(data?.getAllPharmaciesByAdmin?.list);
+    setPropertiesTotal(data?.getAllPharmaciesByAdmin?.metaCounter[0]?.total ?? 0);
   },
 });
 	/** LIFECYCLES **/
 	useEffect(() => {
-		getAllPropertiesByAdminRefetch({input:propertiesInquiry});
+		getAllPharmaciesByAdminRefetch({input:propertiesInquiry});
 	}, [propertiesInquiry]);
 
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {
 		propertiesInquiry.page = newPage + 1;
-	 	await getAllPropertiesByAdminRefetch({input:propertiesInquiry});
-		setPropertiesInquiry({ ...propertiesInquiry });
+		await getAllPharmaciesByAdminRefetch({input:propertiesInquiry});
+		setPharmaciesInquiry({ ...propertiesInquiry });
 	};
 
 	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		propertiesInquiry.limit = parseInt(event.target.value, 10);
 		propertiesInquiry.page = 1;
-		await getAllPropertiesByAdminRefetch({input:propertiesInquiry});
-		setPropertiesInquiry({ ...propertiesInquiry });
+		await getAllPharmaciesByAdminRefetch({input:propertiesInquiry});
+		setPharmaciesInquiry({ ...propertiesInquiry });
 	};
 
 	const menuIconClickHandler = (e: any, index: number) => {
@@ -80,21 +80,24 @@ const {
 	const tabChangeHandler = async (event: any, newValue: string) => {
 		setValue(newValue);
 
-		setPropertiesInquiry({ ...propertiesInquiry, page: 1, sort: 'createdAt' });
+		setPharmaciesInquiry({ ...propertiesInquiry, page: 1, sort: 'createdAt' });
 
 		switch (newValue) {
-			case 'ACTIVE':
-				setPropertiesInquiry({ ...propertiesInquiry, search: { propertyStatus: PropertyStatus.ACTIVE } });
+			case 'HOLD':
+				setPharmaciesInquiry({ ...propertiesInquiry, search: { pharmacyStatus: PharmacyStatus.HOLD } });
 				break;
-			case 'SOLD':
-				setPropertiesInquiry({ ...propertiesInquiry, search: { propertyStatus: PropertyStatus.SOLD } });
+			case 'ACTIVE':
+				setPharmaciesInquiry({ ...propertiesInquiry, search: { pharmacyStatus: PharmacyStatus.ACTIVE } });
+				break;
+			case 'CLOSED':
+				setPharmaciesInquiry({ ...propertiesInquiry, search: { pharmacyStatus: PharmacyStatus.CLOSED } });
 				break;
 			case 'DELETE':
-				setPropertiesInquiry({ ...propertiesInquiry, search: { propertyStatus: PropertyStatus.DELETE } });
+				setPharmaciesInquiry({ ...propertiesInquiry, search: { pharmacyStatus: PharmacyStatus.DELETE } });
 				break;
 			default:
-				delete propertiesInquiry?.search?.propertyStatus;
-				setPropertiesInquiry({ ...propertiesInquiry });
+				delete propertiesInquiry?.search?.pharmacyStatus;
+				setPharmaciesInquiry({ ...propertiesInquiry });
 				break;
 		}
 	};
@@ -102,7 +105,7 @@ const {
 	const removePropertyHandler = async (id: string) => {
 		try {
 			if (await sweetConfirmAlert('Are you sure to remove?')) {
-				await removePropertyByAdmin({
+				await removePharmacyByAdmin({
 				variables:{
 					input:id,
 				}
@@ -120,28 +123,28 @@ const {
 			setSearchType(newValue);
 
 			if (newValue !== 'ALL') {
-				setPropertiesInquiry({
+				setPharmaciesInquiry({
 					...propertiesInquiry,
 					page: 1,
 					sort: 'createdAt',
 					search: {
 						...propertiesInquiry.search,
-						propertyLocationList: [newValue as PropertyLocation],
+						pharmacyLocationList: [newValue as PharmacyLocation],
 					},
 				});
 			} else {
-				delete propertiesInquiry?.search?.propertyLocationList;
-				setPropertiesInquiry({ ...propertiesInquiry });
+				delete propertiesInquiry?.search?.pharmacyLocationList;
+				setPharmaciesInquiry({ ...propertiesInquiry });
 			}
 		} catch (err: any) {
 			console.log('searchTypeHandler: ', err.message);
 		}
 	};
 
-	const updatePropertyHandler = async (updateData: PropertyUpdate) => {
+	const updatePharmacyHandler = async (updateData: PharmacyUpdate) => {
 		try {
 			console.log('+updateData: ', updateData);
-				await updatePropertyByAdmin({
+				await updatePharmacyByAdmin({
 				variables:{
 					input:updateData,
 				}
@@ -157,13 +160,20 @@ const {
 	return (
 		<Box component={'div'} className={'content'}>
 			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Property List
+				Pharmacy List
 			</Typography>
 			<Box component={'div'} className={'table-wrap'}>
 				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
 					<TabContext value={value}>
 						<Box component={'div'}>
 							<List className={'tab-menu'}>
+								<ListItem
+									onClick={(e:any) => tabChangeHandler(e, 'HOLD')}
+									value="HOLD"
+									className={value === 'HOLD' ? 'li on' : 'li'}
+								>
+									Hold
+								</ListItem>
 								<ListItem
 									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
 									value="ALL"
@@ -179,11 +189,11 @@ const {
 									Active
 								</ListItem>
 								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'SOLD')}
-									value="SOLD"
-									className={value === 'SOLD' ? 'li on' : 'li'}
+									onClick={(e:any) => tabChangeHandler(e, 'CLOSED')}
+									value="CLOSED"
+									className={value === 'CLOSED' ? 'li on' : 'li'}
 								>
-									Sold
+									Closed
 								</ListItem>
 								<ListItem
 									onClick={(e:any) => tabChangeHandler(e, 'DELETE')}
@@ -199,7 +209,7 @@ const {
 									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
 										ALL
 									</MenuItem>
-									{Object.values(PropertyLocation).map((location: string) => (
+									{Object.values(PharmacyLocation).map((location: string) => (
 										<MenuItem value={location} onClick={() => searchTypeHandler(location)} key={location}>
 											{location}
 										</MenuItem>
@@ -213,7 +223,7 @@ const {
 							anchorEl={anchorEl}
 							menuIconClickHandler={menuIconClickHandler}
 							menuIconCloseHandler={menuIconCloseHandler}
-							updatePropertyHandler={updatePropertyHandler}
+							updatePharmacyHandler={updatePharmacyHandler}
 							removePropertyHandler={removePropertyHandler}
 						/>
 

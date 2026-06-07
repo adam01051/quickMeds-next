@@ -6,39 +6,39 @@ import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper';
 import TopPropertyCard from './TopPropertyCard';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PharmaciesInquiry } from '../../types/property/property.input';
 import { Property } from '../../types/property/property';
 import { T } from '../../types/common';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_PROPERTIES } from '../../../apollo/user/query';
-import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { GET_PHARMACIES } from '../../../apollo/user/query';
+import { LIKE_TARGET_PHARMACY } from '../../../apollo/user/mutation';
 import { Message } from '../../enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 interface TopPropertiesProps {
-	initialInput: PropertiesInquiry;
+	initialInput: PharmaciesInquiry;
 }
 
 const TopProperties = (props: TopPropertiesProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
 	const [topProperties, setTopProperties] = useState<Property[]>([]);
-	const [likeTargetProperty] =useMutation(LIKE_TARGET_PROPERTY);
+	const [likeTargetPharmacy] =useMutation(LIKE_TARGET_PHARMACY);
 
 	/** APOLLO REQUESTS **/
 	
 	/** HANDLERS **/
 		const {
-			loading: getPropertiesLoading,
-			data: getPropertiesData,
-			error: getPropertyError,
-			refetch: getPropertiesRefetch,
-		} = useQuery(GET_PROPERTIES, {
+			loading: getPharmaciesLoading,
+			data: getPharmaciesData,
+			error: getPharmacyError,
+			refetch: getPharmaciesRefetch,
+		} = useQuery(GET_PHARMACIES, {
 			fetchPolicy: 'cache-and-network',
 			variables: { input: initialInput },
 			notifyOnNetworkStatusChange: true,
 			onCompleted: (data: T) => {
-			setTopProperties(data?.getProperties?.list);
+			setTopProperties(data?.getPharmacies?.list);
 			},
 		});
 	
@@ -46,10 +46,10 @@ const TopProperties = (props: TopPropertiesProps) => {
 		try {
 			if(!id) return;
 			if(!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
-		await likeTargetProperty({
+		await likeTargetPharmacy({
 	  variables: { input: id },
 	});
-			await getPropertiesRefetch({input:initialInput});
+			await getPharmaciesRefetch({input:initialInput});
 			await sweetTopSmallSuccessAlert("success",800);
 	
 		} catch (error:any) {
@@ -65,7 +65,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 			<Stack className={'top-properties'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top properties</span>
+						<span>Top pharmacies</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -93,8 +93,8 @@ const TopProperties = (props: TopPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Top properties</span>
-							<p>Check out our Top Properties</p>
+							<span>Top pharmacies</span>
+							<p>Check out our Top Pharmacies</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
@@ -137,7 +137,7 @@ TopProperties.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 8,
-		sort: 'propertyRank',
+		sort: 'pharmacyRank',
 		direction: 'DESC',
 		search: {},
 	},

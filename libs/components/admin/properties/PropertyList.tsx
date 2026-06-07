@@ -18,7 +18,7 @@ import { Property } from '../../../types/property/property';
 import { REACT_APP_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
-import { PropertyStatus } from '../../../enums/property.enum';
+import { PharmacyStatus } from '../../../enums/property.enum';
 
 interface Data {
 	id: string;
@@ -118,7 +118,7 @@ interface PropertyPanelListType {
 	anchorEl: any;
 	menuIconClickHandler: any;
 	menuIconCloseHandler: any;
-	updatePropertyHandler: any;
+	updatePharmacyHandler: any;
 	removePropertyHandler: any;
 }
 
@@ -128,7 +128,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 		anchorEl,
 		menuIconClickHandler,
 		menuIconCloseHandler,
-		updatePropertyHandler,
+		updatePharmacyHandler,
 		removePropertyHandler,
 	} = props;
 
@@ -149,13 +149,13 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 
 						{properties.length !== 0 &&
 							properties.map((property: Property, index: number) => {
-								const propertyImage = `${REACT_APP_API_URL}/${property?.propertyImages[0]}`;
+								const propertyImage = `${REACT_APP_API_URL}/${property?.pharmacyImages[0]}`;
 
 								return (
 									<TableRow hover key={property?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 										<TableCell align="left">{property._id}</TableCell>
 										<TableCell align="left" className={'name'}>
-											{property.propertyStatus === PropertyStatus.DELETE ? (
+											{property.pharmacyStatus === PharmacyStatus.DELETE ? (
 												<Stack direction={'row'}>
 													<Link href={`/property/detail?id=${property?._id}`}>
 														<div>
@@ -163,7 +163,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 														</div>
 													</Link>
 													<Link href={`/property/detail?id=${property?._id}`}>
-														<div>{property.propertyTitle}</div>
+														<div>{property.pharmacyName}</div>
 													</Link>
 												</Stack>
 											) : (
@@ -172,16 +172,16 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 														<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
 													</div>
 
-													<div style={{marginTop:"10px"}}>{property.propertyTitle}</div>
+													<div style={{marginTop:"10px"}}>{property.pharmacyName}</div>
 												</Stack>
 											)}
 										</TableCell>
-										<TableCell align="center">{property.propertyPrice}</TableCell>
+										<TableCell align="center">{property.pharmacyDeliveryFee}</TableCell>
 										<TableCell align="center">{property.memberData?.memberNick}</TableCell>
-										<TableCell align="center">{property.propertyLocation}</TableCell>
-										<TableCell align="center">{property.propertyType}</TableCell>
+										<TableCell align="center">{property.pharmacyLocation}</TableCell>
+										<TableCell align="center">{property.pharmacyType}</TableCell>
 										<TableCell align="center">
-											{property.propertyStatus === PropertyStatus.DELETE && (
+											{property.pharmacyStatus === PharmacyStatus.DELETE && (
 												<Button
 													variant="outlined"
 													sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
@@ -191,14 +191,13 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 												</Button>
 											)}
 
-											{property.propertyStatus === PropertyStatus.SOLD && (
-												<Button className={'badge warning'}>{property.propertyStatus}</Button>
-											)}
-
-											{property.propertyStatus === PropertyStatus.ACTIVE && (
+											{property.pharmacyStatus !== PharmacyStatus.DELETE && (
 												<>
-													<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-														{property.propertyStatus}
+													<Button
+														onClick={(e: any) => menuIconClickHandler(e, index)}
+														className={property.pharmacyStatus === PharmacyStatus.ACTIVE ? 'badge success' : 'badge warning'}
+													>
+														{property.pharmacyStatus}
 													</Button>
 
 													<Menu
@@ -212,11 +211,11 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 														TransitionComponent={Fade}
 														sx={{ p: 1 }}
 													>
-														{Object.values(PropertyStatus)
-															.filter((ele) => ele !== property.propertyStatus)
+														{Object.values(PharmacyStatus)
+															.filter((ele) => ele !== property.pharmacyStatus)
 															.map((status: string) => (
 																<MenuItem
-																	onClick={() => updatePropertyHandler({ _id: property._id, propertyStatus: status })}
+																	onClick={() => updatePharmacyHandler({ _id: property._id, pharmacyStatus: status })}
 																	key={status}
 																>
 																	<Typography variant={'subtitle1'} component={'span'}>

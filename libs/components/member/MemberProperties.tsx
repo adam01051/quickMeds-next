@@ -4,34 +4,34 @@ import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from '../mypage/PropertyCard';
 import { Property } from '../../types/property/property';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PharmaciesInquiry } from '../../types/property/property.input';
 import { T } from '../../types/common';
 import { useRouter } from 'next/router';
-import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { GET_PHARMACIES } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>({ ...initialInput });
+	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>({ ...initialInput });
 	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
 	const [total, setTotal] = useState<number>(0);
 
 	/** APOLLO REQUESTS **/
 	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertiesError,
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+		loading: getPharmaciesLoading,
+		data: getPharmaciesData,
+		error: getPharmaciesError,
+		refetch: getPharmaciesRefetch,
+	} = useQuery(GET_PHARMACIES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		skip: !searchFilter?.search?.memberId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: any) => {
-			setAgentProperties(data?.getProperties?.list);
-			setTotal(data?.getProperties?.metaCounter[0]?.total ?? 0);
+			setAgentProperties(data?.getPharmacies?.list);
+			setTotal(data?.getPharmacies?.metaCounter[0]?.total ?? 0);
 		},
 	});
 	/** LIFECYCLES **/
@@ -48,13 +48,13 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return <div>QUICKMEDS PHARMACIES MOBILE</div>;
 	} else {
 		return (
 			<div id="member-properties-page">
 				<Stack className="main-title-box">
 					<Stack className="right-box">
-						<Typography className="main-title">Properties</Typography>
+						<Typography className="main-title">Pharmacies</Typography>
 					</Stack>
 				</Stack>
 				<Stack className="properties-list-box">
@@ -70,7 +70,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 						{agentProperties?.length === 0 && (
 							<div className={'no-data'}>
 								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Property found!</p>
+								<p>No pharmacy found!</p>
 							</div>
 						)}
 						{agentProperties?.map((property: Property) => {
@@ -89,7 +89,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} property available</Typography>
+									<Typography>{total} pharmacies available</Typography>
 								</Stack>
 							</Stack>
 						)}

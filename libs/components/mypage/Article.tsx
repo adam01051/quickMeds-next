@@ -11,7 +11,7 @@ const Article = () => {
 		return (
 			<Stack className="card-config">
 				<Stack className="top">
-					<img src="/img/apartmentMain.png" alt="" />
+					<img src="/img/community/articleImg.png" alt="" />
 					<Box component={'div'} className={'date'}>
 						<Typography>July 28</Typography>
 					</Box>

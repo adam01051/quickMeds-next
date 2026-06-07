@@ -15,11 +15,11 @@ const About: NextPage = () => {
 				<Stack className={'intro'}>
 					<Stack className={'container'}>
 						<Stack className={'left'}>
-							<strong>We're on a Mission to Change View of Real Estate Field.</strong>
+							<strong>We're on a mission to make pharmacy access simpler.</strong>
 						</Stack>
 						<Stack className={'right'}>
 							<p>
-								It doesn’t matter how organized you are — a surplus of toys will always ensure your house is a mess
+								quickMeds helps people discover trusted local pharmacies, delivery options, and essential services.
 								waiting to happen. Fortunately, getting kids on board with the idea of ditching their stuff is a lot
 								easier than it sounds.
 								<br />
@@ -33,7 +33,7 @@ const About: NextPage = () => {
 									<div>
 										<img src="/img/icons/garden.svg" alt="" />
 									</div>
-									<span>Modern Villa</span>
+									<span>Trusted Pharmacy</span>
 									<p>Nullam sollicitudin blandit Nullam maximus.</p>
 								</div>
 								<div className={'box'}>
@@ -59,7 +59,7 @@ const About: NextPage = () => {
 							</Box>
 							<Box component={'div'}>
 								<strong>12K</strong>
-								<p>Property Ready</p>
+								<p>Pharmacy Ready</p>
 							</Box>
 							<Box component={'div'}>
 								<strong>20M</strong>
@@ -88,7 +88,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/security.svg" alt="" />
 							</div>
 							<div className={'text-box'}>
-								<span>Property Management</span>
+								<span>Pharmacy Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
@@ -97,7 +97,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/keywording.svg" alt="" />
 							</div>
 							<div className={'text_-box'}>
-								<span>Property Management</span>
+								<span>Pharmacy Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
@@ -106,7 +106,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/investment.svg" alt="" />
 							</div>
 							<div className={'text-box'}>
-								<span>Property Management</span>
+								<span>Pharmacy Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
@@ -132,7 +132,7 @@ const About: NextPage = () => {
 					<Stack className={'container'}>
 						<Box component={'div'} className={'left'}>
 							<strong>Need help? Talk to our expert.</strong>
-							<p>Talk to our experts or Browse through more properties.</p>
+							<p>Talk to our experts or Browse through more pharmacies.</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
 							<div className={'white'}>

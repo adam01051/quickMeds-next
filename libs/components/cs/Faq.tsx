@@ -33,7 +33,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const Faq = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [category, setCategory] = useState<string>('property');
+	const [category, setCategory] = useState<string>('pharmacy');
 	const [expanded, setExpanded] = useState<string | false>('panel1');
 
 	/** APOLLO REQUESTS **/
@@ -49,21 +49,21 @@ const Faq = () => {
 	};
 
 	const data: any = {
-		property: [
+		pharmacy: [
 			{
 				id: '00f5a45ed8897f8090116a01',
-				subject: 'Are the properties displayed on the site reliable?',
-				content: 'of course we only have verified properties',
+				subject: 'Are the pharmacies displayed on the site reliable?',
+				content: 'of course we only have verified pharmacies',
 			},
 			{
 				id: '00f5a45ed8897f8090116a22',
-				subject: 'What types of properties do you offer?',
-				content: 'We offer single-family homes, condos, townhouses, apartments, and penthouses',
+				subject: 'What types of pharmacies do you offer?',
+				content: 'We list retail, hospital, compounding, and online pharmacies.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a21',
-				subject: 'How can I search for properties on your website?',
-				content: 'Simply use our search bar to enter location, price range, bedrooms/bathrooms, and property type.',
+				subject: 'How can I search for pharmacies on your website?',
+				content: 'Simply use our search bar to enter location, price range, delivery and insurance, and pharmacy type.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a23',
@@ -72,7 +72,7 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a24',
-				subject: 'What should I consider when buying a property?',
+				subject: 'What should I consider when buying a pharmacy?',
 				content: 'Location, condition, size, amenities, and future development plans.',
 			},
 			{
@@ -82,22 +82,22 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a29',
-				subject: 'What happens if I encounter issues with the property after purchase?',
+				subject: 'What happens if I encounter issues with the pharmacy after purchase?',
 				content: 'We offer post-purchase support to address any concerns promptly.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a28',
-				subject: 'Do you offer properties in specific neighborhoods?',
+				subject: 'Do you offer pharmacies in specific neighborhoods?',
 				content: 'Yes, we have listings in various neighborhoods based on your preferences.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a27',
-				subject: 'Can I sell my property through your website?',
-				content: 'Absolutely, we provide services for selling properties as well.',
+				subject: 'Can I sell my pharmacy through your website?',
+				content: 'Absolutely, we provide services for selling pharmacies as well.',
 			},
 			{
 				id: '00f5a45ed8897f8090116b99',
-				subject: 'What if I need help understanding legal aspects of property purchase?',
+				subject: 'What if I need help understanding legal aspects of pharmacy purchase?',
 				content: 'Our team can provide basic guidance and recommend legal professionals if needed.',
 			},
 		],
@@ -115,7 +115,7 @@ const Faq = () => {
 			{
 				id: '00f5a45ed8897f8090116a92',
 				subject: 'Is there an option for installment payments?',
-				content: 'Yes, we offer installment payment plans for certain properties. Please inquire for more details.',
+				content: 'Yes, we offer installment payment plans for certain pharmacies. Please inquire for more details.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a93',
@@ -162,17 +162,17 @@ const Faq = () => {
 			{
 				id: '00f5a45ed8897f8090116a03',
 				subject: 'What should buyers pay attention to?',
-				content: 'Buyers should check and decide whether the property they want to buy or rent is actually suitable!',
+				content: 'Buyers should check and decide whether the pharmacy they want to find is actually suitable!',
 			},
 			{
 				id: '00f5a45ed8897f8090116a85',
-				subject: 'How can I determine if a property is within my budget?',
+				subject: 'How can I determine if a pharmacy is within my budget?',
 				content:
 					'Calculate your budget by considering your income, down payment, and potential mortgage payments. Our agents can assist you within your budget.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a84',
-				subject: 'What documents do I need to provide when purchasing a property?',
+				subject: 'What documents do I need to provide when purchasing a pharmacy?',
 				content:
 					"You'll typically need identification, proof of income, bank statements, and any necessary loan documentation. Our team will guide you through.",
 			},
@@ -184,37 +184,37 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a82',
-				subject: 'Can I negotiate the price of a property?',
+				subject: 'Can I negotiate the price of a pharmacy?',
 				content:
-					'Yes, you can negotiate the price of a property. Our agents will assist you in making competitive offers and negotiating terms with the seller.',
+					'Yes, you can negotiate the price of a pharmacy. Our agents will assist you in making competitive offers and negotiating terms with the seller.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a81',
-				subject: 'What are some red flags to watch out for when viewing properties?',
+				subject: 'What are some red flags to watch out for when viewing pharmacies?',
 				content:
 					'Watch out for signs of structural damage, water damage, mold, outdated systems, and undesirable neighborhood conditions.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a80',
-				subject: 'Do you provide assistance with property inspections?',
+				subject: 'Do you provide assistance with pharmacy inspections?',
 				content:
-					'Yes, we can recommend reputable inspectors and accompany you during property inspections to identify any potential issues.',
+					'Yes, we can recommend reputable inspectors and accompany you during pharmacy inspections to identify any potential issues.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a79',
-				subject: 'How long does it typically take to find the right property?',
+				subject: 'How long does it typically take to find the right pharmacy?',
 				content:
-					'The timeframe varies depending on your preferences and market conditions. Our agents will work diligently to find the right property as quickly as possible.',
+					'The timeframe varies depending on your preferences and market conditions. Our agents will work diligently to find the right pharmacy as quickly as possible.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a78',
-				subject: 'What are the advantages of using a real estate agent when buying a property?',
+				subject: 'What are the advantages of using a pharmacy agent when buying a pharmacy?',
 				content:
-					'Real estate agents provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
+					'Pharmacy agents provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a77',
-				subject: 'What happens if I change my mind about a property after making an offer?',
+				subject: 'What happens if I change my mind about a pharmacy after making an offer?',
 				content:
 					'Depending on the terms of the offer and the stage of the transaction, you may have options to withdraw your offer.',
 			},
@@ -229,17 +229,17 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a62',
-				subject: 'What qualifications do I need to become a real estate agent?',
+				subject: 'What qualifications do I need to become a pharmacy agent?',
 				content: 'Complete pre-licensing course, pass licensing exam, meet state requirements.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a63',
-				subject: 'How do I find clients as a new real estate agent?',
+				subject: 'How do I find clients as a new pharmacy agent?',
 				content: 'Build network, use online/offline marketing, join reputable brokerage.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a64',
-				subject: 'What are some effective marketing strategies for selling properties?',
+				subject: 'What are some effective marketing strategies for selling pharmacies?',
 				content: 'Use social media, online platforms, networking events, and direct mail.',
 			},
 			{
@@ -250,7 +250,7 @@ const Faq = () => {
 			{
 				id: '00f5a45ed8897f8090116a66',
 				subject: 'What should I do to stay updated with market trends and changes?',
-				content: 'Attend industry events, follow real estate news, participate in training.',
+				content: 'Attend industry events, follow pharmacy news, participate in training.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a67',
@@ -260,17 +260,17 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a68',
-				subject: 'What tools and technologies should I utilize as a real estate agent?',
+				subject: 'What tools and technologies should I utilize as a pharmacy agent?',
 				content: 'Use CRM software, virtual tours, digital marketing tools, and mobile apps.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a69',
-				subject: 'How do I ensure compliance with real estate laws and regulations?',
+				subject: 'How do I ensure compliance with pharmacy laws and regulations?',
 				content: 'Stay updated with laws, attend education courses, consult legal professionals.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a70',
-				subject: 'What strategies can I use to grow my real estate business?',
+				subject: 'What strategies can I use to grow my pharmacy business?',
 				content: 'Build relationships, provide exceptional service, seek referrals, and continuously improve skills.',
 			},
 		],
@@ -302,7 +302,7 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a56',
-				subject: 'Do members receive discounts on property listings or services?',
+				subject: 'Do members receive discounts on pharmacy listings or services?',
 				content: 'Membership discounts are not part of our current offerings.',
 			},
 			{
@@ -422,7 +422,7 @@ const Faq = () => {
 			},
 			{
 				id: '00f5a45ed8897f8090116a31',
-				subject: 'Do you host events or webinars related to real estate?',
+				subject: 'Do you host events or webinars related to pharmacy?',
 				content: "We're not hosting events or webinars at this time.",
 			},
 			{
@@ -440,12 +440,12 @@ const Faq = () => {
 			<Stack className={'faq-content'}>
 				<Box className={'categories'} component={'div'}>
 					<div
-						className={category === 'property' ? 'active' : ''}
+						className={category === 'pharmacy' ? 'active' : ''}
 						onClick={() => {
-							changeCategoryHandler('property');
+							changeCategoryHandler('pharmacy');
 						}}
 					>
-						Property
+						Pharmacy
 					</div>
 					<div
 						className={category === 'payment' ? 'active' : ''}

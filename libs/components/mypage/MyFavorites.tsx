@@ -6,7 +6,7 @@ import PropertyCard from '../property/PropertyCard';
 import { Property } from '../../types/property/property';
 import { T } from '../../types/common';
 import { GET_FAVORITES } from '../../../apollo/user/query';
-import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { LIKE_TARGET_PHARMACY } from '../../../apollo/user/mutation';
 import { useMutation, useQuery } from '@apollo/client';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
@@ -18,7 +18,7 @@ const MyFavorites: NextPage = () => {
 	const [searchFavorites, setSearchFavorites] = useState<T>({ page: 1, limit: 6 });
 
 	/** APOLLO REQUESTS **/
-const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
 
 const {
   loading: getFavoritesLoading,
@@ -46,7 +46,7 @@ const likePropertyHandler = async (user: any, id: string) => {
     if (!id) return;
     if (!user._id) throw new Error(Messages.error2);
 
-    await likeTargetProperty({
+    await likeTargetPharmacy({
       variables: {
         input: id,
       },
@@ -67,7 +67,7 @@ const likePropertyHandler = async (user: any, id: string) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR MY FAVORITES MOBILE</div>;
+		return <div>QUICKMEDS FAVORITES MOBILE</div>;
 	} else {
 		return (
 			<div id="my-favorites-page">
@@ -102,7 +102,7 @@ const likePropertyHandler = async (user: any, id: string) => {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} favorite propert{total > 1 ? 'ies' : 'y'}
+								Total {total} favorite pharmacies
 							</Typography>
 						</Stack>
 					</Stack>

@@ -8,14 +8,14 @@ import EastIcon from '@mui/icons-material/East';
 import PopularPropertyCard from './PopularPropertyCard';
 import { Property } from '../../types/property/property';
 import Link from 'next/link';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PharmaciesInquiry } from '../../types/property/property.input';
 import { useQuery } from '@apollo/client';
-import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { GET_PHARMACIES } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import router from 'next/router';
 
 interface PopularPropertiesProps {
-	initialInput: PropertiesInquiry;
+	initialInput: PharmaciesInquiry;
 }
 
 const PopularProperties = (props: PopularPropertiesProps) => {
@@ -28,16 +28,16 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 	
 	/** HANDLERS **/
 	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertyError,
+		loading: getPharmaciesLoading,
+		data: getPharmaciesData,
+		error: getPharmacyError,
 		refetch: getProperiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+	} = useQuery(GET_PHARMACIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-		setPopularProperties(data?.getProperties?.list);
+		setPopularProperties(data?.getPharmacies?.list);
 		},
 	});
 
@@ -50,7 +50,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 			<Stack className={'popular-properties'} >
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Popular properties</span>
+						<span>Popular pharmacies</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -78,7 +78,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
 						<Box component={'div'} className={'left'}>
-							<span>Popular properties</span>
+							<span>Popular pharmacies</span>
 							<p>Popularity is based on views</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
@@ -128,7 +128,7 @@ PopularProperties.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 7,
-		sort: 'propertyViews',
+		sort: 'pharmacyViews',
 		direction: 'DESC',
 		search: {},
 	},

@@ -36,7 +36,7 @@ const {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR MY FAVORITES MOBILE</div>;
+		return <div>QUICKMEDS FAVORITES MOBILE</div>;
 	} else {
 		return (
 			<div id="my-favorites-page">
@@ -54,7 +54,7 @@ const {
 					) : (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Properties found!</p>
+							<p>No recently visited pharmacies found!</p>
 						</div>
 					)}
 				</Stack>
@@ -71,7 +71,7 @@ const {
 						</Stack>
 						<Stack className="total-result">
 							<Typography>
-								Total {total} recently visited propert{total > 1 ? 'ies' : 'y'}
+								Total {total} recently visited pharmacies
 							</Typography>
 						</Stack>
 					</Stack>

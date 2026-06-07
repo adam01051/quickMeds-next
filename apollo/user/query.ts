@@ -20,7 +20,7 @@ export const GET_AGENTS = gql`
 				memberDesc
 				memberWarnings
 				memberBlocks
-				memberProperties
+				memberPharmacies
 				memberRank
 				memberPoints
 				memberLikes
@@ -55,7 +55,7 @@ query GetMember($input: String!) {
         memberImage
         memberAddress
         memberDesc
-        memberProperties
+        memberPharmacies
         memberArticles
         memberPoints
         memberLikes
@@ -79,32 +79,32 @@ query GetMember($input: String!) {
 `);
 
 /**************************
- *        PROPERTY        *
+ *        PHARMACY        *
  *************************/
 
-export const GET_PROPERTY = gql`
-	query GetProperty($input: String!) {
-		getProperty(propertyId: $input) {
+export const GET_PHARMACY = gql`
+	query GetPharmacy($input: String!) {
+		getPharmacy(pharmacyId: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 			memberData {
@@ -137,31 +137,31 @@ export const GET_PROPERTY = gql`
 	}
 `;
 
-export const GET_PROPERTIES = gql`
-	query GetProperties($input: PropertiesInquiry!) {
-		getProperties(input: $input) {
+export const GET_PHARMACIES = gql`
+	query GetPharmacies($input: PharmaciesInquiry!) {
+		getPharmacies(input: $input) {
 			list {
 				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
+				pharmacyType
+				pharmacyStatus
+				pharmacyLocation
+				pharmacyAddress
+				pharmacyName
+				pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+				pharmacyMedicationCount
+				pharmacyViews
+				pharmacyLikes
+				pharmacyRank
+				pharmacyImages
+				pharmacyDesc
+				acceptsInsurance
+				hasDelivery
 				memberId
-				soldAt
+				verifiedAt
 				deletedAt
-				constructedAt
+				openedAt
 				createdAt
 				updatedAt
 				memberData {
@@ -177,7 +177,7 @@ export const GET_PROPERTIES = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberPharmacies
 					memberRank
 					memberPoints
 					memberLikes
@@ -199,30 +199,30 @@ export const GET_PROPERTIES = gql`
 	}
 `;
 
-export const GET_AGENT_PROPERTIES = gql`
-	query GetAgentProperties($input: AgentPropertiesInquiry!) {
-		getAgentProperties(input: $input) {
+export const GET_AGENT_PHARMACIES = gql`
+	query GetAgentPharmacies($input: AgentPharmaciesInquiry!) {
+		getAgentPharmacies(input: $input) {
 			list {
 				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
+				pharmacyType
+				pharmacyStatus
+				pharmacyLocation
+				pharmacyAddress
+				pharmacyName
+				pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+				pharmacyMedicationCount
+				pharmacyViews
+				pharmacyLikes
+				pharmacyImages
+				pharmacyDesc
+				acceptsInsurance
+				hasDelivery
 				memberId
-				soldAt
+				verifiedAt
 				deletedAt
-				constructedAt
+				openedAt
 				createdAt
 				updatedAt
 			}
@@ -238,27 +238,27 @@ export const GET_FAVORITES = gql`
 		getFavorites(input: $input) {
 			list {
 				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyComments
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
+				pharmacyType
+				pharmacyStatus
+				pharmacyLocation
+				pharmacyAddress
+				pharmacyName
+				pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+				pharmacyMedicationCount
+				pharmacyViews
+				pharmacyLikes
+				pharmacyComments
+				pharmacyRank
+				pharmacyImages
+				pharmacyDesc
+				acceptsInsurance
+				hasDelivery
 				memberId
-				soldAt
+				verifiedAt
 				deletedAt
-				constructedAt
+				openedAt
 				createdAt
 				updatedAt
 				memberData {
@@ -272,7 +272,7 @@ export const GET_FAVORITES = gql`
 					memberImage
 					memberAddress
 					memberDesc
-					memberProperties
+					memberPharmacies
 					memberArticles
 					memberPoints
 					memberLikes
@@ -301,27 +301,27 @@ export const GET_VISITED = gql`
 		getVisited(input: $input) {
 			list {
 				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyComments
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
+				pharmacyType
+				pharmacyStatus
+				pharmacyLocation
+				pharmacyAddress
+				pharmacyName
+				pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+				pharmacyMedicationCount
+				pharmacyViews
+				pharmacyLikes
+				pharmacyComments
+				pharmacyRank
+				pharmacyImages
+				pharmacyDesc
+				acceptsInsurance
+				hasDelivery
 				memberId
-				soldAt
+				verifiedAt
 				deletedAt
-				constructedAt
+				openedAt
 				createdAt
 				updatedAt
 				memberData {
@@ -335,7 +335,7 @@ export const GET_VISITED = gql`
 					memberImage
 					memberAddress
 					memberDesc
-					memberProperties
+					memberPharmacies
 					memberArticles
 					memberPoints
 					memberLikes
@@ -391,7 +391,7 @@ export const GET_BOARD_ARTICLE = gql`
 				memberDesc
 				memberWarnings
 				memberBlocks
-				memberProperties
+				memberPharmacies
 				memberRank
 				memberPoints
 				memberLikes
@@ -443,7 +443,7 @@ export const GET_BOARD_ARTICLES = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberPharmacies
 					memberRank
 					memberPoints
 					memberLikes
@@ -489,7 +489,7 @@ export const GET_COMMENTS = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberPharmacies
 					memberRank
 					memberPoints
 					memberLikes
@@ -540,7 +540,7 @@ export const GET_MEMBER_FOLLOWERS = gql`
 					memberImage
 					memberAddress
 					memberDesc
-					memberProperties
+					memberPharmacies
 					memberArticles
 					memberPoints
 					memberLikes
@@ -583,7 +583,7 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					memberImage
 					memberAddress
 					memberDesc
-					memberProperties
+					memberPharmacies
 					memberArticles
 					memberPoints
 					memberLikes

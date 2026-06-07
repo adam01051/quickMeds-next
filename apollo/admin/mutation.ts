@@ -17,7 +17,7 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 			memberImage
 			memberAddress
 			memberDesc
-			memberProperties
+			memberPharmacies
 			memberRank
 			memberArticles
 			memberPoints
@@ -34,61 +34,61 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *        PHARMACY        *
  *************************/
 
-export const UPDATE_PROPERTY_BY_ADMIN = gql`
-	mutation UpdatePropertyByAdmin($input: PropertyUpdate!) {
-		updatePropertyByAdmin(input: $input) {
+export const UPDATE_PHARMACY_BY_ADMIN = gql`
+	mutation UpdatePharmacyByAdmin($input: PharmacyUpdate!) {
+		updatePharmacyByAdmin(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 		}
 	}
 `;
 
-export const REMOVE_PROPERTY_BY_ADMIN = gql`
-	mutation RemovePropertyByAdmin($input: String!) {
-		removePropertyByAdmin(propertyId: $input) {
+export const REMOVE_PHARMACY_BY_ADMIN = gql`
+	mutation RemovePharmacyByAdmin($input: String!) {
+		removePharmacyByAdmin(pharmacyId: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			pharmacyType
+			pharmacyStatus
+			pharmacyLocation
+			pharmacyAddress
+			pharmacyName
+			pharmacyDeliveryFee
+			pharmacyLatitude
+			pharmacyLongitude
+			pharmacyMedicationCount
+			pharmacyViews
+			pharmacyLikes
+			pharmacyImages
+			pharmacyDesc
+			acceptsInsurance
+			hasDelivery
 			memberId
-			soldAt
+			verifiedAt
 			deletedAt
-			constructedAt
+			openedAt
 			createdAt
 			updatedAt
 		}

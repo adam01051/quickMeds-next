@@ -33,44 +33,44 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.propertyImages[0]})` }}
+					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.pharmacyImages[0]})` }}
 					onClick={() => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property?.propertyPrice}</div>
+					<div>${property?.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {
 						pushDetailhandler(property._id);
-					}}>{property?.propertyTitle}</strong>
-					<p className={'desc'}>{property?.propertyAddress}</p>
+					}}>{property?.pharmacyName}</strong>
+					<p className={'desc'}>{property?.pharmacyAddress}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
+							<img src="/img/icons/discovery.svg" alt="" />
+							<span>{property?.pharmacyMedicationCount} medications</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
+							<img src="/img/icons/securePayment.svg" alt="" />
+							<span>{property?.pharmacyType} type</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
+							<img src="/img/icons/home.svg" alt="" />
+							<span>{property?.pharmacyMedicationCount} medications</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
 						<p>
 							{' '}
-							{property.propertyRent ? 'Rent' : ''} {property.propertyRent && property.propertyBarter && '/'}{' '}
-							{property.propertyBarter ? 'Barter' : ''}
+							{property.hasDelivery ? 'Delivery' : ''} {property.hasDelivery && property.acceptsInsurance && '/'}{' '}
+							{property.acceptsInsurance ? 'Insurance' : ''}
 						</p>
 						<div className="view-like-box">
 							<IconButton color={'default'}>
 								<RemoveRedEyeIcon />
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
+							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
 							<IconButton color={'default'}  onClick={() => likePropertyHandler(user,property?._id)}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
@@ -78,7 +78,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 									<FavoriteIcon />
 								)}
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyLikes}</Typography>
+							<Typography className="view-cnt">{property?.pharmacyLikes}</Typography>
 						</div>
 					</div>
 				</Box>
@@ -90,44 +90,44 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 				<Box
 					component={'div'}
 					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.propertyImages[0]})` }}
+					style={{ backgroundImage: `url(${REACT_APP_API_URL}/${property?.pharmacyImages[0]})` }}
 					onClick={() => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property?.propertyPrice}</div>
+					<div>${property?.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {
 						pushDetailhandler(property._id);
-					}}>{property?.propertyTitle}</strong>
-					<p className={'desc'}>{property?.propertyAddress}</p>
+					}}>{property?.pharmacyName}</strong>
+					<p className={'desc'}>{property?.pharmacyAddress}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
+							<img src="/img/icons/discovery.svg" alt="" />
+							<span>{property?.pharmacyMedicationCount} medications</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
+							<img src="/img/icons/securePayment.svg" alt="" />
+							<span>{property?.pharmacyType} type</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
+							<img src="/img/icons/home.svg" alt="" />
+							<span>{property?.pharmacyMedicationCount} medications</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
 						<p>
 							{' '}
-							{property.propertyRent ? 'Rent' : ''} {property.propertyRent && property.propertyBarter && '/'}{' '}
-							{property.propertyBarter ? 'Barter' : ''}
+							{property.hasDelivery ? 'Delivery' : ''} {property.hasDelivery && property.acceptsInsurance && '/'}{' '}
+							{property.acceptsInsurance ? 'Insurance' : ''}
 						</p>
 						<div className="view-like-box">
 							<IconButton color={'default'} >
 								<RemoveRedEyeIcon />
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
+							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
 							<IconButton color={'default'} onClick={() => likePropertyHandler(user,property?._id)}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
@@ -135,7 +135,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 									<FavoriteIcon />
 								)}
 							</IconButton>
-							<Typography className="view-cnt">{property?.propertyLikes}</Typography>
+							<Typography className="view-cnt">{property?.pharmacyLikes}</Typography>
 						</div>
 					</div>
 				</Box>

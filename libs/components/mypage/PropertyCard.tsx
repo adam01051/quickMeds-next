@@ -8,17 +8,17 @@ import { Property } from '../../types/property/property';
 import { formatterStr } from '../../utils';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
-import { PropertyStatus } from '../../enums/property.enum';
+import { PharmacyStatus } from '../../enums/property.enum';
 
 interface PropertyCardProps {
 	property: Property;
 	deletePropertyHandler?: any;
 	memberPage?: boolean;
-	updatePropertyHandler?: any;
+	updatePharmacyHandler?: any;
 }
 
 export const PropertyCard = (props: PropertyCardProps) => {
-	const { property, deletePropertyHandler, memberPage, updatePropertyHandler } = props;
+	const { property, deletePropertyHandler, memberPage, updatePharmacyHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,7 +29,7 @@ export const PropertyCard = (props: PropertyCardProps) => {
 		console.log('+pushEditProperty: ', id);
 		await router.push({
 			pathname: '/mypage',
-			query: { category: 'addProperty', propertyId: id },
+			query: { category: 'addProperty', pharmacyId: id },
 		});
 	};
 
@@ -51,18 +51,18 @@ export const PropertyCard = (props: PropertyCardProps) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>MOBILE PROPERTY CARD</div>;
+		return <div>MOBILE PHARMACY CARD</div>;
 	} else
 		return (
 			<Stack className="property-card-box">
 				<Stack className="image-box" onClick={() => pushPropertyDetail(property?._id)}>
-					<img src={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`} alt="" />
+					<img src={`${process.env.REACT_APP_API_URL}/${property.pharmacyImages[0]}`} alt="" />
 				</Stack>
 				<Stack className="information-box" onClick={() => pushPropertyDetail(property?._id)}>
-					<Typography className="name">{property.propertyTitle}</Typography>
-					<Typography className="address">{property.propertyAddress}</Typography>
+					<Typography className="name">{property.pharmacyName}</Typography>
+					<Typography className="address">{property.pharmacyAddress}</Typography>
 					<Typography className="price">
-						<strong>${formatterStr(property?.propertyPrice)}</strong>
+						<strong>Delivery: ${formatterStr(property?.pharmacyDeliveryFee)}</strong>
 					</Typography>
 				</Stack>
 				<Stack className="date-box">
@@ -73,11 +73,11 @@ export const PropertyCard = (props: PropertyCardProps) => {
 				<Stack className="status-box">
 					<Stack className="coloured-box" sx={{ background: '#E5F0FD' }} onClick={handleClick}>
 						<Typography className="status" sx={{ color: '#3554d1' }}>
-							{property.propertyStatus}
+							{property.pharmacyStatus}
 						</Typography>
 					</Stack>
 				</Stack>
-				{!memberPage && property.propertyStatus !== 'SOLD' && (
+				{!memberPage && property.pharmacyStatus !== 'CLOSED' && (
 					<Menu
 						anchorEl={anchorEl}
 						open={open}
@@ -98,16 +98,16 @@ export const PropertyCard = (props: PropertyCardProps) => {
 							},
 						}}
 					>
-						{property.propertyStatus === 'ACTIVE' && (
+						{property.pharmacyStatus === 'ACTIVE' && (
 							<>
 								<MenuItem
 									disableRipple
 									onClick={() => {
 										handleClose();
-										updatePropertyHandler(PropertyStatus.SOLD, property?._id);
+										updatePharmacyHandler(PharmacyStatus.CLOSED, property?._id);
 									}}
 								>
-									Sold
+									Close
 								</MenuItem>
 							</>
 						)} 
@@ -115,9 +115,9 @@ export const PropertyCard = (props: PropertyCardProps) => {
 				)}
 
 				<Stack className="views-box">
-					<Typography className="views">{property.propertyViews.toLocaleString()}</Typography>
+					<Typography className="views">{property.pharmacyViews.toLocaleString()}</Typography>
 				</Stack>
-				{!memberPage && property.propertyStatus === PropertyStatus.ACTIVE &&(
+				{!memberPage && property.pharmacyStatus === PharmacyStatus.ACTIVE &&(
 					<Stack className="action-box">
 						<IconButton className="icon-button" onClick={() => pushEditProperty(property._id)}>
 							<ModeIcon className="buttons" />

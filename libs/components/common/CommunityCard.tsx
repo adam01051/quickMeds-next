@@ -15,11 +15,12 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 interface CommunityCardProps {
 	boardArticle: BoardArticle;
 	size?: string;
-	likeArticleHandler:any
+	likeArticleHandler?: any;
+	likeBoardArticle?: any;
 }
 
 const CommunityCard = (props: CommunityCardProps) => {
-	const { boardArticle, size = 'normal',likeArticleHandler } = props;
+	const { boardArticle, size = 'normal', likeArticleHandler, likeBoardArticle } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -74,7 +75,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 							<RemoveRedEyeIcon />
 						</IconButton>
 						<Typography className="view-cnt">{boardArticle?.articleViews}</Typography>
-						<IconButton color={'default'} onClick={(e:any) => likeArticleHandler(e,user, boardArticle?._id)}>
+						<IconButton color={'default'} onClick={(e:any) => (likeArticleHandler ?? likeBoardArticle)?.(e, user, boardArticle?._id)}>
 							{boardArticle?.meLiked && boardArticle?.meLiked[0]?.myFavorite ? (
 								<FavoriteIcon color={'primary'} />
 							) : (

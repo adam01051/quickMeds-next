@@ -1,37 +1,34 @@
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import { PharmacyLocation, PharmacyStatus, PharmacyType } from '../../enums/property.enum';
 import { Direction } from '../../enums/common.enum';
 
-export interface PropertyInput {
-	propertyType: PropertyType;
-	propertyLocation: PropertyLocation;
-	propertyAddress: string;
-	propertyTitle: string;
-	propertyPrice: number;
-	propertySquare: number;
-	propertyBeds: number;
-	propertyRooms: number;
-	propertyImages: string[];
-	propertyDesc?: string;
-	propertyBarter?: boolean;
-	propertyRent?: boolean;
+export interface PharmacyInput {
+	pharmacyType: PharmacyType;
+	pharmacyLocation: PharmacyLocation;
+	pharmacyAddress: string;
+	pharmacyName: string;
+	pharmacyDeliveryFee: number;
+	pharmacyLatitude: number;
+	pharmacyLongitude: number;
+	pharmacyImages: string[];
+	pharmacyDesc?: string;
+	acceptsInsurance?: boolean;
+	hasDelivery?: boolean;
 	memberId?: string;
-	constructedAt?: Date;
+	openedAt?: Date;
 }
 
 interface PISearch {
 	memberId?: string;
-	locationList?: PropertyLocation[];
-	typeList?: PropertyType[];
-	roomsList?: Number[];
-	options?: string[];
-	bedsList?: Number[];
-	pricesRange?: Range;
+	locationList?: PharmacyLocation[];
+	typeList?: PharmacyType[];
+	acceptsInsurance?: boolean;
+	hasDelivery?: boolean;
+	deliveryFeeRange?: Range;
 	periodsRange?: PeriodsRange;
-	squaresRange?: Range;
 	text?: string;
 }
 
-export interface PropertiesInquiry {
+export interface PharmaciesInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
@@ -40,10 +37,10 @@ export interface PropertiesInquiry {
 }
 
 interface APISearch {
-	propertyStatus?: PropertyStatus;
+	pharmacyStatus?: PharmacyStatus;
 }
 
-export interface AgentPropertiesInquiry {
+export interface AgentPharmaciesInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
@@ -52,11 +49,12 @@ export interface AgentPropertiesInquiry {
 }
 
 interface ALPISearch {
-	propertyStatus?: PropertyStatus;
-	propertyLocationList?: PropertyLocation[];
+	pharmacyStatus?: PharmacyStatus;
+	pharmacyLocationList?: PharmacyLocation[];
+	pharmacyTypeList?: PharmacyType[];
 }
 
-export interface AllPropertiesInquiry {
+export interface AllPharmaciesInquiry {
 	page: number;
 	limit: number;
 	sort?: string;

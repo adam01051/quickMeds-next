@@ -6,15 +6,15 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/property/Filter';
 import { useRouter } from 'next/router';
-import { PropertiesInquiry } from '../../libs/types/property/property.input';
+import { PharmaciesInquiry } from '../../libs/types/property/property.input';
 import { Property } from '../../libs/types/property/property';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { GET_PROPERTIES } from '../../apollo/user/query';
+import { GET_PHARMACIES } from '../../apollo/user/query';
 import { useMutation, useQuery } from '@apollo/client';
 import { T } from '../../libs/types/common';
-import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { LIKE_TARGET_PHARMACY } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -26,7 +26,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
+	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 	const [properties, setProperties] = useState<Property[]>([]);
@@ -35,21 +35,21 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
-	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
 
 	/** APOLLO REQUESTS **/
 	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertyError,
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+		loading: getPharmaciesLoading,
+		data: getPharmaciesData,
+		error: getPharmacyError,
+		refetch: getPharmaciesRefetch,
+	} = useQuery(GET_PHARMACIES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setProperties(data?.getProperties?.list);
-			setTotal(data?.getProperties?.metaCounter[0]?.total);
+			setProperties(data?.getPharmacies?.list);
+			setTotal(data?.getPharmacies?.metaCounter[0]?.total);
 		},
 	});
 
@@ -64,7 +64,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	}, [router]);
 
 	useEffect(() => {
-		//getPropertiesRefetch({input:searchFilter})
+		//getPharmaciesRefetch({input:searchFilter})
 	}, [searchFilter]);
 
 	/** HANDLERS **/
@@ -84,10 +84,10 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
-			await likeTargetProperty({
+			await likeTargetPharmacy({
 				variables: { input: id },
 			});
-			await getPropertiesRefetch({ input: initialInput });
+			await getPharmaciesRefetch({ input: initialInput });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (error: any) {
 			console.log('error in likePropertHandler', error.message);
@@ -112,19 +112,19 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.ASC });
-				setFilterSortName('Lowest Price');
+				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.ASC });
+				setFilterSortName('Lowest delivery fee');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.DESC });
-				setFilterSortName('Highest Price');
+				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.DESC });
+				setFilterSortName('Highest delivery fee');
 		}
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
 
 	if (device === 'mobile') {
-		return <h1>PROPERTIES MOBILE</h1>;
+		return <h1>PHARMACIES MOBILE</h1>;
 	} else {
 		return (
 			<div id="property-list-page" style={{ position: 'relative' }}>
@@ -150,7 +150,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									disableRipple
 									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 								>
-									Lowest Price
+									Lowest delivery fee
 								</MenuItem>
 								<MenuItem
 									onClick={sortingHandler}
@@ -158,7 +158,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									disableRipple
 									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
 								>
-									Highest Price
+									Highest delivery fee
 								</MenuItem>
 							</Menu>
 						</div>
@@ -173,7 +173,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 								{properties?.length === 0 ? (
 									<div className={'no-data'}>
 										<img src="/img/icons/icoAlert.svg" alt="" />
-										<p>No Properties found!</p>
+										<p>No pharmacies found!</p>
 									</div>
 								) : (
 									properties.map((property: Property) => {
@@ -197,7 +197,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 								{properties.length !== 0 && (
 									<Stack className="total-result">
 										<Typography>
-											Total {total} propert{total > 1 ? 'ies' : 'y'} available
+											Total {total} pharmacies available
 										</Typography>
 									</Stack>
 								)}
@@ -216,16 +216,7 @@ PropertyList.defaultProps = {
 		limit: 9,
 		sort: 'createdAt',
 		direction: 'DESC',
-		search: {
-			squaresRange: {
-				start: 0,
-				end: 500,
-			},
-			pricesRange: {
-				start: 0,
-				end: 2000000,
-			},
-		},
+		search: {},
 	},
 };
 
