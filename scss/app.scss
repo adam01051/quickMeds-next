@@ -47,6 +47,41 @@ hr {
 	margin: auto;
 }
 
+.brand-logo {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	width: max-content;
+	white-space: nowrap;
+	cursor: pointer;
+
+	.brand-logo__mark {
+		display: block;
+		flex: 0 0 auto;
+		width: 40px;
+		height: 40px;
+	}
+
+	.brand-logo__wordmark {
+		display: inline-flex;
+		align-items: baseline;
+		font-family: $font;
+		font-size: 26px;
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -1.2px;
+	}
+
+	.brand-logo__meds {
+		color: #eb6753;
+	}
+
+	&.brand-logo--icon-only {
+		gap: 0;
+	}
+}
+
 /** VERSION: PC **/
 #pc-wrap {
 	width: 100%;

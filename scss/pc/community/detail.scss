@@ -23,11 +23,9 @@
 						width: 100%;
 						flex-direction: row;
 						gap: 11px;
-						img {
+						.brand-logo__mark {
 							width: 80px;
 							height: 80px;
-							border-radius: 50%;
-							object-fit: cover;
 						}
 						.community-name {
 							.name {

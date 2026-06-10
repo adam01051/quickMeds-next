@@ -65,17 +65,9 @@ body::-webkit-scrollbar {
 					align-items: center;
 					justify-content: space-between;
 					.logo-box {
-						img {
-							width: 150px;
-							cursor: pointer;
-						}
-						.quickmeds-wordmark {
-							color: #fff;
-							font-family: $font;
-							font-size: 28px;
-							font-weight: 700;
-							letter-spacing: -1px;
-							cursor: pointer;
+						a {
+							display: flex;
+							align-items: center;
 						}
 					}
 					.router-box {
@@ -712,16 +704,8 @@ body::-webkit-scrollbar {
 					.footer-box {
 						display: flex;
 						flex-direction: column;
-						.logo {
-							display: inline-block;
-							color: #fff;
-							font-family: $font;
-							font-size: 30px;
-							font-weight: 700;
-							letter-spacing: -1px;
-							width: 128px;
-							height: 52px;
-							cursor: pointer;
+						.brand-logo {
+							margin-bottom: 12px;
 						}
 						span {
 							color: #bebdbd;

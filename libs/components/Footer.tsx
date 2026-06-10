@@ -5,6 +5,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
 import moment from 'moment';
+import BrandLogo from './common/BrandLogo';
 
 const Footer = () => {
 	const device = useDeviceDetect();
@@ -15,7 +16,7 @@ const Footer = () => {
 				<Stack className={'main'}>
 					<Stack className={'left'}>
 						<Box component={'div'} className={'footer-box'}>
-							<strong className={'logo'}>quickMeds</strong>
+							<BrandLogo variant="light" />
 						</Box>
 						<Box component={'div'} className={'footer-box'}>
 							<span>total free customer care</span>
@@ -73,7 +74,7 @@ const Footer = () => {
 				<Stack className={'main'}>
 					<Stack className={'left'}>
 						<Box component={'div'} className={'footer-box'}>
-							<strong className={'logo'}>quickMeds</strong>
+							<BrandLogo variant="light" />
 						</Box>
 						<Box component={'div'} className={'footer-box'}>
 							<span>total free customer care</span>

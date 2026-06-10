@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import BrandLogo from '../../libs/components/common/BrandLogo';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -73,8 +74,7 @@ const Join: NextPage = () => {
 						<Stack className={'left'}>
 							{/* @ts-ignore */}
 							<Box className={'logo'}>
-								<img src="/img/logo/logoText.svg" alt="" />
-								<span>quickMeds</span>
+								<BrandLogo />
 							</Box>
 							<Box className={'info'}>
 								<span>{loginView ? 'login' : 'signup'}</span>

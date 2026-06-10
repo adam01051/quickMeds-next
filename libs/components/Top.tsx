@@ -17,6 +17,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
+import BrandLogo from './common/BrandLogo';
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -166,7 +167,7 @@ const Top = () => {
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
 							<Link href={'/'}>
-								<strong className="quickmeds-wordmark">quickMeds</strong>
+								<BrandLogo variant="light" />
 							</Link>
 						</Box>
 						<Box component={'div'} className={'router-box'}>

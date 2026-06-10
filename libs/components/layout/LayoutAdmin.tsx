@@ -18,6 +18,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { MemberType } from '../../enums/member.enum';
+import BrandLogo from '../common/BrandLogo';
 const drawerWidth = 280;
 
 const withAdminLayout = (Component: ComponentType) => {
@@ -142,7 +143,7 @@ const withAdminLayout = (Component: ComponentType) => {
 					>
 						<Toolbar sx={{ flexDirection: 'column', alignItems: 'flexStart' }}>
 							<Stack className={'logo-box'}>
-								<Typography variant="h5">quickMeds</Typography>
+								<BrandLogo />
 							</Stack>
 
 							<Stack

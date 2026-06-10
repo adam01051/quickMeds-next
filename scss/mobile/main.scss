@@ -769,14 +769,8 @@
           .footer-box {
             display: flex;
             flex-direction: column;
-            .logo {
-              display: inline-block;
-              color: #fff;
-              font-size: 28px;
-              font-weight: 700;
-              width: 128px;
-              height: 52px;
-              cursor: pointer;
+            .brand-logo {
+              margin-bottom: 12px;
             }
             span {
               color: #bebdbd;
