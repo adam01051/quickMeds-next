@@ -9,6 +9,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { topPropertyRank } from '../../config';
 
 interface TopPropertyCardProps {
 	property: Property;
@@ -38,7 +39,13 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property?.pharmacyDeliveryFee}</div>
+					{property?.pharmacyRank >= topPropertyRank && (
+						<div className="status">
+							<img src="/img/icons/electricity.svg" alt="" />
+							<span>top</span>
+						</div>
+					)}
+					<div className="price">${property?.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {
@@ -56,7 +63,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -71,7 +78,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 								<RemoveRedEyeIcon />
 							</IconButton>
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
-							<IconButton color={'default'}  onClick={() => likePropertyHandler(user,property?._id)}>
+							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (
@@ -95,7 +102,13 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property?.pharmacyDeliveryFee}</div>
+					{property?.pharmacyRank >= topPropertyRank && (
+						<div className="status">
+							<img src="/img/icons/electricity.svg" alt="" />
+							<span>top</span>
+						</div>
+					)}
+					<div className="price">${property?.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {
@@ -113,7 +126,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -128,7 +141,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 								<RemoveRedEyeIcon />
 							</IconButton>
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler(user,property?._id)}>
+							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (

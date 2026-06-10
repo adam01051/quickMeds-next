@@ -770,6 +770,10 @@
             display: flex;
             flex-direction: column;
             .logo {
+              display: inline-block;
+              color: #fff;
+              font-size: 28px;
+              font-weight: 700;
               width: 128px;
               height: 52px;
               cursor: pointer;
@@ -852,6 +856,37 @@
           font-weight: 400;
           line-height: normal;
         }
+      }
+    }
+  }
+  .trend-card-box,
+  .top-card-box {
+    .card-img {
+      div.status {
+        position: absolute;
+        padding: 6px 20px;
+        left: 20px;
+        top: 20px;
+        bottom: auto;
+        display: flex;
+        align-items: center;
+        border-radius: 6px;
+        background: #eb6753;
+        img {
+          width: 14px;
+          height: 14px;
+        }
+        span {
+          margin-left: 5px;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+      }
+      div.price {
+        left: 20px;
+        bottom: 20px;
       }
     }
   }

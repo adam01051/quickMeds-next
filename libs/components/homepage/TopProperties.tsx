@@ -97,11 +97,6 @@ const TopProperties = (props: TopPropertiesProps) => {
 							<p>Check out our Top Pharmacies</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
-							<div className={'pagination-box'}>
-								<WestIcon className={'swiper-top-prev'} />
-								<div className={'swiper-top-pagination'}></div>
-								<EastIcon className={'swiper-top-next'} />
-							</div>
 						</Box>
 					</Stack>
 					<Stack className={'card-box'}>
@@ -127,6 +122,13 @@ const TopProperties = (props: TopPropertiesProps) => {
 							})}
 						</Swiper>
 					</Stack>
+					{topProperties.length > 0 && (
+						<Stack className={'pagination-box'}>
+							<WestIcon className={'swiper-top-prev'} />
+							<div className={'swiper-top-pagination'}></div>
+							<EastIcon className={'swiper-top-next'} />
+						</Stack>
+					)}
 				</Stack>
 			</Stack>
 		);

@@ -69,7 +69,7 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -123,7 +123,7 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />

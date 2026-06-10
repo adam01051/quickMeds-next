@@ -52,7 +52,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
 						</div>
 						<div>
 							<img src="/img/icons/securePayment.svg" alt="" />

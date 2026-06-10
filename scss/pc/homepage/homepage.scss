@@ -644,6 +644,93 @@
 				}
 			}
 		}
+		.trend-properties,
+		.top-properties {
+			padding: 132px 0px 94px;
+			height: 816px;
+			background: #f6f6f6;
+			.container {
+				align-items: center;
+				.card-box {
+					margin-top: 34px;
+					width: 100%;
+					height: auto;
+					justify-content: space-between;
+					.trend-property-swiper,
+					.top-property-swiper {
+						height: 425px;
+						.trend-property-slide,
+						.top-property-slide {
+							margin: 10px 0 10px 10px;
+						}
+					}
+					.trend-card-box,
+					.top-card-box {
+						width: 400px;
+						height: 425px;
+						transition: transform 0.3s, opacity 0.3s;
+						.card-img {
+							div.status {
+								position: absolute;
+								padding: 6px 34px;
+								left: 20px;
+								top: 20px;
+								bottom: auto;
+								display: flex;
+								align-items: center;
+								border-radius: 6px;
+								background: #eb6753;
+								img {
+									width: 14px;
+									height: 14px;
+								}
+								span {
+									margin-left: 5px;
+									color: #fff;
+									font-family: $font;
+									font-size: 12px;
+									font-weight: 600;
+									text-transform: uppercase;
+								}
+							}
+							div.price {
+								left: 20px;
+								bottom: 20px;
+							}
+						}
+						.info {
+							.bott {
+								p {
+									font-weight: 500;
+								}
+								.view-like-box {
+									gap: 5px;
+								}
+							}
+						}
+					}
+				}
+				.pagination-box {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+					.swiper-pagination-bullet.swiper-pagination-bullet-active {
+						background: #000000;
+					}
+					.swiper-trend-next,
+					.swiper-top-next {
+						margin-left: 20px;
+						cursor: pointer;
+					}
+					.swiper-trend-prev,
+					.swiper-top-prev {
+						margin-right: 20px;
+						cursor: pointer;
+					}
+				}
+			}
+		}
 		.top-agents {
 			position: relative;
 			padding: 153px 0px 135px;

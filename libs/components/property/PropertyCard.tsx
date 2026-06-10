@@ -81,7 +81,7 @@ const PropertyCard = (props: PropertyCardType) => {
 							<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{property.pharmacyType} type</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/home.svg" alt="" /> <Typography>{property.pharmacyMedicationCount} medications</Typography>
+							<img src="/img/icons/home.svg" alt="" /> <Typography>{property.pharmacyLocation.replaceAll('_', ' ')}</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="divider"></Stack>

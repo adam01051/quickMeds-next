@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, FormControlLabel, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import { getJwtToken } from '../../auth';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmacyInput } from '../../types/property/property.input';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
+import { REACT_APP_API_URL } from '../../config';
 
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
@@ -79,6 +80,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 		}
 	};
 
+	const removeImage = (image: string) => update({ pharmacyImages: form.pharmacyImages.filter((item) => item !== image) });
+
 	if (user.memberType !== 'AGENT') return null;
 
 	return (
@@ -87,24 +90,100 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				<Typography className="main-title">Add or edit pharmacy</Typography>
 				<Typography className="sub-title">Keep your pharmacy information accurate and useful.</Typography>
 			</Stack>
-			<Stack className="config" spacing={2}>
-				<TextField label="Pharmacy name" value={form.pharmacyName} onChange={(e) => update({ pharmacyName: e.target.value })} />
-				<TextField select label="Type" value={form.pharmacyType} onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}>
-					{Object.values(PharmacyType).map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>)}
-				</TextField>
-				<TextField select label="Location" value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
-					{Object.values(PharmacyLocation).map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>)}
-				</TextField>
-				<TextField label="Address" value={form.pharmacyAddress} onChange={(e) => update({ pharmacyAddress: e.target.value })} />
-				<TextField label="Delivery fee" type="number" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
-				<TextField label="Latitude" type="number" value={form.pharmacyLatitude} onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })} />
-				<TextField label="Longitude" type="number" value={form.pharmacyLongitude} onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })} />
-				<TextField label="Description" multiline minRows={4} value={form.pharmacyDesc ?? ''} onChange={(e) => update({ pharmacyDesc: e.target.value })} />
-				<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
-				<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked })} />} label="Offers delivery" />
-				<input ref={inputRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadImages} />
-				<Typography>{form.pharmacyImages.length} image(s) uploaded</Typography>
-				<Button variant="contained" disabled={!form.pharmacyName || !form.pharmacyAddress || !form.pharmacyImages.length} onClick={submit}>Save pharmacy</Button>
+			<Stack className="config">
+				<Stack className="description-box">
+					<Stack className="config-column">
+						<Typography className="title">Pharmacy name</Typography>
+						<input className="description-input" placeholder="Pharmacy name" value={form.pharmacyName} onChange={(e) => update({ pharmacyName: e.target.value })} />
+					</Stack>
+
+					<Stack className="config-row">
+						<Stack className="price-year-after-price">
+							<Typography className="title">Pharmacy type</Typography>
+							<select className="select-description" value={form.pharmacyType} onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}>
+								{Object.values(PharmacyType).map((value) => <option key={value} value={value}>{value}</option>)}
+							</select>
+							<div className="divider" />
+							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
+						</Stack>
+						<Stack className="price-year-after-price">
+							<Typography className="title">Location</Typography>
+							<select className="select-description" value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
+								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{value.replaceAll('_', ' ')}</option>)}
+							</select>
+							<div className="divider" />
+							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
+						</Stack>
+					</Stack>
+
+					<Stack className="config-column">
+						<Typography className="title">Address</Typography>
+						<input className="description-input" placeholder="Full pharmacy address" value={form.pharmacyAddress} onChange={(e) => update({ pharmacyAddress: e.target.value })} />
+					</Stack>
+
+					<Stack className="config-row">
+						<Stack className="price-year-after-price">
+							<Typography className="title">Delivery fee</Typography>
+							<input className="description-input" type="number" min="0" placeholder="Delivery fee" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
+						</Stack>
+						<Stack className="price-year-after-price">
+							<Typography className="title">Opened date</Typography>
+							<input className="description-input" type="date" value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''} onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })} />
+						</Stack>
+					</Stack>
+
+					<Stack className="config-row">
+						<Stack className="price-year-after-price">
+							<Typography className="title">Latitude</Typography>
+							<input className="description-input" type="number" step="any" value={form.pharmacyLatitude} onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })} />
+						</Stack>
+						<Stack className="price-year-after-price">
+							<Typography className="title">Longitude</Typography>
+							<input className="description-input" type="number" step="any" value={form.pharmacyLongitude} onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })} />
+						</Stack>
+					</Stack>
+
+					<Typography className="property-title">Pharmacy services</Typography>
+					<Stack className="pharmacy-service-row">
+						<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
+						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked })} />} label="Offers delivery" />
+					</Stack>
+
+					<Typography className="property-title">Pharmacy description</Typography>
+					<Stack className="config-column">
+						<Typography className="title">Description</Typography>
+						<textarea className="description-text" value={form.pharmacyDesc ?? ''} onChange={(e) => update({ pharmacyDesc: e.target.value })} />
+					</Stack>
+				</Stack>
+
+				<Typography className="upload-title">Upload photos of your pharmacy</Typography>
+				<Stack className="images-box">
+					<Stack className="upload-box">
+						<img className="pharmacy-upload-icon" src="/img/icons/discovery.svg" alt="" />
+						<Stack className="text-box">
+							<Typography className="drag-title">Add clear pharmacy photos</Typography>
+							<Typography className="format-title">JPEG or PNG format, up to five images</Typography>
+						</Stack>
+						<Button className="browse-button" onClick={() => inputRef.current?.click()}>
+							<Typography className="browse-button-text">Browse Files</Typography>
+							<input ref={inputRef} type="file" hidden accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadImages} />
+						</Button>
+					</Stack>
+					<Stack className="gallery-box">
+						{form.pharmacyImages.map((image) => (
+							<Stack className="image-box" key={image}>
+								<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
+								<Button className="absolute-box" onClick={() => removeImage(image)}>×</Button>
+							</Stack>
+						))}
+					</Stack>
+				</Stack>
+
+				<Stack className="buttons-row">
+					<Button className="next-button" disabled={!form.pharmacyName || !form.pharmacyAddress || !form.pharmacyImages.length} onClick={submit}>
+						<Typography className="next-button-text">Save pharmacy</Typography>
+					</Button>
+				</Stack>
 			</Stack>
 		</div>
 	);

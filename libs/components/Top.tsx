@@ -166,7 +166,7 @@ const Top = () => {
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
 							<Link href={'/'}>
-								<strong style={{ color: '#fff', fontSize: '24px' }}>quickMeds</strong>
+								<strong className="quickmeds-wordmark">quickMeds</strong>
 							</Link>
 						</Box>
 						<Box component={'div'} className={'router-box'}>

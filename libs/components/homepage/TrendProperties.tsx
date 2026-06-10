@@ -109,11 +109,6 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 							<p>Trend is based on likes</p>
 						</Box>
 						<Box component={'div'} className={'right'}>
-							<div className={'pagination-box'}>
-								<WestIcon className={'swiper-trend-prev'} />
-								<div className={'swiper-trend-pagination'}></div>
-								<EastIcon className={'swiper-trend-next'} />
-							</div>
 						</Box>
 					</Stack>
 					<Stack className={'card-box'}>
@@ -145,6 +140,13 @@ const TrendProperties = (props: TrendPropertiesProps) => {
 							</Swiper>
 						)}
 					</Stack>
+					{trendProperties.length > 0 && (
+						<Stack className={'pagination-box'}>
+							<WestIcon className={'swiper-trend-prev'} />
+							<div className={'swiper-trend-pagination'}></div>
+							<EastIcon className={'swiper-trend-next'} />
+						</Stack>
+					)}
 				</Stack>
 			</Stack>
 		);

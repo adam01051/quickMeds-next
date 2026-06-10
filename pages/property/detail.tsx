@@ -263,7 +263,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{property?.pharmacyType} type</Typography>
 										</Stack>
 										<Stack className="option">
-											<img src="/img/icons/home.svg" alt="" /> <Typography>{property?.pharmacyMedicationCount} medications</Typography>
+											<img src="/img/icons/home.svg" alt="" /> <Typography>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
 										</Stack>
 									</Stack>
 								</Stack>
@@ -376,8 +376,8 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											</svg>
 										</Stack>
 										<Stack className={'option-includes'}>
-											<Typography className={'title'}>Size</Typography>
-											<Typography className={'option-data'}>{property?.pharmacyMedicationCount} medications</Typography>
+											<Typography className={'title'}>Location</Typography>
+											<Typography className={'option-data'}>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -418,8 +418,8 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 													<Typography className={'data'}>{property?.pharmacyType}</Typography>
 												</Box>
 												<Box component={'div'} className={'info'}>
-													<Typography className={'title'}>Medication count</Typography>
-													<Typography className={'data'}>{property?.pharmacyMedicationCount}</Typography>
+													<Typography className={'title'}>Location</Typography>
+													<Typography className={'data'}>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
 												</Box>
 											</Stack>
 											<Stack className={'right'}>

@@ -9,6 +9,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { topPropertyRank } from '../../config';
 
 interface TrendPropertyCardProps {
 	property: Property;
@@ -38,7 +39,13 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property.pharmacyDeliveryFee}</div>
+					{property?.pharmacyRank >= topPropertyRank && (
+						<div className="status">
+							<img src="/img/icons/electricity.svg" alt="" />
+							<span>top</span>
+						</div>
+					)}
+					<div className="price">${property.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
@@ -49,7 +56,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 					>
 						{property.pharmacyName}{' '}
 					</strong>
-					<p className={'desc'}>{property.pharmacyDesc ?? 'no description'}</p>
+					<p className={'desc'}>{property.pharmacyAddress}</p>
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
@@ -61,7 +68,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property.pharmacyMedicationCount} medications</span>
+							<span>{property.pharmacyLocation.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -75,7 +82,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 								<RemoveRedEyeIcon />
 							</IconButton>
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler(user, property?._id)}>
+							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (
@@ -99,7 +106,13 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						pushDetailhandler(property._id);
 					}}
 				>
-					<div>${property.pharmacyDeliveryFee}</div>
+					{property?.pharmacyRank >= topPropertyRank && (
+						<div className="status">
+							<img src="/img/icons/electricity.svg" alt="" />
+							<span>top</span>
+						</div>
+					)}
+					<div className="price">${property.pharmacyDeliveryFee}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
@@ -110,7 +123,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 					>
 						{property.pharmacyName}
 					</strong>
-					<p className={'desc'}>{property.pharmacyDesc ?? 'no description'}</p>
+					<p className={'desc'}>{property.pharmacyAddress}</p>
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
@@ -122,7 +135,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property.pharmacyMedicationCount} medications</span>
+							<span>{property.pharmacyLocation.replaceAll('_', ' ')}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -136,7 +149,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 								<RemoveRedEyeIcon />
 							</IconButton>
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
-							<IconButton color={'default'} onClick={() => likePropertyHandler(user, property?._id)}>
+							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
 									<FavoriteIcon style={{ color: 'red' }} />
 								) : (
