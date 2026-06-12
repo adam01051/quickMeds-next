@@ -18,6 +18,7 @@ import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 import BrandLogo from './common/BrandLogo';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -33,6 +34,8 @@ const Top = () => {
 	const [bgColor, setBgColor] = useState<boolean>(false);
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
+	const isHome = router.pathname === '/';
+	const shouldReduceMotion = useReducedMotion();
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -59,6 +62,14 @@ const Top = () => {
 		if (jwt) updateUserInfo(jwt);
 	}, []);
 
+	useEffect(() => {
+		const changeNavbarColor = () => setColorChange(window.scrollY >= 40);
+
+		changeNavbarColor();
+		window.addEventListener('scroll', changeNavbarColor, { passive: true });
+		return () => window.removeEventListener('scroll', changeNavbarColor);
+	}, []);
+
 	/** HANDLERS **/
 	const langClick = (e: any) => {
 		setAnchorEl2(e.currentTarget);
@@ -77,14 +88,6 @@ const Top = () => {
 		},
 		[router],
 	);
-
-	const changeNavbarColor = () => {
-		if (window.scrollY >= 50) {
-			setColorChange(true);
-		} else {
-			setColorChange(false);
-		}
-	};
 
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -136,10 +139,6 @@ const Top = () => {
 		},
 	}));
 
-	if (typeof window !== 'undefined') {
-		window.addEventListener('scroll', changeNavbarColor);
-	}
-
 	if (device == 'mobile') {
 		return (
 			<Stack className={'top'}>
@@ -163,11 +162,18 @@ const Top = () => {
 	} else {
 		return (
 			<Stack className={'navbar'}>
-				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
+				<motion.div
+					className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''} ${
+						isHome ? 'home-clinical-navbar' : ''
+					}`}
+					initial={isHome && !shouldReduceMotion ? { opacity: 0, y: -10 } : false}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.35, ease: 'easeOut' }}
+				>
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
 							<Link href={'/'}>
-								<BrandLogo variant="light" />
+								<BrandLogo variant={isHome ? 'dark' : 'light'} />
 							</Link>
 						</Box>
 						<Box component={'div'} className={'router-box'}>
@@ -282,7 +288,7 @@ const Top = () => {
 							</div>
 						</Box>
 					</Stack>
-				</Stack>
+				</motion.div>
 			</Stack>
 		);
 	}

@@ -10,6 +10,10 @@ import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
+import { motion, useReducedMotion } from 'framer-motion';
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 //@ts-ignore
 import 'swiper/css';
 //@ts-ignore
@@ -21,6 +25,7 @@ const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
+		const shouldReduceMotion = useReducedMotion();
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -67,6 +72,21 @@ const withLayoutMain = (Component: any) => {
 						<Stack className={'header-main'}>
 							<FiberContainer />
 							<Stack className={'container'}>
+								<motion.div
+									className="home-healthcare-hero"
+									initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.45, ease: 'easeOut' }}
+								>
+									<span className="hero-kicker">Trusted local pharmacy care</span>
+									<h1>Find trusted pharmacies and essential care near you.</h1>
+									<p>Search verified pharmacies, compare delivery and insurance support, and get help when you need it.</p>
+									<div className="hero-trust-row">
+										<span><VerifiedUserOutlinedIcon /> Licensed pharmacies</span>
+										<span><LocalShippingOutlinedIcon /> Delivery options</span>
+										<span><SupportAgentOutlinedIcon /> Pharmacist support</span>
+									</div>
+								</motion.div>
 								<HeaderFilter />
 							</Stack>
 						</Stack>

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, Divider, FormControlLabel, Modal, Stack } from '@mui/material';
+import { Button, Checkbox, Divider, FormControlLabel, Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 interface HeaderFilterProps {
 	initialInput: PharmaciesInquiry;
@@ -20,6 +21,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 	const [openLocation, setOpenLocation] = useState(false);
 	const [openType, setOpenType] = useState(false);
 	const [openAdvancedFilter, setOpenAdvancedFilter] = useState(false);
+	const shouldReduceMotion = useReducedMotion();
 
 	const updateSearch = (value: Partial<PharmaciesInquiry['search']>) =>
 		setSearchFilter({ ...searchFilter, search: { ...searchFilter.search, ...value } });
@@ -43,146 +45,219 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 
 	return (
 		<>
-			<Stack className="search-box">
-				<Stack className="select-box">
-					<div className="box on">
+			<motion.div
+				className="search-box clinical-search-box"
+				initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.4, delay: 0.12, ease: 'easeOut' }}
+			>
+				<div className="select-box">
+					<div className="box search-field on">
+						<span className="field-label">Pharmacy</span>
 						<input
 							className="header-search-input"
-							placeholder="Search pharmacies"
+							placeholder="Search pharmacy name or address"
+							aria-label="Search pharmacy name or address"
 							value={searchFilter.search.text ?? ''}
 							onChange={(event) => updateSearch({ text: event.target.value || undefined })}
 							onKeyDown={(event) => event.key === 'Enter' && pushSearchHandler()}
 						/>
 					</div>
-					<div
+					<motion.button
+						type="button"
 						className={`box ${openLocation ? 'on' : ''}`}
+						aria-expanded={openLocation}
+						aria-label="Choose pharmacy location"
+						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+						whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
 						onClick={() => {
 							setOpenLocation(!openLocation);
 							setOpenType(false);
 						}}
 					>
-						<span>{searchFilter.search.locationList?.[0] ?? 'Location'}</span>
+						<span className="field-copy">
+							<small>Location</small>
+							<strong>{searchFilter.search.locationList?.[0]?.replaceAll('_', ' ') ?? 'Choose area'}</strong>
+						</span>
 						<ExpandMoreIcon />
-					</div>
-					<div
+					</motion.button>
+					<motion.button
+						type="button"
 						className={`box ${openType ? 'on' : ''}`}
+						aria-expanded={openType}
+						aria-label="Choose pharmacy type"
+						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+						whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
 						onClick={() => {
 							setOpenType(!openType);
 							setOpenLocation(false);
 						}}
 					>
-						<span>{searchFilter.search.typeList?.[0] ?? 'Pharmacy type'}</span>
+						<span className="field-copy">
+							<small>Pharmacy type</small>
+							<strong>{searchFilter.search.typeList?.[0] ?? 'All pharmacy types'}</strong>
+						</span>
 						<ExpandMoreIcon />
-					</div>
-				</Stack>
-				<Stack className="search-box-other">
-					<div className="advanced-filter" onClick={() => setOpenAdvancedFilter(true)}>
+					</motion.button>
+				</div>
+
+				<div className="search-box-other">
+					<motion.button
+						type="button"
+						className="advanced-filter"
+						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+						whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+						onClick={() => setOpenAdvancedFilter(true)}
+					>
 						<img src="/img/icons/tune.svg" alt="" />
 						<span>Advanced</span>
-					</div>
-					<div className="search-btn" onClick={pushSearchHandler}>
-						<img src="/img/icons/search_white.svg" alt="Search" />
-					</div>
-				</Stack>
-
-				<div className={`filter-location ${openLocation ? 'on' : ''}`} ref={locationRef}>
-					{Object.values(PharmacyLocation).map((location) => (
-						<div
-							key={location}
-							onClick={() => {
-								updateSearch({ locationList: [location] });
-								setOpenLocation(false);
-							}}
-						>
-							<img src="/img/banner/header1.svg" alt="" />
-							<span>{location.replaceAll('_', ' ')}</span>
-						</div>
-					))}
+					</motion.button>
+					<motion.button
+						type="button"
+						className="search-btn"
+						aria-label="Search pharmacies"
+						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
+						whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+						onClick={pushSearchHandler}
+					>
+						<img src="/img/icons/search_white.svg" alt="" />
+						<span>Search</span>
+					</motion.button>
 				</div>
 
-				<div className={`filter-type ${openType ? 'on' : ''}`} ref={typeRef}>
-					{Object.values(PharmacyType).map((type) => (
-						<div
-							className="pharmacy-type-option"
-							key={type}
-							onClick={() => {
-								updateSearch({ typeList: [type] });
-								setOpenType(false);
-							}}
+				<AnimatePresence>
+					{openLocation && (
+						<motion.div
+							className="filter-location on clinical-filter-panel"
+							ref={locationRef}
+							initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -4 }}
+							transition={{ duration: 0.18 }}
 						>
-							<img src="/img/icons/securePayment.svg" alt="" />
-							<span>{type}</span>
-						</div>
-					))}
-				</div>
-			</Stack>
+							{Object.values(PharmacyLocation).map((location) => (
+								<button
+									type="button"
+									key={location}
+									onClick={() => {
+										updateSearch({ locationList: [location] });
+										setOpenLocation(false);
+									}}
+								>
+									<img src="/img/banner/header1.svg" alt="" />
+									<span>{location.replaceAll('_', ' ')}</span>
+								</button>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
 
-			<Modal open={openAdvancedFilter} onClose={() => setOpenAdvancedFilter(false)}>
-				<div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: '#fff', borderRadius: '12px', outline: 'none' }}>
-					<div className="advanced-filter-modal">
-						<div className="close" onClick={() => setOpenAdvancedFilter(false)}>
-							<CloseIcon />
-						</div>
-						<div className="top">
-							<span>Find a pharmacy</span>
-							<div className="search-input-box">
-								<img src="/img/icons/search.svg" alt="" />
-								<input
-									value={searchFilter.search.text ?? ''}
-									placeholder="Pharmacy name or address"
-									onChange={(event) => updateSearch({ text: event.target.value || undefined })}
-								/>
-							</div>
-						</div>
-						<Divider sx={{ mt: '30px', mb: '35px' }} />
-						<div className="middle pharmacy-advanced-middle">
-							<div className="row-box">
-								<div className="box">
-									<span>services</span>
-									<div className="inside pharmacy-service-options">
-										<FormControlLabel
-											control={<Checkbox checked={searchFilter.search.hasDelivery === true} onChange={(e) => updateSearch({ hasDelivery: e.target.checked || undefined })} />}
-											label="Delivery"
-										/>
-										<FormControlLabel
-											control={<Checkbox checked={searchFilter.search.acceptsInsurance === true} onChange={(e) => updateSearch({ acceptsInsurance: e.target.checked || undefined })} />}
-											label="Insurance"
+				<AnimatePresence>
+					{openType && (
+						<motion.div
+							className="filter-type on clinical-filter-panel"
+							ref={typeRef}
+							initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -4 }}
+							transition={{ duration: 0.18 }}
+						>
+							{Object.values(PharmacyType).map((type) => (
+								<button
+									type="button"
+									className="pharmacy-type-option"
+									key={type}
+									onClick={() => {
+										updateSearch({ typeList: [type] });
+										setOpenType(false);
+									}}
+								>
+									<img src="/img/icons/securePayment.svg" alt="" />
+									<span>{type}</span>
+								</button>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</motion.div>
+
+			<AnimatePresence>
+				{openAdvancedFilter && (
+					<Modal open onClose={() => setOpenAdvancedFilter(false)} className="clinical-advanced-modal">
+						<motion.div
+							className="advanced-filter-modal-shell"
+							initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.985 }}
+							animate={{ opacity: 1, y: 0, scale: 1 }}
+							exit={{ opacity: 0, y: shouldReduceMotion ? 0 : 8, scale: 0.99 }}
+							transition={{ duration: 0.2, ease: 'easeOut' }}
+						>
+							<div className="advanced-filter-modal">
+								<button type="button" aria-label="Close advanced filters" className="close" onClick={() => setOpenAdvancedFilter(false)}>
+									<CloseIcon />
+								</button>
+								<div className="top">
+									<span>Find a pharmacy</span>
+									<div className="search-input-box">
+										<img src="/img/icons/search.svg" alt="" />
+										<input
+											value={searchFilter.search.text ?? ''}
+											placeholder="Pharmacy name or address"
+											aria-label="Pharmacy name or address"
+											onChange={(event) => updateSearch({ text: event.target.value || undefined })}
 										/>
 									</div>
 								</div>
-								<div className="box">
-									<span>delivery fee</span>
-									<div className="inside pharmacy-range">
-										<input
-											type="number"
-											placeholder="Minimum"
-											value={searchFilter.search.deliveryFeeRange?.start ?? ''}
-											onChange={(e) => updateSearch({ deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 1000 } })}
-										/>
-										<div className="minus-line" />
-										<input
-											type="number"
-											placeholder="Maximum"
-											value={searchFilter.search.deliveryFeeRange?.end ?? ''}
-											onChange={(e) => updateSearch({ deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 1000 } })}
-										/>
+								<Divider sx={{ mt: '30px', mb: '35px' }} />
+								<div className="middle pharmacy-advanced-middle">
+									<div className="row-box">
+										<div className="box">
+											<span>services</span>
+											<div className="inside pharmacy-service-options">
+												<FormControlLabel
+													control={<Checkbox checked={searchFilter.search.hasDelivery === true} onChange={(e) => updateSearch({ hasDelivery: e.target.checked || undefined })} />}
+													label="Delivery"
+												/>
+												<FormControlLabel
+													control={<Checkbox checked={searchFilter.search.acceptsInsurance === true} onChange={(e) => updateSearch({ acceptsInsurance: e.target.checked || undefined })} />}
+													label="Insurance"
+												/>
+											</div>
+										</div>
+										<div className="box">
+											<span>delivery fee</span>
+											<div className="inside pharmacy-range">
+												<input
+													type="number"
+													placeholder="Minimum"
+													value={searchFilter.search.deliveryFeeRange?.start ?? ''}
+													onChange={(e) => updateSearch({ deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 1000 } })}
+												/>
+												<div className="minus-line" />
+												<input
+													type="number"
+													placeholder="Maximum"
+													value={searchFilter.search.deliveryFeeRange?.end ?? ''}
+													onChange={(e) => updateSearch({ deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 1000 } })}
+												/>
+											</div>
+										</div>
 									</div>
 								</div>
+								<Divider sx={{ mt: '60px', mb: '18px' }} />
+								<div className="bottom">
+									<button type="button" className="reset-filter" onClick={resetFilterHandler}>
+										<img src="/img/icons/reset.svg" alt="" />
+										<span>Reset all filters</span>
+									</button>
+									<Button startIcon={<img src="/img/icons/search.svg" alt="" />} className="search-btn" onClick={pushSearchHandler}>
+										Search
+									</Button>
+								</div>
 							</div>
-						</div>
-						<Divider sx={{ mt: '60px', mb: '18px' }} />
-						<div className="bottom">
-							<div onClick={resetFilterHandler}>
-								<img src="/img/icons/reset.svg" alt="" />
-								<span>Reset all filters</span>
-							</div>
-							<Button startIcon={<img src="/img/icons/search.svg" alt="" />} className="search-btn" onClick={pushSearchHandler}>
-								Search
-							</Button>
-						</div>
-					</div>
-				</div>
-			</Modal>
+						</motion.div>
+					</Modal>
+				)}
+			</AnimatePresence>
 		</>
 	);
 };
