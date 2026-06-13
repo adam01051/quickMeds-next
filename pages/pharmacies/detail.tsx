@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
 import moment from 'moment';
 import { formatterStr } from '../../libs/utils';
+import { getPharmacyLocationLabel } from '../../libs/utils/pharmacy-location';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
@@ -43,7 +44,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
+const PharmacyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -210,7 +211,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 								<Stack className={'left-box'}>
 									<Typography className={'title-main'}>{property?.pharmacyName}</Typography>
 									<Stack className={'top-box'}>
-										<Typography className={'city'}>{property?.pharmacyLocation}</Typography>
+										<Typography className={'city'}>{getPharmacyLocationLabel(property?.pharmacyLocation)}</Typography>
 										<Stack className={'divider'}></Stack>
 										<Stack className={'buy-rent-box'}>
 											{property?.acceptsInsurance && (
@@ -263,7 +264,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 											<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{property?.pharmacyType} type</Typography>
 										</Stack>
 										<Stack className="option">
-											<img src="/img/icons/home.svg" alt="" /> <Typography>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
+											<img src="/img/icons/home.svg" alt="" /> <Typography>{getPharmacyLocationLabel(property?.pharmacyLocation)}</Typography>
 										</Stack>
 									</Stack>
 								</Stack>
@@ -377,7 +378,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 										</Stack>
 										<Stack className={'option-includes'}>
 											<Typography className={'title'}>Location</Typography>
-											<Typography className={'option-data'}>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
+											<Typography className={'option-data'}>{getPharmacyLocationLabel(property?.pharmacyLocation)}</Typography>
 										</Stack>
 									</Stack>
 									<Stack className={'option'}>
@@ -419,7 +420,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 												</Box>
 												<Box component={'div'} className={'info'}>
 													<Typography className={'title'}>Location</Typography>
-													<Typography className={'data'}>{property?.pharmacyLocation?.replaceAll('_', ' ')}</Typography>
+													<Typography className={'data'}>{getPharmacyLocationLabel(property?.pharmacyLocation)}</Typography>
 												</Box>
 											</Stack>
 											<Stack className={'right'}>
@@ -645,7 +646,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 	}
 };
 
-PropertyDetail.defaultProps = {
+PharmacyDetail.defaultProps = {
 	initialComment: {
 		page: 1,
 		limit: 5,
@@ -657,4 +658,4 @@ PropertyDetail.defaultProps = {
 	},
 };
 
-export default withLayoutFull(PropertyDetail);
+export default withLayoutFull(PharmacyDetail);

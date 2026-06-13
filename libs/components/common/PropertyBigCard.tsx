@@ -1,4 +1,5 @@
 import React from 'react';
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import { Stack, Box, Divider, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -24,7 +25,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 
 	/** HANDLERS **/
 	const goPropertyDetatilPage = (pharmacyId: string) => {
-		router.push(`/property/detail?id=${pharmacyId}`);
+		router.push(`/pharmacies/detail?id=${pharmacyId}`);
 	};
 
 	if (device === 'mobile') {
@@ -52,7 +53,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
-							<span>{property?.pharmacyLocation?.replaceAll('_', ' ')}</span>
+							<span>{getPharmacyLocationLabel(property?.pharmacyLocation)}</span>
 						</div>
 						<div>
 							<img src="/img/icons/securePayment.svg" alt="" />

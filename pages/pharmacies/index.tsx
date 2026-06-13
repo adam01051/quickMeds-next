@@ -23,7 +23,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
+const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>(
@@ -71,8 +71,8 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
 		await router.push(
-			`/property?input=${JSON.stringify(searchFilter)}`,
-			`/property?input=${JSON.stringify(searchFilter)}`,
+			`/pharmacies?input=${JSON.stringify(searchFilter)}`,
+			`/pharmacies?input=${JSON.stringify(searchFilter)}`,
 			{
 				scroll: false,
 			},
@@ -210,7 +210,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	}
 };
 
-PropertyList.defaultProps = {
+PharmacyList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 9,
@@ -220,4 +220,4 @@ PropertyList.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(PropertyList);
+export default withLayoutBasic(PharmacyList);

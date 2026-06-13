@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { topPropertyRank } from '../../config';
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 interface TrendPropertyCardProps {
 	property: Property;
@@ -25,7 +26,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 	/** HANDLERS **/
 	const pushDetailhandler = async (propertyID: string) => {
 		console.log('ID', propertyID);
-		await router.push({pathname:'/property/detail',query:{id:propertyID}})
+		await router.push({pathname:'/pharmacies/detail',query:{id:propertyID}})
 	};
 
 	if (device === 'mobile') {
@@ -68,7 +69,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property.pharmacyLocation.replaceAll('_', ' ')}</span>
+							<span>{getPharmacyLocationLabel(property.pharmacyLocation)}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
@@ -135,7 +136,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{property.pharmacyLocation.replaceAll('_', ' ')}</span>
+							<span>{getPharmacyLocationLabel(property.pharmacyLocation)}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />

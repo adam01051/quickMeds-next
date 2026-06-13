@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Divider, FormControlLabel, Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import NightlightOutlinedIcon from '@mui/icons-material/NightlightOutlined';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import LocalPharmacyOutlinedIcon from '@mui/icons-material/LocalPharmacyOutlined';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 interface HeaderFilterProps {
 	initialInput: PharmaciesInquiry;
@@ -36,27 +43,26 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 	}, []);
 
 	const pushSearchHandler = async () => {
-		await router.push(`/property?input=${JSON.stringify(searchFilter)}`);
+		await router.push(`/pharmacies?input=${JSON.stringify(searchFilter)}`);
 	};
 
 	const resetFilterHandler = () => setSearchFilter(initialInput);
 
-	if (device === 'mobile') return <div>HEADER FILTER MOBILE</div>;
-
 	return (
-		<>
+		<div className="home-search-area">
 			<motion.div
 				className="search-box clinical-search-box"
-				initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+				initial={false}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.4, delay: 0.12, ease: 'easeOut' }}
 			>
 				<div className="select-box">
 					<div className="box search-field on">
+						{device !== 'mobile' && <SearchRoundedIcon className="field-icon" />}
 						<span className="field-label">Pharmacy</span>
 						<input
 							className="header-search-input"
-							placeholder="Search pharmacy name or address"
+							placeholder={device === 'mobile' ? 'Search pharmacy name or address' : 'Pharmacy or address'}
 							aria-label="Search pharmacy name or address"
 							value={searchFilter.search.text ?? ''}
 							onChange={(event) => updateSearch({ text: event.target.value || undefined })}
@@ -65,9 +71,9 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					</div>
 					<motion.button
 						type="button"
-						className={`box ${openLocation ? 'on' : ''}`}
+						className={`box location-field ${openLocation ? 'on' : ''}`}
 						aria-expanded={openLocation}
-						aria-label="Choose pharmacy location"
+						aria-label="Choose pharmacy region"
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
 						onClick={() => {
@@ -75,15 +81,16 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 							setOpenType(false);
 						}}
 					>
+						{device !== 'mobile' && <LocationOnOutlinedIcon className="field-icon" />}
 						<span className="field-copy">
-							<small>Location</small>
-							<strong>{searchFilter.search.locationList?.[0]?.replaceAll('_', ' ') ?? 'Choose area'}</strong>
+							<small>Region</small>
+							<strong>{getPharmacyLocationLabel(searchFilter.search.locationList?.[0])}</strong>
 						</span>
 						<ExpandMoreIcon />
 					</motion.button>
 					<motion.button
 						type="button"
-						className={`box ${openType ? 'on' : ''}`}
+						className={`box type-field ${openType ? 'on' : ''}`}
 						aria-expanded={openType}
 						aria-label="Choose pharmacy type"
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
@@ -93,9 +100,10 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 							setOpenLocation(false);
 						}}
 					>
+						{device !== 'mobile' && <LocalPharmacyOutlinedIcon className="field-icon" />}
 						<span className="field-copy">
 							<small>Pharmacy type</small>
-							<strong>{searchFilter.search.typeList?.[0] ?? 'All pharmacy types'}</strong>
+							<strong>{searchFilter.search.typeList?.[0] ?? (device === 'mobile' ? 'All pharmacy types' : 'Pharmacy type')}</strong>
 						</span>
 						<ExpandMoreIcon />
 					</motion.button>
@@ -120,8 +128,9 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						onClick={pushSearchHandler}
 					>
-						<img src="/img/icons/search_white.svg" alt="" />
+						{device === 'mobile' && <img src="/img/icons/search_white.svg" alt="" />}
 						<span>Search</span>
+						{device !== 'mobile' && <ArrowForwardRoundedIcon />}
 					</motion.button>
 				</div>
 
@@ -135,6 +144,15 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 							exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -4 }}
 							transition={{ duration: 0.18 }}
 						>
+							<button
+								type="button"
+								onClick={() => {
+									updateSearch({ locationList: undefined });
+									setOpenLocation(false);
+								}}
+							>
+								<span>All regions</span>
+							</button>
 							{Object.values(PharmacyLocation).map((location) => (
 								<button
 									type="button"
@@ -144,8 +162,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 										setOpenLocation(false);
 									}}
 								>
-									<img src="/img/banner/header1.svg" alt="" />
-									<span>{location.replaceAll('_', ' ')}</span>
+									<span>{getPharmacyLocationLabel(location)}</span>
 								</button>
 							))}
 						</motion.div>
@@ -180,6 +197,21 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					)}
 				</AnimatePresence>
 			</motion.div>
+			<div className="home-search-future" aria-label="Future pharmacy discovery options">
+				<button type="button" disabled>
+					<AccessTimeRoundedIcon />
+					<span><strong>Open now</strong><small className="future-item-label">Coming soon</small></span>
+				</button>
+				<button type="button" disabled>
+					<NightlightOutlinedIcon />
+					<span><strong>24/7 pharmacies</strong><small className="future-item-label">Coming soon</small></span>
+				</button>
+				<button type="button" disabled>
+					<LocationOnOutlinedIcon />
+					<span><strong>Use current location</strong><small className="future-item-label">Coming soon</small></span>
+				</button>
+				{device !== 'mobile' && <span className="home-search-future__label">Coming soon</span>}
+			</div>
 
 			<AnimatePresence>
 				{openAdvancedFilter && (
@@ -258,7 +290,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					</Modal>
 				)}
 			</AnimatePresence>
-		</>
+		</div>
 	);
 };
 

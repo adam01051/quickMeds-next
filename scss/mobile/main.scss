@@ -885,3 +885,419 @@
     }
   }
 }
+
+/** HOMEPAGE DISCOVERY **/
+#mobile-wrap {
+	.home-mobile-top {
+		height: auto;
+		padding: 12px 16px 8px;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+		border-bottom: 1px solid #dbe5e1;
+		background: #fbfcfb;
+
+		&__bar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			.brand-logo__mark {
+				width: 36px;
+				height: 36px;
+			}
+
+			.brand-logo__wordmark {
+				font-size: 23px;
+			}
+		}
+
+		&__account {
+			width: 44px;
+			height: 44px;
+			display: grid;
+			place-items: center;
+			border: 1px solid #d7e2de;
+			border-radius: 8px;
+			color: #17372e;
+		}
+
+		&__nav {
+			display: flex;
+			gap: 18px;
+			overflow-x: auto;
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			a {
+				min-height: 38px;
+				display: flex;
+				align-items: center;
+				flex: 0 0 auto;
+				color: #536660;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 500;
+
+				&[aria-current='page'] {
+					color: #126b50;
+					box-shadow: inset 0 -2px #126b50;
+				}
+			}
+		}
+	}
+
+	.header-main {
+		padding: 52px 0 40px;
+		background: #f1f6f3;
+
+		.container {
+			width: min(calc(100% - 32px), 600px);
+			margin: 0 auto;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.home-healthcare-hero {
+			.hero-kicker {
+				color: #126b50;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 600;
+			}
+
+			h1 {
+				margin: 14px 0 12px;
+				color: #102a22;
+				font-family: $font;
+				font-size: clamp(36px, 11vw, 48px);
+				font-weight: 650;
+				line-height: 1.08;
+				letter-spacing: -0.035em;
+			}
+
+			p {
+				color: #536660;
+				font-family: $font;
+				font-size: 15px;
+				line-height: 1.65;
+			}
+		}
+
+		.home-search-area {
+			margin-top: 28px;
+		}
+
+		.clinical-search-box {
+			position: relative;
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			border: 1px solid #cfdcd7;
+			border-radius: 14px;
+			background: #fff;
+
+			.select-box,
+			.search-box-other {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			.box {
+				min-height: 58px;
+				padding: 9px 12px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border: 1px solid #dbe5e1;
+				border-radius: 8px;
+				background: #fff;
+				color: #17372e;
+				text-align: left;
+
+				&.search-field {
+					align-items: flex-start;
+					flex-direction: column;
+					justify-content: center;
+				}
+
+				.field-label,
+				.field-copy small {
+					color: #60736c;
+					font-family: $font;
+					font-size: 11px;
+				}
+
+				.field-copy {
+					display: flex;
+					flex-direction: column;
+					gap: 4px;
+				}
+
+				.header-search-input {
+					margin-top: 4px;
+					width: 100%;
+					border: 0;
+					outline: 0;
+					color: #17372e;
+					font-family: $font;
+					font-size: 16px;
+				}
+			}
+
+			.advanced-filter,
+			.search-btn {
+				min-height: 48px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				border-radius: 8px;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 600;
+			}
+
+			.advanced-filter {
+				border: 1px solid #cfdcd7;
+				background: #fff;
+				color: #28453b;
+			}
+
+			.search-btn {
+				border: 1px solid #126b50;
+				background: #126b50;
+				color: #fff;
+			}
+
+			.clinical-filter-panel {
+				position: absolute;
+				right: 0;
+				left: 0;
+				top: calc(100% + 8px);
+				padding: 10px;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px;
+				border: 1px solid #cfdcd7;
+				border-radius: 12px;
+				background: #fff;
+				z-index: 20;
+
+				button {
+					min-height: 52px;
+					padding: 8px;
+					border: 1px solid #dbe5e1;
+					border-radius: 8px;
+					background: #f8faf9;
+					color: #28453b;
+				}
+
+				img {
+					display: none;
+				}
+			}
+		}
+
+		.home-search-future {
+			margin-top: 10px;
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 7px;
+
+			button {
+				min-height: 48px;
+				padding: 7px 11px;
+				display: flex;
+				align-items: center;
+				gap: 9px;
+				border: 1px solid #d7e2de;
+				border-radius: 8px;
+				background: #f8faf9;
+				color: #536660;
+				text-align: left;
+
+				span {
+					display: flex;
+					flex-direction: column;
+				}
+
+				strong,
+				small {
+					font-family: $font;
+				}
+
+				strong {
+					font-size: 12px;
+				}
+
+				small {
+					color: #71847d;
+					font-size: 10px;
+				}
+			}
+		}
+	}
+}
+
+/** HOMEPAGE H1: STITCH-GUIDED FOUNDATION **/
+#mobile-wrap.quickmeds-home {
+	--home-ink: #121c2a;
+	--home-muted: #52615b;
+	--home-primary: #064e3b;
+	--home-primary-dark: #003527;
+	--home-paper: #fdfcfb;
+	--home-surface: #ffffff;
+	--home-border: #dfe6e2;
+	background: var(--home-paper);
+	font-family: 'Geist', $font;
+
+	.home-mobile-top {
+		padding: 10px 16px 7px;
+		border-bottom-color: var(--home-border);
+		background: var(--home-paper);
+
+		&__bar {
+			.brand-logo__mark {
+				width: 34px;
+				height: 34px;
+			}
+
+			.brand-logo__wordmark {
+				color: var(--home-primary-dark);
+				font-family: 'Source Serif 4', Georgia, serif;
+				font-size: 22px;
+				font-weight: 700;
+				letter-spacing: -0.035em;
+			}
+
+			.brand-logo__meds {
+				color: var(--home-primary);
+			}
+		}
+
+		&__account {
+			border-color: var(--home-border);
+			background: var(--home-surface);
+			color: var(--home-primary-dark);
+		}
+
+		&__nav {
+			gap: 20px;
+
+			a {
+				color: #52615b;
+				font-family: 'Geist', $font;
+				font-size: 12px;
+
+				&[aria-current='page'] {
+					color: var(--home-primary);
+					box-shadow: inset 0 -2px var(--home-primary);
+				}
+
+				&:focus-visible {
+					outline: 2px solid var(--home-primary);
+					outline-offset: 2px;
+				}
+			}
+		}
+	}
+
+	.header-main {
+		padding: 42px 0 38px;
+		background: var(--home-paper);
+
+		.container {
+			width: calc(100% - 32px);
+			max-width: 600px;
+			align-items: stretch;
+		}
+
+		.home-hero-grid {
+			min-width: 0;
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 26px;
+
+			> * {
+				width: 100%;
+				min-width: 0;
+			}
+		}
+
+		.home-healthcare-hero {
+			display: block;
+
+			.hero-kicker {
+				display: inline-flex;
+				align-items: center;
+				width: fit-content;
+				min-height: 27px;
+				padding: 0 9px;
+				border: 1px solid #a8cfbc;
+				border-radius: 999px;
+				background: #e8f7ef;
+				color: var(--home-primary);
+				font-family: 'Geist', $font;
+				font-size: 10px;
+				letter-spacing: 0.02em;
+			}
+
+			h1 {
+				width: auto;
+				max-width: 100%;
+				margin: 17px 0 12px;
+				color: var(--home-primary-dark);
+				font-family: 'Source Serif 4', Georgia, serif;
+				font-size: clamp(38px, 11vw, 48px);
+				font-weight: 600;
+				line-height: 1.05;
+				letter-spacing: -0.035em;
+			}
+
+			p {
+				width: auto;
+				max-width: 100%;
+				color: var(--home-muted);
+				font-family: 'Geist', $font;
+				font-size: 15px;
+				line-height: 1.65;
+			}
+		}
+
+		.home-hero-visual {
+			position: relative;
+			width: 100%;
+			min-width: 0;
+			overflow: hidden;
+			aspect-ratio: 16 / 10;
+			border: 1px solid #bfc9c3;
+			border-radius: 16px;
+			background: #dfeae5;
+			box-shadow: 0 12px 28px rgba(0, 53, 39, 0.1);
+
+			img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+			}
+		}
+
+		.home-search-area {
+			margin-top: 28px;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#mobile-wrap.quickmeds-home .home-mobile-top * {
+		transition: none !important;
+	}
+}

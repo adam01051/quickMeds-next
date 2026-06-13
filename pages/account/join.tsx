@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -20,6 +20,11 @@ const Join: NextPage = () => {
 	const device = useDeviceDetect();
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
 	const [loginView, setLoginView] = useState<boolean>(true);
+
+	useEffect(() => {
+		if (!router.isReady) return;
+		setLoginView(router.query.mode !== 'signup');
+	}, [router.isReady, router.query.mode]);
 
 	/** HANDLERS **/
 	const viewChangeHandler = (state: boolean) => {

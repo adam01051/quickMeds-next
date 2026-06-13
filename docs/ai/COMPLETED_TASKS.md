@@ -109,3 +109,15 @@ The original Nestar desktop visual structure was restored without reverting the 
 | Restored layout hook check | Served HTML and SCSS selector inspection | Passed; original search, filter, form, and wordmark hooks are present. |
 | Property logic regression scan | Search for removed property operations and fields in restored components | Passed. |
 | In-app visual browser | In-app Browser connection | Blocked because no in-app browser session was available; served route and layout-hook checks passed instead. |
+
+## Canonical Public Pharmacy Routes
+
+The public pharmacy catalog now uses pharmacy terminology in its canonical URLs while preserving old bookmarks.
+
+| Task | Status | Notes |
+| --- | --- | --- |
+| Public catalog route | Completed | Moved the pharmacy catalog from `/property` to `/pharmacies`. |
+| Public detail route | Completed | Moved pharmacy details from `/property/detail` to `/pharmacies/detail`. |
+| Legacy compatibility | Completed | Added permanent redirects from both old routes and preserved query parameters. |
+| Route consumers | Completed | Updated navigation, homepage search, filters, cards, favorites, owner pages, and admin detail links. |
+| Deferred internal cleanup | Documented | Legacy component, type, SCSS, admin-route, and owner-category names remain for a separate incremental migration. |

@@ -31,7 +31,7 @@ const withLayoutBasic = (Component: any) => {
 				bgImage = '';
 
 			switch (router.pathname) {
-				case '/property':
+				case '/pharmacies':
 					title = 'Pharmacy Search';
 					desc = 'We are glad to see you again!';
 					bgImage = '/img/banner/header1.svg';

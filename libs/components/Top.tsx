@@ -18,7 +18,7 @@ import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 import BrandLogo from './common/BrandLogo';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -35,7 +35,8 @@ const Top = () => {
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
 	const isHome = router.pathname === '/';
-	const shouldReduceMotion = useReducedMotion();
+	const isActiveRoute = (pathname: string) =>
+		pathname === '/' ? router.pathname === pathname : router.pathname === pathname || router.pathname.startsWith(`${pathname}/`);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -49,7 +50,7 @@ const Top = () => {
 
 	useEffect(() => {
 		switch (router.pathname) {
-			case '/property/detail':
+			case '/pharmacies/detail':
 				setBgColor(true);
 				break;
 			default:
@@ -140,12 +141,32 @@ const Top = () => {
 	}));
 
 	if (device == 'mobile') {
+		if (isHome) {
+			return (
+				<Stack className="top home-mobile-top">
+					<div className="home-mobile-top__bar">
+						<Link href="/" aria-label="quickMeds home"><BrandLogo /></Link>
+						<Link href="/account/join" className="home-mobile-top__account" aria-label="Login or register">
+							<AccountCircleOutlinedIcon />
+						</Link>
+					</div>
+					<nav className="home-mobile-top__nav" aria-label="Primary navigation">
+						<Link href="/" aria-current="page">{t('Home')}</Link>
+						<Link href="/pharmacies">{t('Pharmacies')}</Link>
+						<Link href="/agent">{t('Pharmacy Owners')}</Link>
+						<Link href="/community?articleCategory=FREE">{t('Community')}</Link>
+						<Link href="/cs">{t('CS')}</Link>
+					</nav>
+				</Stack>
+			);
+		}
+
 		return (
 			<Stack className={'top'}>
 				<Link href={'/'}>
 					<div>{t('Home')}</div>
 				</Link>
-				<Link href={'/property'}>
+				<Link href={'/pharmacies'}>
 					<div>{t('Pharmacies')}</div>
 				</Link>
 				<Link href={'/agent'}>
@@ -166,7 +187,7 @@ const Top = () => {
 					className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''} ${
 						isHome ? 'home-clinical-navbar' : ''
 					}`}
-					initial={isHome && !shouldReduceMotion ? { opacity: 0, y: -10 } : false}
+					initial={false}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.35, ease: 'easeOut' }}
 				>
@@ -176,25 +197,25 @@ const Top = () => {
 								<BrandLogo variant={isHome ? 'dark' : 'light'} />
 							</Link>
 						</Box>
-						<Box component={'div'} className={'router-box'}>
-							<Link href={'/'}>
+						<Box component={'nav'} className={'router-box'} aria-label="Primary navigation">
+							<Link href={'/'} aria-current={isActiveRoute('/') ? 'page' : undefined}>
 								<div>{t('Home')}</div>
 							</Link>
-							<Link href={'/property'}>
+							<Link href={'/pharmacies'} aria-current={isActiveRoute('/pharmacies') ? 'page' : undefined}>
 								<div>{t('Pharmacies')}</div>
 							</Link>
-							<Link href={'/agent'}>
+							<Link href={'/agent'} aria-current={isActiveRoute('/agent') ? 'page' : undefined}>
 								<div> {t('Pharmacy Owners')} </div>
 							</Link>
-							<Link href={'/community?articleCategory=FREE'}>
+							<Link href={'/community?articleCategory=FREE'} aria-current={isActiveRoute('/community') ? 'page' : undefined}>
 								<div> {t('Community')} </div>
 							</Link>
 							{user?._id && (
-								<Link href={'/mypage'}>
+								<Link href={'/mypage'} aria-current={isActiveRoute('/mypage') ? 'page' : undefined}>
 									<div> {t('My Page')} </div>
-								</Link>
+							</Link>
 							)}
-							<Link href={'/cs'}>
+							<Link href={'/cs'} aria-current={isActiveRoute('/cs') ? 'page' : undefined}>
 								<div> {t('CS')} </div>
 							</Link>
 						</Box>
@@ -226,18 +247,25 @@ const Top = () => {
 									</Menu>
 								</>
 							) : (
-								<Link href={'/account/join'}>
-									<div className={'join-box'}>
-										<AccountCircleOutlinedIcon />
-										<span>
-											{t('Login')} / {t('Register')}
-										</span>
+								isHome ? (
+									<div className="home-auth-actions">
+										<Link href="/account/join" className="home-auth-actions__login">{t('Login')}</Link>
+										<Link href="/account/join?mode=signup" className="home-auth-actions__register">{t('Register')}</Link>
 									</div>
-								</Link>
+								) : (
+									<Link href={'/account/join'}>
+										<div className={'join-box'}>
+											<AccountCircleOutlinedIcon />
+											<span>
+												{t('Login')} / {t('Register')}
+											</span>
+										</div>
+									</Link>
+								)
 							)}
 
 							<div className={'lan-box'}>
-								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} />}
+								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label="Notifications" />}
 								<Button
 									disableRipple
 									className="btn-lang"

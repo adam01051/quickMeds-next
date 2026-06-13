@@ -4,6 +4,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useRouter } from 'next/router';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 interface FilterProps {
 	searchFilter: PharmaciesInquiry;
@@ -17,7 +18,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 
 	const apply = async (next: PharmaciesInquiry) => {
 		setSearchFilter(next);
-		await router.push(`/property?input=${JSON.stringify(next)}`, undefined, { scroll: false });
+		await router.push(`/pharmacies?input=${JSON.stringify(next)}`, undefined, { scroll: false });
 	};
 
 	const updateSearch = (value: Partial<PharmaciesInquiry['search']>) =>
@@ -44,7 +45,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 					/>
 				</Stack>
 
-				<Typography className="title">Location</Typography>
+				<Typography className="title">Region</Typography>
 				<Stack className="property-location" sx={{ height: showMore ? 'auto !important' : undefined }}>
 					{Object.values(PharmacyLocation).map((location) => (
 						<Stack className="input-box" key={location}>
@@ -53,7 +54,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 								checked={searchFilter.search.locationList?.includes(location) ?? false}
 								onChange={() => toggleList('locationList', location)}
 							/>
-							<Typography className="property-type">{location.replaceAll('_', ' ')}</Typography>
+							<Typography className="property-type">{getPharmacyLocationLabel(location)}</Typography>
 						</Stack>
 					))}
 				</Stack>

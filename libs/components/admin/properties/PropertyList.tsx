@@ -19,6 +19,7 @@ import { REACT_APP_API_URL } from '../../../config';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import { PharmacyStatus } from '../../../enums/property.enum';
+import { getPharmacyLocationLabel } from '../../../utils/pharmacy-location';
 
 interface Data {
 	id: string;
@@ -157,12 +158,12 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 										<TableCell align="left" className={'name'}>
 											{property.pharmacyStatus === PharmacyStatus.DELETE ? (
 												<Stack direction={'row'}>
-													<Link href={`/property/detail?id=${property?._id}`}>
+													<Link href={`/pharmacies/detail?id=${property?._id}`}>
 														<div>
 															<Avatar alt="Remy Sharp" src={propertyImage} sx={{ ml: '2px', mr: '10px' }} />
 														</div>
 													</Link>
-													<Link href={`/property/detail?id=${property?._id}`}>
+													<Link href={`/pharmacies/detail?id=${property?._id}`}>
 														<div>{property.pharmacyName}</div>
 													</Link>
 												</Stack>
@@ -178,7 +179,7 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 										</TableCell>
 										<TableCell align="center">{property.pharmacyDeliveryFee}</TableCell>
 										<TableCell align="center">{property.memberData?.memberNick}</TableCell>
-										<TableCell align="center">{property.pharmacyLocation}</TableCell>
+										<TableCell align="center">{getPharmacyLocationLabel(property.pharmacyLocation)}</TableCell>
 										<TableCell align="center">{property.pharmacyType}</TableCell>
 										<TableCell align="center">
 											{property.pharmacyStatus === PharmacyStatus.DELETE && (

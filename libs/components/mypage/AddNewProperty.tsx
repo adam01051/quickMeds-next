@@ -11,6 +11,7 @@ import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmacyInput } from '../../types/property/property.input';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { REACT_APP_API_URL } from '../../config';
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
@@ -107,9 +108,9 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 						</Stack>
 						<Stack className="price-year-after-price">
-							<Typography className="title">Location</Typography>
+							<Typography className="title">Region</Typography>
 							<select className="select-description" value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
-								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{value.replaceAll('_', ' ')}</option>)}
+								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{getPharmacyLocationLabel(value)}</option>)}
 							</select>
 							<div className="divider" />
 							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
@@ -192,7 +193,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 AddProperty.defaultProps = {
 	initialValues: {
 		pharmacyType: PharmacyType.RETAIL,
-		pharmacyLocation: PharmacyLocation.CENTRAL,
+		pharmacyLocation: PharmacyLocation.TASHKENT_CITY,
 		pharmacyAddress: '',
 		pharmacyName: '',
 		pharmacyDeliveryFee: 0,

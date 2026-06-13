@@ -15,6 +15,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 
 import {topPropertyRank} from "../../config"
+import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 interface PropertyCardType {
 	property: Property;
@@ -39,7 +40,7 @@ const PropertyCard = (props: PropertyCardType) => {
 				<Stack className="top">
 					<Link
 						href={{
-							pathname: '/property/detail',
+							pathname: '/pharmacies/detail',
 							query: { id: property?._id },
 						}}
 					>
@@ -60,7 +61,7 @@ const PropertyCard = (props: PropertyCardType) => {
 						<Stack className="name">
 							<Link
 								href={{
-									pathname: '/property/detail',
+									pathname: '/pharmacies/detail',
 									query: { id: property?._id },
 								}}
 							>
@@ -69,7 +70,7 @@ const PropertyCard = (props: PropertyCardType) => {
 						</Stack>
 						<Stack className="address">
 							<Typography>
-								{property.pharmacyAddress}, {property.pharmacyLocation}
+								{property.pharmacyAddress}, {getPharmacyLocationLabel(property.pharmacyLocation)}
 							</Typography>
 						</Stack>
 					</Stack>
@@ -81,7 +82,7 @@ const PropertyCard = (props: PropertyCardType) => {
 							<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{property.pharmacyType} type</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/home.svg" alt="" /> <Typography>{property.pharmacyLocation.replaceAll('_', ' ')}</Typography>
+							<img src="/img/icons/home.svg" alt="" /> <Typography>{getPharmacyLocationLabel(property.pharmacyLocation)}</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="divider"></Stack>
