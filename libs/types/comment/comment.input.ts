@@ -10,6 +10,7 @@ export interface CommentInput {
 
 interface CISearch {
 	commentRefId: string;
+	commentGroup?: CommentGroup;
 }
 
 export interface CommentsInquiry {

@@ -56,3 +56,10 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 5. Redesign mobile navigation and mobile catalog in separate approved phases.
 6. Replace Korean footer regions/phone content later; preserve it until that phase.
 7. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
+
+## Pharmacy Detail Feedback Follow-up
+
+1. Visually verify the Community Feedback section with a valid pharmacy record containing more than five comments.
+2. Verify authenticated comment submission, unauthenticated messaging, Load More completion, and member-profile navigation in the browser.
+3. Keep ratings, visit dates, and review scores out of the interface unless real backend contracts are approved later.
+4. Complete an authenticated browser smoke test proving a submitted comment remains after reconciliation and page reload.

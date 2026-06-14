@@ -1424,6 +1424,32 @@
 		}
 	}
 
+	.pharmacy-detail__feedback {
+		padding: 20px 16px;
+	}
+
+	.pharmacy-feedback-card {
+		padding: 16px;
+
+		&__author {
+			align-items: flex-start;
+
+			img {
+				flex: 0 0 auto;
+			}
+
+			button {
+				min-height: 44px;
+				display: flex;
+				align-items: center;
+			}
+		}
+
+		&__content {
+			font-size: 14px;
+		}
+	}
+
 	.pharmacy-detail__sidebar {
 		position: static;
 		display: contents;

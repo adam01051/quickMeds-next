@@ -39,3 +39,13 @@
 - Medication count remains outside approved public product scope and must not be displayed on redesigned public cards/details.
 - Legacy internal Property/Agent names remain compatibility debt and are not renamed as part of visual micro-phases.
 - Local development must run only one `next dev` process per `.next` directory to prevent stale or missing chunk responses.
+
+## Pharmacy Detail Feedback Decisions
+
+- Pharmacy comments are presented as truthful community feedback, not ratings or reviews.
+- Display the actual comment creation date with `Commented`; do not fabricate unsupported last-visited dates.
+- Preserve comment creation and member-profile navigation while keeping the default feedback section compact through a collapsed `Write a comment` form.
+- Use incremental Load More pagination on the detail page instead of numbered comment pages.
+- Record every meaningful implementation and validation result in the existing `docs/ai` tracking files before completing a development task.
+- Treat the successful `CREATE_COMMENT` mutation response as immediately visible truth; later list reconciliation must never remove it.
+- Use the optional `CommentsInquiry.search.commentGroup` filter for pharmacy-detail feedback while preserving compatibility for existing comment callers.

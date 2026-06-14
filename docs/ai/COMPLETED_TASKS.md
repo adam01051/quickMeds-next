@@ -161,3 +161,36 @@ Validation completed:
 - Homepage, catalog, pharmacy detail, Pharmacy Owners, community, account, My Page, CS, member, and About route checks returned HTTP 200.
 - Referenced Next.js development assets returned HTTP 200 after the runtime cleanup.
 - Catalog cards were visually checked at `1440px` and `1024px`.
+
+## Pharmacy Detail Community Feedback Redesign
+
+- Replaced the centered divider-based pharmacy comments presentation with compact, left-aligned bordered feedback cards.
+- Feedback cards now show the real member avatar fallback, member nickname, profile navigation, truthful `Commented` date from `createdAt`, and comment content.
+- Replaced numbered comment pagination with a full-width Load More interaction that appends pages and prevents duplicate comments.
+- Added comment loading skeletons, query-error recovery, improved empty state, and mutation loading feedback.
+- Moved comment submission behind an accessible `Write a comment` disclosure while preserving authentication and `CREATE_COMMENT` behavior.
+- Added scoped desktop and mobile feedback styles without changing other pharmacy-detail sections or backend contracts.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- The detail route compiled successfully in the development server.
+- Final visual verification of a valid pharmacy record remains pending because the available screenshot attempt was not completed.
+
+## Pharmacy Comment Persistence Fix
+
+- Replaced competing Apollo comment-list state writers with explicit network-only first-page and append operations.
+- Successfully created comments are inserted immediately, remain visible during reconciliation, and are deduplicated against refreshed results.
+- Comment drafts clear only after successful creation and remain available when creation fails.
+- Load More remains append-only and cannot replace the newest first-page comments.
+- Pharmacy detail comment inquiries now send the optional `CommentGroup.PHARMACY` filter.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- Backend focused comment and pharmacy tests passed: `7/7`.
+- Backend API and batch TypeScript checks passed.
+- Frontend and backend `git diff --check` passed.

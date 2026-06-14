@@ -15,9 +15,9 @@ QuickMeds is NestJS GraphQL monorepo migrated from real estate platform into a P
 Before making any changes, read:
 
 - docs/ai/BACKEND_MIGRATION.md
-- docs/ai/DECIONS.md
+- docs/ai/DECISIONS.md
 - docs/ai/FRONTEND_MIGRATION.md
-- and etc inside of quickMeds/docs/ai
+- and other relevant files inside `docs/ai` in both repositories
 
 ## Workflow
 
@@ -26,7 +26,10 @@ Before making any changes, read:
 3. Make small incremental changes.
 4. Run typecheck after each phase.
 5. Do not remove working logic unless replaced safely.
-6. Update quickMeds/docs/ai/COMPLETED_TASKS.md after major changes.
+6. Record every meaningful implementation, migration, validation result, decision, and remaining limitation in the existing `docs/ai` files before finishing the task.
+7. Update `docs/ai/COMPLETED_TASKS.md` for completed work and validation, `docs/ai/DECISIONS.md` for durable decisions, `docs/ai/NEXT_STEPS.md` for deferred work, and the relevant migration document for rollout details.
+8. When a change affects backend contracts or migration behavior, update the corresponding existing `docs/ai` files in the backend repository as well.
+9. Do not create a new documentation file when an existing `docs/ai` tracking file covers the subject.
 
 
 
@@ -39,4 +42,3 @@ Before making any changes, read:
 ```` bash
 yarn install
 ````
-

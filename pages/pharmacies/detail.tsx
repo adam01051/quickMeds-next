@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Stack } from '@mui/material';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import { NextPage } from 'next';
@@ -14,7 +14,7 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
 import moment from 'moment';
@@ -25,7 +25,6 @@ import { userVar } from '../../apollo/store';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
-import { Pagination as MuiPagination } from '@mui/material';
 import Link from 'next/link';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GET_COMMENTS, GET_PHARMACIES, GET_PHARMACY } from '../../apollo/user/query';
@@ -45,7 +44,7 @@ const initialCommentInquiry: CommentsInquiry = {
 	limit: 5,
 	sort: 'createdAt',
 	direction: Direction.DESC,
-	search: { commentRefId: '' },
+	search: { commentRefId: '', commentGroup: CommentGroup.PHARMACY },
 };
 
 const pharmacyImage = (image?: string) => (image ? `${REACT_APP_API_URL}/${image}` : '/img/banner/header1.svg');
@@ -60,6 +59,9 @@ const PharmacyDetail: NextPage = () => {
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialCommentInquiry);
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState(0);
+	const [loadedCommentPage, setLoadedCommentPage] = useState(1);
+	const [isLoadingMoreComments, setIsLoadingMoreComments] = useState(false);
+	const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.PHARMACY,
 		commentContent: '',
@@ -67,7 +69,10 @@ const PharmacyDetail: NextPage = () => {
 	});
 
 	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
-	const [createComment] = useMutation(CREATE_COMMENT);
+	const [createComment, { loading: isCreatingComment }] = useMutation(CREATE_COMMENT);
+	const [getComments, { loading: commentsLoading, error: commentsError }] = useLazyQuery(GET_COMMENTS, {
+		fetchPolicy: 'network-only',
+	});
 	const {
 		loading: pharmacyLoading,
 		error: pharmacyError,
@@ -100,28 +105,26 @@ const PharmacyDetail: NextPage = () => {
 		onCompleted: (data: T) => setNearbyPharmacies(data?.getPharmacies?.list ?? []),
 	});
 
-	const { refetch: refetchComments } = useQuery(GET_COMMENTS, {
-		fetchPolicy: 'cache-and-network',
-		variables: { input: commentInquiry },
-		skip: !commentInquiry.search.commentRefId,
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setComments(data?.getComments?.list ?? []);
-			setCommentTotal(data?.getComments?.metaCounter?.[0]?.total ?? 0);
-		},
-	});
-
 	useEffect(() => {
 		if (!router.query.id) return;
 		const id = router.query.id as string;
 		setPharmacyId(id);
-		setCommentInquiry((current) => ({ ...current, search: { commentRefId: id } }));
-		setInsertCommentData((current) => ({ ...current, commentRefId: id }));
-	}, [router.query.id]);
-
-	useEffect(() => {
-		if (commentInquiry.search.commentRefId) refetchComments({ input: commentInquiry });
-	}, [commentInquiry, refetchComments]);
+		const nextInquiry = { ...initialCommentInquiry, search: { commentRefId: id, commentGroup: CommentGroup.PHARMACY } };
+		setCommentInquiry(nextInquiry);
+		setComments([]);
+		setCommentTotal(0);
+		setLoadedCommentPage(1);
+		setIsCommentFormOpen(false);
+		setInsertCommentData({
+			commentGroup: CommentGroup.PHARMACY,
+			commentContent: '',
+			commentRefId: id,
+		});
+		getComments({ variables: { input: nextInquiry } }).then((response) => {
+			setComments(response.data?.getComments?.list ?? []);
+			setCommentTotal(response.data?.getComments?.metaCounter?.[0]?.total ?? 0);
+		}).catch(() => undefined);
+	}, [getComments, router.query.id]);
 
 	const validCoordinates = useMemo(() => {
 		if (!pharmacy) return false;
@@ -150,16 +153,68 @@ const PharmacyDetail: NextPage = () => {
 		}
 	};
 
-	const handleCommentPage = (_event: ChangeEvent<unknown>, page: number) => {
-		setCommentInquiry((current) => ({ ...current, page }));
+	const handleLoadMoreComments = async () => {
+		try {
+			setIsLoadingMoreComments(true);
+			const nextPage = loadedCommentPage + 1;
+			const response = await getComments({ variables: { input: { ...commentInquiry, page: nextPage } } });
+			const nextComments = response.data?.getComments?.list ?? [];
+			setComments((current) => {
+				const commentsById = new Map(current.map((comment) => [comment._id, comment]));
+				nextComments.forEach((comment: Comment) => commentsById.set(comment._id, comment));
+				return Array.from(commentsById.values());
+			});
+			setCommentTotal(response.data?.getComments?.metaCounter?.[0]?.total ?? commentTotal);
+			setLoadedCommentPage(nextPage);
+		} catch (error: unknown) {
+			sweetErrorHandling(error);
+		} finally {
+			setIsLoadingMoreComments(false);
+		}
 	};
 
 	const handleCreateComment = async () => {
+		const draft = insertCommentData.commentContent;
+		let createdComment: Comment;
 		try {
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
-			await createComment({ variables: { input: insertCommentData } });
+			const createdResponse = await createComment({ variables: { input: insertCommentData } });
+			if (!createdResponse.data?.createComment) throw new Error(Message.SOMETHING_WENT_WRONG);
+			createdComment = {
+				...createdResponse.data?.createComment,
+				memberData: user,
+			} as Comment;
+			setComments((current) => [createdComment, ...current.filter((comment) => comment._id !== createdComment._id)]);
+			setCommentTotal((current) => current + 1);
 			setInsertCommentData((current) => ({ ...current, commentContent: '' }));
-			await refetchComments({ input: commentInquiry });
+			await sweetTopSmallSuccessAlert('Comment submitted', 1000);
+		} catch (error: unknown) {
+			setInsertCommentData((current) => ({ ...current, commentContent: draft }));
+			setIsCommentFormOpen(true);
+			sweetErrorHandling(error);
+			return;
+		}
+
+		try {
+			const response = await getComments({ variables: { input: { ...commentInquiry, page: 1 } } });
+			const refreshedComments = response.data?.getComments?.list ?? [];
+			setComments((current) => {
+				const refreshedIds = new Set(refreshedComments.map((comment: Comment) => comment._id));
+				return [...refreshedComments, ...current.filter((comment) => !refreshedIds.has(comment._id))];
+			});
+			setCommentTotal(response.data?.getComments?.metaCounter?.[0]?.total ?? 0);
+			setLoadedCommentPage(1);
+		} catch (error: unknown) {
+			// The comment is already persisted and remains visible from the mutation response.
+		}
+	};
+
+	const handleRetryComments = async () => {
+		try {
+			const response = await getComments({ variables: { input: { ...commentInquiry, page: 1 } } });
+			setComments(response.data?.getComments?.list ?? []);
+			setCommentTotal(response.data?.getComments?.metaCounter?.[0]?.total ?? 0);
+			setLoadedCommentPage(1);
 		} catch (error: unknown) {
 			sweetErrorHandling(error);
 		}
@@ -296,24 +351,47 @@ const PharmacyDetail: NextPage = () => {
 							) : <p className="pharmacy-detail__empty-copy">A map location has not been provided yet.</p>}
 						</section>
 
-						<section className="pharmacy-detail__section">
-							<div className="pharmacy-detail__section-heading">
-								<span>Community</span>
-								<h2>Pharmacy comments</h2>
-							</div>
-							{comments.length ? (
+						<section className="pharmacy-detail__section pharmacy-detail__feedback">
+							<h2>Community Feedback</h2>
+							{commentsLoading && !comments.length ? (
+								<div className="pharmacy-detail__comments-loading" aria-label="Loading pharmacy comments">
+									<div />
+									<div />
+								</div>
+							) : commentsError && !comments.length ? (
+								<div className="pharmacy-detail__comments-state" role="alert">
+									<p>We could not load pharmacy comments.</p>
+									<button type="button" onClick={handleRetryComments}>Try again</button>
+								</div>
+							) : comments.length ? (
 								<div className="pharmacy-detail__comments">
 									{comments.map((comment) => <Review comment={comment} key={comment._id} />)}
-									{commentTotal > commentInquiry.limit && (
-										<MuiPagination page={commentInquiry.page} count={Math.ceil(commentTotal / commentInquiry.limit)} onChange={handleCommentPage} shape="rounded" />
+									{comments.length < commentTotal && (
+										<button className="pharmacy-detail__load-comments" type="button" onClick={handleLoadMoreComments} disabled={isLoadingMoreComments}>
+											{isLoadingMoreComments ? 'Loading comments…' : 'Load More Comments'}
+										</button>
 									)}
 								</div>
 							) : <p className="pharmacy-detail__empty-copy">No comments yet. Be the first to share useful information.</p>}
-							<div className="pharmacy-detail__comment-form">
-								<label htmlFor="pharmacy-comment">Add a comment</label>
-								<textarea id="pharmacy-comment" value={insertCommentData.commentContent} onChange={(event) => setInsertCommentData({ ...insertCommentData, commentContent: event.target.value })} placeholder="Share helpful information about this pharmacy" />
-								<Button disabled={!insertCommentData.commentContent.trim() || !user?._id} onClick={handleCreateComment}>Submit comment</Button>
-							</div>
+							<button
+								className="pharmacy-detail__comment-toggle"
+								type="button"
+								aria-expanded={isCommentFormOpen}
+								aria-controls="pharmacy-comment-form"
+								onClick={() => setIsCommentFormOpen((current) => !current)}
+							>
+								{isCommentFormOpen ? 'Close comment form' : 'Write a comment'}
+							</button>
+							{isCommentFormOpen && (
+								<div className="pharmacy-detail__comment-form" id="pharmacy-comment-form">
+									<label htmlFor="pharmacy-comment">Share helpful information about this pharmacy</label>
+									{!user?._id && <p className="pharmacy-detail__comment-auth">Log in to write a comment.</p>}
+									<textarea id="pharmacy-comment" value={insertCommentData.commentContent} onChange={(event) => setInsertCommentData({ ...insertCommentData, commentContent: event.target.value })} placeholder="Write your comment" disabled={!user?._id || isCreatingComment} />
+									<Button disabled={!insertCommentData.commentContent.trim() || !user?._id || isCreatingComment} onClick={handleCreateComment}>
+										{isCreatingComment ? 'Submitting…' : 'Submit comment'}
+									</Button>
+								</div>
+							)}
 						</section>
 					</div>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
 import { Comment } from '../../types/comment/comment';
 import { REACT_APP_API_URL } from '../../config';
 import Moment from 'react-moment';
@@ -24,25 +23,29 @@ const Review = (props: ReviewProps) => {
 		if (id === user?._id) router.push('/mypage');
 		else router.push(`/member?memberId=${id}`);
 	};
+
+	const memberName = comment.memberData?.memberNick ?? 'QuickMeds member';
+	const memberId = comment.memberData?._id;
+
 	return (
-			<article className={'review-config'}>
-				<Stack className={'review-mb-info'}>
-					<Stack className={'img-name-box'}>
-						<img src={imagePath} alt={`${comment.memberData?.memberNick ?? 'Member'} profile`} className={'img-box'} />
-						<Stack>
-							<Typography className={'name'} onClick={() => goMemberPage(comment?.memberData?._id as string)}>
-								{comment.memberData?.memberNick}
-							</Typography>
-							<Typography className={'date'}>
-								<Moment format={'DD MMMM, YYYY'}>{comment.createdAt}</Moment>
-							</Typography>
-						</Stack>
-					</Stack>
-				</Stack>
-				<Stack className={'desc-box'}>
-					<Typography className={'description'}>{comment.commentContent}</Typography>
-				</Stack>
-			</article>
+		<article className="pharmacy-feedback-card">
+			<header className="pharmacy-feedback-card__author">
+				<img src={imagePath} alt={`${memberName} profile`} />
+				<div>
+					{memberId ? (
+						<button type="button" onClick={() => goMemberPage(memberId)}>
+							{memberName}
+						</button>
+					) : (
+						<strong>{memberName}</strong>
+					)}
+					<p>
+						Commented <Moment format="DD MMMM YYYY">{comment.createdAt}</Moment>
+					</p>
+				</div>
+			</header>
+			<p className="pharmacy-feedback-card__content">{comment.commentContent}</p>
+		</article>
 	);
 };
 
