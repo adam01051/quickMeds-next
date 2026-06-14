@@ -135,7 +135,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 												<Typography>Following</Typography>
 												<Button
 													variant="outlined"
-													sx={{ background: '#ed5858', ':hover': { background: '#ee7171' } }}
+													sx={{ color: '#52615b', borderColor: '#cfdcd7', ':hover': { borderColor: '#08634f' } }}
 													onClick={() => unsubscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
 												>
 													Unfollow
@@ -144,7 +144,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 										) : (
 											<Button
 												variant="contained"
-												sx={{ background: '#60eb60d4', ':hover': { background: '#60eb60d4' } }}
+												sx={{ background: '#08634f', ':hover': { background: '#064e3b' } }}
 												onClick={() => subscribeHandler(follower?.followerData?._id, getMemberFollowersRefetch, followInquiry)}
 											>
 												Follow

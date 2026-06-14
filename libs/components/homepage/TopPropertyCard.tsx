@@ -82,7 +82,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
 							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-									<FavoriteIcon style={{ color: 'red' }} />
+									<FavoriteIcon style={{ color: '#08634f' }} />
 								) : (
 									<FavoriteIcon />
 								)}
@@ -145,7 +145,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 							<Typography className="view-cnt">{property?.pharmacyViews}</Typography>
 							<IconButton color={'default'} onClick={(event) => { event.stopPropagation(); likePropertyHandler(user, property?._id); }}>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-									<FavoriteIcon style={{ color: 'red' }} />
+									<FavoriteIcon style={{ color: '#08634f' }} />
 								) : (
 									<FavoriteIcon />
 								)}

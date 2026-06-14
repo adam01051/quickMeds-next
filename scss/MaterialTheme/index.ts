@@ -14,10 +14,10 @@ export const light = {
 		},
 		primary: {
 			contrastText: '#ffffff',
-			main: '#E92C28',
+			main: '#08634f',
 		},
 		secondary: {
-			main: '#1646C1',
+			main: '#0f766e',
 		},
 		text: {
 			primary: '#212121',

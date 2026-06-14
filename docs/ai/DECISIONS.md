@@ -49,3 +49,22 @@
 - Record every meaningful implementation and validation result in the existing `docs/ai` tracking files before completing a development task.
 - Treat the successful `CREATE_COMMENT` mutation response as immediately visible truth; later list reconciliation must never remove it.
 - Use the optional `CommentsInquiry.search.commentGroup` filter for pharmacy-detail feedback while preserving compatibility for existing comment callers.
+
+## Pharmacy Catalog Header Decisions
+
+- The pharmacy catalog prioritizes discovery controls and results over decorative hero imagery.
+- `/pharmacies` owns its compact directory header and live result count; shared `LayoutBasic` banners remain for other routes.
+- Do not duplicate catalog search controls in the header because the existing sidebar remains the functional search and filter surface.
+# Public Page Header Decision
+
+- Public `LayoutBasic` routes no longer use shared photographic heroes or generic route welcome copy.
+- Pages should own their context through an existing content heading, profile identity, or form identity.
+- Add a compact route introduction only when removing the shared hero would leave the page without a clear title; currently this applies to Pharmacy Owners and My Page.
+- Mobile remains independent and must not inherit desktop-only route header changes.
+
+# Public Accent Palette Decision
+
+- QuickMeds public interfaces use deep emerald `#08634f` as the primary interactive accent and dark emerald `#064e3b` for stronger emphasis.
+- Legacy Nestar coral, red, orange, purple, and unrelated neon-green decorative accents must not be used for public navigation, tabs, buttons, favorites, cards, or active states.
+- Red remains reserved for truthful errors, destructive warnings, and validation states.
+- The shared MUI primary and secondary palettes use QuickMeds emerald values so Material controls do not reintroduce the legacy red/blue palette.

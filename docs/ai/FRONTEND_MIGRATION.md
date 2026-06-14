@@ -110,3 +110,25 @@ Intentionally deferred Nestar surfaces:
 - The submission form is collapsed by default, includes logged-out guidance, and reports mutation loading state.
 - The optional additive `CommentsInquiry.search.commentGroup` filter is now used to isolate pharmacy feedback from other comment groups.
 - Comment creation inserts the mutation result immediately and reconciles it with a network-only first-page query without allowing stale results to erase it.
+
+## Pharmacy Catalog Header Migration
+
+- The legacy shared image banner is omitted only for `/pharmacies`.
+- The catalog page now owns a compact directory header containing truthful guidance, result count, and sorting.
+- Existing Pharmacy Owners, community, account, My Page, CS, and member banners remain unchanged.
+- Catalog sidebar/filter-shell redesign and mobile catalog remain separate future phases.
+
+## Shared Public Hero Removal
+
+- The legacy `LayoutBasic` image-banner mechanism has been removed from all public desktop routes.
+- `/pharmacies` retains its page-owned compact directory header.
+- `/agent` and `/mypage` now own compact route introductions.
+- Pharmacy Owner detail, Community, CS, Login/Signup, Member, and About rely on their existing page-owned context with reduced route-level top spacing.
+- Internal page redesigns, mobile pages, admin pages, and footer migration remain separate phases.
+
+## Public Accent Palette Migration
+
+- Migrated remaining public Nestar coral, orange, purple, red, and neon-green decorative accents to the QuickMeds emerald palette.
+- Updated Community, CS, account, Pharmacy Owner, My Page, older shared cards, About surfaces, member Follow controls, and the shared brand mark accent.
+- Updated the shared MUI primary and secondary colors so pagination, favorites, selected controls, and other Material components use emerald.
+- Semantic validation and error colors remain red.

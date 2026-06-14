@@ -83,7 +83,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 								}}
 							>
 								{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-									<FavoriteIcon style={{ color: 'red' }} />
+									<FavoriteIcon style={{ color: '#08634f' }} />
 								) : (
 									<FavoriteIcon />
 								)}

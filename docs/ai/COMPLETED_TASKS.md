@@ -194,3 +194,47 @@ Validation completed:
 - Backend focused comment and pharmacy tests passed: `7/7`.
 - Backend API and batch TypeScript checks passed.
 - Frontend and backend `git diff --check` passed.
+
+## Pharmacy Catalog Hero Replacement
+
+- Removed the large Nestar house-image banner and generic welcome copy from the desktop `/pharmacies` route only.
+- Added a compact Warm Civic Pharmacy directory header with truthful catalog guidance, live result count, and the existing sorting control.
+- Preserved all other `LayoutBasic` route banners without visual or behavioral changes.
+- Reduced the gap before catalog filters and results while preserving filters, cards, pagination, query behavior, and the mobile placeholder.
+- Added contained desktop behavior and a stacked utility layout at `1024px`.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- `/pharmacies` returned HTTP 200 and was visually verified at `1440px`, `1280px`, and `1024px`.
+
+## Public LayoutBasic Hero Removal
+
+- Removed the remaining large desktop image heroes and route-specific banner copy inherited from Nestar.
+- Added a consistent fixed-navbar content offset to public `LayoutBasic` routes while leaving mobile rendering unchanged.
+- Added compact Warm Civic Pharmacy introductions to the Pharmacy Owners directory and My Page.
+- Reduced hero-compensating top spacing on Pharmacy Owner detail, Community list/detail, CS, Login/Signup, Member, and About pages.
+- Preserved the existing pharmacy catalog directory header and all route, authentication, GraphQL, chat, footer, and page-business behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Headless browser verification was blocked by the existing local Next.js development runtime returning `missing required error components, refreshing...`; the production build confirms the affected routes compile.
+
+## Public Accent Palette Migration
+
+- Replaced remaining public legacy coral, orange, purple, red, and neon-green decorative accents with the QuickMeds emerald and mint palette.
+- Updated the shared MUI theme so Material primary and secondary controls no longer reintroduce the old red and blue colors.
+- Normalized visible active tabs, actions, favorites, owner/member controls, cards, About surfaces, and the brand-mark accent.
+- Preserved red for semantic errors and destructive warnings.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- The known legacy public accent tokens no longer appear outside intentionally excluded admin styling.

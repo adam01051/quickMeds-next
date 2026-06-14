@@ -112,6 +112,11 @@ const MyPage: NextPage = () => {
 		return (
 			<div id="my-page" style={{ position: 'relative' }}>
 				<div className="container">
+					<header className="my-page-header">
+						<span>Account</span>
+						<h1>My Page</h1>
+						<p>Manage your profile, pharmacies, saved items, and community articles.</p>
+					</header>
 					<Stack className={'my-page'}>
 						<Stack className={'back-frame'}>
 							<Stack className={'left-config'}>

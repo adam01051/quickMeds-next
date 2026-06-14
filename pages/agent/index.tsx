@@ -135,6 +135,11 @@ const AgentList: NextPage = ({ initialInput, ...props }: any) => {
 		return (
 			<Stack className={'agent-list-page'}>
 				<Stack className={'container'}>
+					<header className="agent-directory-header">
+						<span>Pharmacy Owner directory</span>
+						<h1>Meet Pharmacy Owners</h1>
+						<p>Discover the people and businesses helping communities access pharmacy services across Uzbekistan.</p>
+					</header>
 					<Stack className={'filter'}>
 						<Box component={'div'} className={'left'}>
 							<input

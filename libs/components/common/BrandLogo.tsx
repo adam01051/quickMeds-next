@@ -22,7 +22,7 @@ const BrandLogo = ({ variant = 'dark', iconOnly = false, className = '' }: Brand
 					fill="#FFFFFF"
 				/>
 				<g transform="rotate(-38 34 34)">
-					<rect x="26.5" y="30" width="15" height="8" rx="4" fill="#EB6753" stroke="#FFFFFF" strokeWidth="2" />
+					<rect x="26.5" y="30" width="15" height="8" rx="4" fill="#064E3B" stroke="#FFFFFF" strokeWidth="2" />
 					<path d="M34 30v8" stroke="#FFFFFF" strokeWidth="2" />
 				</g>
 			</svg>

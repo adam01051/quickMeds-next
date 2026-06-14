@@ -49,13 +49,12 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 ## Next Frontend Micro-Phases After June 14 Checkpoint
 
-1. Replace the public catalog’s legacy Nestar house banner and generic subtitle with pharmacy-discovery content.
-2. Redesign the catalog filter/sorting shell while preserving the current `PharmaciesInquiry` behavior.
-3. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
-4. Audit Pharmacy Owner pages and remove remaining visible real-estate imagery/copy without renaming compatibility internals.
-5. Redesign mobile navigation and mobile catalog in separate approved phases.
-6. Replace Korean footer regions/phone content later; preserve it until that phase.
-7. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
+1. Redesign the catalog filter shell while preserving the current `PharmaciesInquiry` behavior.
+2. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
+3. Audit Pharmacy Owner pages and remove remaining visible real-estate imagery/copy without renaming compatibility internals.
+4. Redesign mobile navigation and mobile catalog in separate approved phases.
+5. Replace Korean footer regions/phone content later; preserve it until that phase.
+6. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
 
 ## Pharmacy Detail Feedback Follow-up
 
@@ -63,3 +62,13 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Verify authenticated comment submission, unauthenticated messaging, Load More completion, and member-profile navigation in the browser.
 3. Keep ratings, visit dates, and review scores out of the interface unless real backend contracts are approved later.
 4. Complete an authenticated browser smoke test proving a submitted comment remains after reconciliation and page reload.
+# After Public Hero Removal
+
+- Visually verify all affected public desktop routes with representative authenticated and unauthenticated states.
+- Migrate remaining property-era internal page presentation incrementally; do not reintroduce generic shared route banners.
+- Redesign mobile route content separately because the desktop shared hero removal intentionally does not change mobile rendering.
+
+# After Public Accent Palette Migration
+
+- Visually audit public routes for imagery or icon assets that contain baked-in legacy colors.
+- Continue replacing remaining property-era layout patterns incrementally without introducing new accent colors.

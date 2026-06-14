@@ -133,41 +133,39 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 	} else {
 		return (
 			<div id="property-list-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Box component={'div'} className={'right'}>
-						<span>Sort by</span>
-						<div>
-							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-								{filterSortName}
-							</Button>
-							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'new'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									New
-								</MenuItem>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'lowest'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									Lowest delivery fee
-								</MenuItem>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'highest'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									Highest delivery fee
-								</MenuItem>
-							</Menu>
+				<header className="catalog-directory-header">
+					<div className="container">
+						<div className="catalog-directory-header__copy">
+							<span>Pharmacy directory</span>
+							<h1>Find pharmacies across Uzbekistan</h1>
+							<p>Filter pharmacies by region, available services, and working hours before you visit.</p>
 						</div>
-					</Box>
+						<div className="catalog-directory-header__utilities">
+							<p aria-live="polite">
+								{getPharmaciesLoading && properties.length === 0 ? (
+									<span>Loading pharmacies…</span>
+								) : (
+									<>
+										<strong>{total}</strong>
+										<span>{total === 1 ? ' pharmacy available' : ' pharmacies available'}</span>
+									</>
+								)}
+							</p>
+							<Box component="div" className="catalog-directory-header__sort">
+								<span>Sort by</span>
+								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />} aria-haspopup="menu" aria-expanded={sortingOpen}>
+									{filterSortName}
+								</Button>
+								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
+									<MenuItem onClick={sortingHandler} id="new" disableRipple>New</MenuItem>
+									<MenuItem onClick={sortingHandler} id="lowest" disableRipple>Lowest delivery fee</MenuItem>
+									<MenuItem onClick={sortingHandler} id="highest" disableRipple>Highest delivery fee</MenuItem>
+								</Menu>
+							</Box>
+						</div>
+					</div>
+				</header>
+				<div className="container">
 					<Stack className={'property-page'}>
 						<Stack className={'filter-config'}>
 							{/* @ts-ignore */}

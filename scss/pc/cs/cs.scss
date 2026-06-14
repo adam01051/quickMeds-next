@@ -59,8 +59,8 @@
             line-height: normal;
             letter-spacing: 0.42px;
             &.active {
-              border: 1px solid #725CE8;
-              background: #EB6753;
+              border: 1px solid #0f766e;
+              background: #08634f;
               color: #FFF;
             }
           }
@@ -119,8 +119,8 @@
                 div {
                   padding: 6px 9px;
                   border-radius: 12px;
-                  border: 1px solid #EB6753;
-                  color: #EB6753;
+                  border: 1px solid #08634f;
+                  color: #08634f;
                   font-family: $font;
                   font-size: 12px;
                   font-style: normal;
@@ -183,8 +183,8 @@
               letter-spacing: -0.225px;
               cursor: pointer;
               &.active {
-                border-bottom: 1px solid #EB6753;
-                color: #EB6753;
+                border-bottom: 1px solid #08634f;
+                color: #08634f;
               }
             }
           }
@@ -198,13 +198,13 @@
               margin: 0 24px;
               display: inline-block;
               padding: 4px 10px;
-              border: 1px solid #725CE8;
+              border: 1px solid #0f766e;
               border-radius: 7px;
-              color: #725CE8;
+              color: #0f766e;
             }
             .question {
               .badge {
-                background: #e92C28;
+                background: #064e3b;
                 color: #fff;
               }
             }
@@ -215,8 +215,8 @@
               align-items: center;
               flex-direction: row;
               .badge {
-                color: #EB6753;
-                border: 1px solid #EB6753;
+                color: #08634f;
+                border: 1px solid #08634f;
               }
             }
           }

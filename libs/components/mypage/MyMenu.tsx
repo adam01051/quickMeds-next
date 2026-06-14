@@ -80,7 +80,7 @@ const MyMenu = () => {
 													Add Pharmacy
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '40px' }}>
-													<PortraitIcon style={{ color: 'red' }} />
+													<PortraitIcon style={{ color: '#08634f' }} />
 												</IconButton>
 											</div>
 										</Link>
@@ -103,7 +103,7 @@ const MyMenu = () => {
 													My Pharmacies
 												</Typography>
 												<IconButton aria-label="delete" sx={{ ml: '36px' }}>
-													<PortraitIcon style={{ color: 'red' }} />
+													<PortraitIcon style={{ color: '#08634f' }} />
 												</IconButton>
 											</div>
 										</Link>
