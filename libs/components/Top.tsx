@@ -31,7 +31,6 @@ const Top = () => {
 	const [colorChange, setColorChange] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
 	let open = Boolean(anchorEl);
-	const [bgColor, setBgColor] = useState<boolean>(false);
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
 	const isHome = router.pathname === '/';
@@ -45,16 +44,6 @@ const Top = () => {
 			setLang('en');
 		} else {
 			setLang(localStorage.getItem('locale'));
-		}
-	}, [router]);
-
-	useEffect(() => {
-		switch (router.pathname) {
-			case '/pharmacies/detail':
-				setBgColor(true);
-				break;
-			default:
-				break;
 		}
 	}, [router]);
 
@@ -117,7 +106,7 @@ const Top = () => {
 		/>
 	))(({ theme }) => ({
 		'& .MuiPaper-root': {
-			top: '109px',
+			top: '64px',
 			borderRadius: 6,
 			marginTop: theme.spacing(1),
 			minWidth: 160,
@@ -184,7 +173,7 @@ const Top = () => {
 		return (
 			<Stack className={'navbar'}>
 				<motion.div
-					className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''} ${
+					className={`navbar-main public-clinical-navbar ${colorChange ? 'transparent' : ''} ${
 						isHome ? 'home-clinical-navbar' : ''
 					}`}
 					initial={false}
@@ -194,7 +183,7 @@ const Top = () => {
 					<Stack className={'container'}>
 						<Box component={'div'} className={'logo-box'}>
 							<Link href={'/'}>
-								<BrandLogo variant={isHome ? 'dark' : 'light'} />
+								<BrandLogo variant="dark" />
 							</Link>
 						</Box>
 						<Box component={'nav'} className={'router-box'} aria-label="Primary navigation">
@@ -247,21 +236,10 @@ const Top = () => {
 									</Menu>
 								</>
 							) : (
-								isHome ? (
-									<div className="home-auth-actions">
-										<Link href="/account/join" className="home-auth-actions__login">{t('Login')}</Link>
-										<Link href="/account/join?mode=signup" className="home-auth-actions__register">{t('Register')}</Link>
-									</div>
-								) : (
-									<Link href={'/account/join'}>
-										<div className={'join-box'}>
-											<AccountCircleOutlinedIcon />
-											<span>
-												{t('Login')} / {t('Register')}
-											</span>
-										</div>
-									</Link>
-								)
+								<div className="public-auth-actions">
+									<Link href="/account/join" className="public-auth-actions__login">{t('Login')}</Link>
+									<Link href="/account/join?mode=signup" className="public-auth-actions__register">{t('Register')}</Link>
+								</div>
 							)}
 
 							<div className={'lan-box'}>

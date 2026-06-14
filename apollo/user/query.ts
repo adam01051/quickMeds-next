@@ -101,6 +101,18 @@ export const GET_PHARMACY = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt
@@ -158,6 +170,18 @@ export const GET_PHARMACIES = gql`
 				pharmacyDesc
 				acceptsInsurance
 				hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 				memberId
 				verifiedAt
 				deletedAt
@@ -219,6 +243,18 @@ export const GET_AGENT_PHARMACIES = gql`
 				pharmacyDesc
 				acceptsInsurance
 				hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 				memberId
 				verifiedAt
 				deletedAt
@@ -255,6 +291,18 @@ export const GET_FAVORITES = gql`
 				pharmacyDesc
 				acceptsInsurance
 				hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 				memberId
 				verifiedAt
 				deletedAt
@@ -318,6 +366,18 @@ export const GET_VISITED = gql`
 				pharmacyDesc
 				acceptsInsurance
 				hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 				memberId
 				verifiedAt
 				deletedAt

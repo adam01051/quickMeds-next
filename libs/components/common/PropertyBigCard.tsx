@@ -6,7 +6,7 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Property } from '../../types/property/property';
 import { REACT_APP_API_URL } from '../../config';
-import { formatterStr } from '../../utils';
+import { formatDeliveryFeeUZS } from '../../utils';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
@@ -45,7 +45,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 						</div>
 					)}
 
-					<div className={'price'}>Delivery: ${formatterStr(property?.pharmacyDeliveryFee)}</div>
+					<div className={'price'}>{property.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(property.pharmacyDeliveryFee)}` : 'Pickup only'}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'}>{property?.pharmacyName}</strong>

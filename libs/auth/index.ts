@@ -1,9 +1,32 @@
 import decodeJWT from 'jwt-decode';
+import { ApolloError } from '@apollo/client';
 import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
-import { sweetMixinErrorAlert } from '../sweetAlert';
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+
+const AUTH_ERROR_MESSAGES: Record<string, string> = {
+	'No member with that member nick!': 'No account was found with that nickname.',
+	'Wrong password, try again!': 'The password is incorrect. Please try again.',
+	'You have been blocked!': 'This account has been blocked.',
+	'The member nick is already in use, please choose another one!': 'That nickname or phone number is already in use.',
+};
+
+const normalizeAuthError = (error: unknown): Error => {
+	if (error instanceof ApolloError) {
+		if (error.graphQLErrors.length > 0) {
+			const message = error.graphQLErrors[0]?.message;
+			if (typeof message === 'string') return new Error(AUTH_ERROR_MESSAGES[message] ?? message);
+		}
+
+		if (error.networkError) {
+			return new Error('Unable to connect to QuickMeds. Please try again shortly.');
+		}
+	}
+
+	if (error instanceof Error && error.message) return error;
+	return new Error('Authentication failed. Please try again.');
+};
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -23,10 +46,8 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
-		console.warn('login err', err);
-		logOut();
-		throw new Error('Login Err');
+	} catch (error: unknown) {
+		throw normalizeAuthError(error);
 	}
 };
 
@@ -38,30 +59,16 @@ const requestJwtToken = async ({
 	password: string;
 }): Promise<{ jwtToken: string }> => {
 	const apolloClient = await initializeApollo();
+	const result = await apolloClient.mutate({
+		mutation: LOGIN,
+		variables: { input: { memberNick: nick, memberPassword: password } },
+		fetchPolicy: 'network-only',
+		context: { suppressGlobalErrorAlert: true },
+	});
+	const accessToken = result?.data?.login?.accessToken;
 
-	try {
-		const result = await apolloClient.mutate({
-			mutation: LOGIN,
-			variables: { input: { memberNick: nick, memberPassword: password } },
-			fetchPolicy: 'network-only',
-		});
-
-		console.log('---------- login ----------');
-		const { accessToken } = result?.data?.login;
-
-		return { jwtToken: accessToken };
-	} catch (err: any) {
-		console.log('request token err', err.graphQLErrors);
-		switch (err.graphQLErrors[0].message) {
-			case 'Definer: login and password do not match':
-				await sweetMixinErrorAlert('Please check your password again');
-				break;
-			case 'Definer: user has been blocked!':
-				await sweetMixinErrorAlert('User has been blocked!');
-				break;
-		}
-		throw new Error('token error');
-	}
+	if (!accessToken) throw new Error('The login response did not include an access token.');
+	return { jwtToken: accessToken };
 };
 
 export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {
@@ -72,10 +79,8 @@ export const signUp = async (nick: string, password: string, phone: string, type
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
-		console.warn('login err', err);
-		logOut();
-		throw new Error('Login Err');
+	} catch (error: unknown) {
+		throw normalizeAuthError(error);
 	}
 };
 
@@ -91,32 +96,18 @@ const requestSignUpJwtToken = async ({
 	type: string;
 }): Promise<{ jwtToken: string }> => {
 	const apolloClient = await initializeApollo();
+	const result = await apolloClient.mutate({
+		mutation: SIGN_UP,
+		variables: {
+			input: { memberNick: nick, memberPassword: password, memberPhone: phone, memberType: type },
+		},
+		fetchPolicy: 'network-only',
+		context: { suppressGlobalErrorAlert: true },
+	});
+	const accessToken = result?.data?.signup?.accessToken;
 
-	try {
-		const result = await apolloClient.mutate({
-			mutation: SIGN_UP,
-			variables: {
-				input: { memberNick: nick, memberPassword: password, memberPhone: phone, memberType: type },
-			},
-			fetchPolicy: 'network-only',
-		});
-
-		console.log('---------- login ----------');
-		const { accessToken } = result?.data?.signup;
-
-		return { jwtToken: accessToken };
-	} catch (err: any) {
-		console.log('request token err', err.graphQLErrors);
-		switch (err.graphQLErrors[0].message) {
-			case 'Definer: login and password do not match':
-				await sweetMixinErrorAlert('Please check your password again');
-				break;
-			case 'Definer: user has been blocked!':
-				await sweetMixinErrorAlert('User has been blocked!');
-				break;
-		}
-		throw new Error('token error');
-	}
+	if (!accessToken) throw new Error('The signup response did not include an access token.');
+	return { jwtToken: accessToken };
 };
 
 export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {

@@ -83,6 +83,14 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 					<Checkbox className="property-checkbox" checked={searchFilter.search.acceptsInsurance === true} onChange={(e) => updateSearch({ acceptsInsurance: e.target.checked || undefined })} />
 					<Typography className="property-type">Accepts insurance</Typography>
 				</Stack>
+				<Stack className="input-box">
+					<Checkbox className="property-checkbox" checked={searchFilter.search.openNow === true} onChange={(e) => updateSearch({ openNow: e.target.checked || undefined })} />
+					<Typography className="property-type">Open now</Typography>
+				</Stack>
+				<Stack className="input-box">
+					<Checkbox className="property-checkbox" checked={searchFilter.search.open24Hours === true} onChange={(e) => updateSearch({ open24Hours: e.target.checked || undefined })} />
+					<Typography className="property-type">Open 24/7</Typography>
+				</Stack>
 
 				<Typography className="title">Delivery fee</Typography>
 				<Stack className="square-year-input">
@@ -90,14 +98,14 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 						type="number"
 						placeholder="Min"
 						value={searchFilter.search.deliveryFeeRange?.start ?? ''}
-						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 1000 } } })}
+						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 100000 } } })}
 					/>
 					<div className="central-divider" />
 					<input
 						type="number"
 						placeholder="Max"
 						value={searchFilter.search.deliveryFeeRange?.end ?? ''}
-						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 1000 } } })}
+						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 100000 } } })}
 					/>
 				</Stack>
 

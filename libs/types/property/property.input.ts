@@ -1,5 +1,6 @@
 import { PharmacyLocation, PharmacyStatus, PharmacyType } from '../../enums/property.enum';
 import { Direction } from '../../enums/common.enum';
+import { PharmacyOperatingDay } from './property';
 
 export interface PharmacyInput {
 	pharmacyType: PharmacyType;
@@ -13,6 +14,9 @@ export interface PharmacyInput {
 	pharmacyDesc?: string;
 	acceptsInsurance?: boolean;
 	hasDelivery?: boolean;
+	open24Hours?: boolean;
+	pharmacyTimezone?: string;
+	operatingHours?: PharmacyOperatingDay[];
 	memberId?: string;
 	openedAt?: Date;
 }
@@ -23,6 +27,8 @@ interface PISearch {
 	typeList?: PharmacyType[];
 	acceptsInsurance?: boolean;
 	hasDelivery?: boolean;
+	openNow?: boolean;
+	open24Hours?: boolean;
 	deliveryFeeRange?: Range;
 	periodsRange?: PeriodsRange;
 	text?: string;

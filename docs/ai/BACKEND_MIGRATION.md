@@ -56,3 +56,10 @@ The pharmacy schema follows the ER model fields:
 - `MemberType.AGENT` is still the pharmacy owner role.
 - Existing MongoDB `properties` documents are not automatically migrated into `pharmacies`; production rollout needs a separate data migration/backfill plan if old data must be preserved.
 - Frontend and external clients must update GraphQL calls to the new pharmacy API names.
+
+## Tashkent Demo Data Procedure
+
+- Five demo Pharmacy Owners and pharmacies were created through backend `signup` and authenticated `createPharmacy` operations.
+- Pharmacy images use the backend-hosted `uploads/pharmacy/default-pharmacy.webp` fallback.
+- Stable owner nicknames and pharmacy name/address pairs prevent duplicate seed records.
+- Replace or remove all demo records before production.

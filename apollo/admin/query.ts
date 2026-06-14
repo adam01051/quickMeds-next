@@ -62,6 +62,18 @@ export const GET_ALL_PHARMACIES_BY_ADMIN = gql`
 				pharmacyDesc
 				acceptsInsurance
 				hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 				memberId
 				verifiedAt
 				deletedAt

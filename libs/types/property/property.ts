@@ -11,6 +11,13 @@ export interface TotalCounter {
 	total: number;
 }
 
+export interface PharmacyOperatingDay {
+	dayOfWeek: number;
+	isClosed: boolean;
+	opensAt?: string;
+	closesAt?: string;
+}
+
 export interface Property {
 	_id: string;
 	pharmacyType: PharmacyType;
@@ -30,6 +37,13 @@ export interface Property {
 	pharmacyDesc?: string;
 	acceptsInsurance: boolean;
 	hasDelivery: boolean;
+	open24Hours: boolean;
+	pharmacyTimezone: string;
+	operatingHours: PharmacyOperatingDay[];
+	hoursConfigured: boolean;
+	isOpenNow: boolean;
+	nextOpeningAt?: Date;
+	nextClosingAt?: Date;
 	memberId: string;
 	verifiedAt?: Date;
 	deletedAt?: Date;

@@ -1,5 +1,11 @@
 # Frontend Migration Plan
 
+## Current Authority
+
+QuickMeds is a pharmacy-discovery platform. The public catalog entity is a Pharmacy, not a medicine or generic Product. Medicine catalog, inventory, prescription, and price-comparison workflows are out of scope.
+
+The historical compatibility plan below is retained only as migration context. Its proposed Product/medicine terminology and stale Property GraphQL operations are superseded by the implemented Pharmacy contract, canonical `/pharmacies` routes, and current frontend source.
+
 ## Context
 
 No Next.js frontend source was inspected in this backend repo. This plan maps the known Nestar backend concepts and likely frontend surfaces to quickMeds pharmacy marketplace concepts. Treat it as the starting checklist for the actual frontend repository audit.
@@ -71,3 +77,27 @@ During the compatibility phase, keep backend GraphQL operations unchanged and re
 - Do not change backend operation names from the frontend repo without a backend compatibility phase.
 - Avoid exposing real-estate field labels to users once quickMeds branding is visible.
 - Keep a temporary compatibility layer small and easy to delete after backend GraphQL migration.
+# Delivery And Hours Rollout
+
+- Pharmacy Owner forms maintain delivery fees, explicit 24/7 status, and optional weekly hours.
+- Homepage/catalog filters and public pharmacy surfaces consume the additive operating-hours contract.
+- Delivery fees are displayed as integer UZS amounts; pickup-only pharmacies hide the fee and `0` means Free.
+- Current-location distance search and verified-only filtering remain deferred.
+
+## June 14, 2026 Incremental Visual Migration
+
+Completed public frontend migrations:
+
+- Homepage discovery composition, search, pharmacy sections, supporting sections, and Pharmacy Owner CTA use the Warm Civic Pharmacy direction.
+- Public desktop navigation now shares one compact warm-white treatment across homepage, catalog, detail, Pharmacy Owners, community, account, My Page, CS, member, and About routes.
+- Pharmacy detail now uses responsive pharmacy-specific information and states instead of the property-era presentation.
+- The desktop catalog uses a dedicated pharmacy-service card and no longer exposes property-card hierarchy or public medication counts.
+
+Intentionally deferred Nestar surfaces:
+
+- catalog route banner and sidebar/filter shell;
+- Favorites and Recently Visited shared cards;
+- Pharmacy Owner and admin presentation;
+- mobile navigation and mobile catalog;
+- footer location/contact replacement;
+- internal Property/Agent file, class, route, and type names.

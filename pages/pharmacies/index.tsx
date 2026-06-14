@@ -1,7 +1,7 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
-import PropertyCard from '../../libs/components/property/PropertyCard';
+import CatalogPharmacyCard from '../../libs/components/property/CatalogPharmacyCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/property/Filter';
@@ -87,7 +87,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 			await likeTargetPharmacy({
 				variables: { input: id },
 			});
-			await getPharmaciesRefetch({ input: initialInput });
+			await getPharmaciesRefetch({ input: searchFilter });
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (error: any) {
 			console.log('error in likePropertHandler', error.message);
@@ -112,15 +112,20 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.ASC });
+				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.ASC, search: { ...searchFilter.search, hasDelivery: true } });
 				setFilterSortName('Lowest delivery fee');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.DESC });
+				setSearchFilter({ ...searchFilter, sort: 'pharmacyDeliveryFee', direction: Direction.DESC, search: { ...searchFilter.search, hasDelivery: true } });
 				setFilterSortName('Highest delivery fee');
 		}
 		setSortingOpen(false);
 		setAnchorEl(null);
+	};
+
+	const clearFilters = async () => {
+		setSearchFilter(initialInput);
+		await router.push(`/pharmacies?input=${JSON.stringify(initialInput)}`, undefined, { scroll: false });
 	};
 
 	if (device === 'mobile') {
@@ -170,14 +175,31 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 						</Stack>
 						<Stack className="main-config" mb={'76px'}>
 							<Stack className={'list-config'}>
-								{properties?.length === 0 ? (
-									<div className={'no-data'}>
-										<img src="/img/icons/icoAlert.svg" alt="" />
-										<p>No pharmacies found!</p>
+								{getPharmaciesLoading && properties.length === 0 ? (
+									Array.from({ length: 6 }).map((_, index) => (
+										<div className="catalog-pharmacy-skeleton" aria-hidden="true" key={index}>
+											<div />
+											<span />
+											<span />
+											<span />
+											<span />
+										</div>
+									))
+								) : getPharmacyError ? (
+									<div className="catalog-pharmacy-state" role="alert">
+										<strong>Pharmacies could not be loaded</strong>
+										<p>Check your connection and try again.</p>
+										<Button variant="outlined" onClick={() => getPharmaciesRefetch({ input: searchFilter })}>Try again</Button>
+									</div>
+								) : properties?.length === 0 ? (
+									<div className="catalog-pharmacy-state">
+										<strong>No pharmacies match these filters</strong>
+										<p>Try changing your region, services, or search text.</p>
+										<Button variant="outlined" onClick={clearFilters}>Clear filters</Button>
 									</div>
 								) : (
 									properties.map((property: Property) => {
-										return <PropertyCard property={property} likePropertyHandler = {likePropertyHandler} key={property?._id} />;
+										return <CatalogPharmacyCard pharmacy={property} onFavorite={likePropertyHandler} key={property?._id} />;
 									})
 								)}
 							</Stack>

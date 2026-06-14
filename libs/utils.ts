@@ -5,6 +5,9 @@ export const formatterStr = (value: number | undefined): string => {
 	return numeral(value).format('0,0') != '0' ? numeral(value).format('0,0') : '';
 };
 
+export const formatDeliveryFeeUZS = (value: number | undefined): string =>
+	!value ? 'Free' : `${new Intl.NumberFormat('uz-UZ').format(value)} UZS`;
+
 export const likeTargetPharmacyHandler = async (likeTargetPharmacy: any, id: string) => {
 	try {
 		await likeTargetPharmacy({

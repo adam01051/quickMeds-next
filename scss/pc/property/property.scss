@@ -403,3 +403,385 @@
 		}
 	}
 }
+
+/** QUICKMEDS CATALOG PHARMACY CARDS **/
+#pc-wrap #property-list-page {
+	.catalog-pharmacy-card {
+		width: 296px;
+		min-width: 0;
+		overflow: hidden;
+		border: 1px solid #d7e2de;
+		border-radius: 10px;
+		background: #fff;
+		transition:
+			transform 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease;
+
+		&:hover {
+			border-color: #a9c4ba;
+			box-shadow: 0 8px 22px rgba(16, 42, 34, 0.07);
+			transform: translateY(-2px);
+		}
+
+		&__media {
+			position: relative;
+			height: 168px;
+			overflow: hidden;
+			background: #e5ece9;
+
+			> a {
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				&:focus-visible {
+					outline: 3px solid #126b50;
+					outline-offset: -3px;
+				}
+			}
+
+			img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+				transition: transform 220ms ease;
+			}
+		}
+
+		&:hover &__media img {
+			transform: scale(1.02);
+		}
+
+		&__status {
+			position: absolute;
+			left: 12px;
+			bottom: 12px;
+			min-height: 25px;
+			padding: 0 8px;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			border: 1px solid rgba(255, 255, 255, 0.75);
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.94);
+			color: #536660;
+			font-family: $font;
+			font-size: 9px;
+			font-weight: 700;
+			letter-spacing: 0.025em;
+			text-transform: uppercase;
+
+			svg {
+				width: 12px;
+				height: 12px;
+			}
+
+			&.is-open {
+				background: #065c45;
+				color: #fff;
+			}
+
+			&.is-closed {
+				background: rgba(255, 255, 255, 0.96);
+				color: #40534c;
+			}
+
+			&.is-unknown {
+				background: rgba(246, 248, 247, 0.96);
+				color: #71847d;
+			}
+		}
+
+		&__favorite.MuiIconButton-root {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			width: 44px;
+			height: 44px;
+			border: 1px solid rgba(215, 226, 222, 0.95);
+			background: rgba(255, 255, 255, 0.94);
+			color: #45675b;
+
+			&:hover {
+				background: #fff;
+			}
+
+			&:focus-visible {
+				outline: 2px solid #126b50;
+				outline-offset: 2px;
+			}
+
+			svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+
+		&__body {
+			padding: 15px 13px 13px;
+		}
+
+		&__heading {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 8px;
+
+			h2 {
+				min-width: 0;
+				color: #102a22;
+				font-family: $font;
+				font-size: 15px;
+				font-weight: 650;
+				line-height: 1.3;
+			}
+
+			span {
+				flex: 0 0 auto;
+				display: inline-flex;
+				color: #126b50;
+
+				svg {
+					width: 16px;
+					height: 16px;
+				}
+			}
+		}
+
+		&__address {
+			min-height: 34px;
+			margin: 6px 0 14px;
+			display: flex;
+			align-items: flex-start;
+			gap: 4px;
+			color: #60736c;
+			font-family: $font;
+			font-size: 10px;
+			line-height: 1.45;
+
+			svg {
+				width: 13px;
+				height: 13px;
+				flex: 0 0 auto;
+				margin-top: 1px;
+			}
+		}
+
+		&__facts {
+			margin: 0;
+			padding: 12px 0;
+			display: grid;
+			gap: 7px;
+			border-top: 1px solid #e5ece9;
+			border-bottom: 1px solid #e5ece9;
+
+			div {
+				display: grid;
+				grid-template-columns: 74px minmax(0, 1fr);
+				align-items: center;
+				gap: 8px;
+			}
+
+			dt,
+			dd {
+				margin: 0;
+				font-family: $font;
+				font-size: 10px;
+				line-height: 1.35;
+			}
+
+			dt {
+				color: #71847d;
+			}
+
+			dd {
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				gap: 4px;
+				color: #17372e;
+				font-weight: 550;
+				text-align: right;
+
+				svg {
+					width: 13px;
+					height: 13px;
+				}
+			}
+		}
+
+		&__action {
+			width: 100%;
+			min-height: 44px;
+			margin-top: 13px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			border: 1px solid #8eaaa0;
+			border-radius: 7px;
+			color: #064e3b;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 600;
+			transition:
+				border-color 150ms ease,
+				background-color 150ms ease;
+
+			&:hover {
+				border-color: #064e3b;
+				background: #f3faf7;
+			}
+
+			&:focus-visible {
+				outline: 2px solid #064e3b;
+				outline-offset: 2px;
+			}
+
+			svg {
+				width: 15px;
+				height: 15px;
+			}
+		}
+	}
+
+	.catalog-pharmacy-state {
+		width: 100%;
+		min-height: 320px;
+		padding: 48px 24px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		border: 1px solid #d7e2de;
+		border-radius: 10px;
+		background: #fff;
+		text-align: center;
+
+		strong {
+			color: #102a22;
+			font-family: $font;
+			font-size: 18px;
+		}
+
+		p {
+			color: #60736c;
+			font-family: $font;
+			font-size: 13px;
+		}
+
+		button {
+			min-height: 44px;
+			margin-top: 6px;
+			border-color: #8eaaa0;
+			color: #064e3b;
+			font-family: $font;
+			text-transform: none;
+		}
+	}
+
+	.catalog-pharmacy-skeleton {
+		width: 296px;
+		height: 394px;
+		padding: 184px 13px 13px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		border: 1px solid #e1e8e5;
+		border-radius: 10px;
+		background: #fff;
+		position: relative;
+		overflow: hidden;
+
+		div,
+		span {
+			border-radius: 5px;
+			background: #eaf0ed;
+			animation: catalog-pharmacy-pulse 1.5s ease-in-out infinite;
+		}
+
+		div {
+			position: absolute;
+			inset: 0 0 auto;
+			height: 168px;
+			border-radius: 0;
+		}
+
+		span {
+			height: 14px;
+
+			&:nth-of-type(1) {
+				width: 68%;
+			}
+
+			&:nth-of-type(2) {
+				width: 92%;
+			}
+
+			&:nth-of-type(3) {
+				height: 84px;
+			}
+
+			&:nth-of-type(4) {
+				height: 44px;
+			}
+		}
+	}
+}
+
+@keyframes catalog-pharmacy-pulse {
+	0%,
+	100% {
+		opacity: 0.55;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@media (max-width: 1180px) {
+	#pc-wrap #property-list-page .container {
+		width: calc(100% - 48px);
+
+		.property-page {
+			gap: 18px;
+
+			.filter-config {
+				width: 280px;
+				flex: 0 0 280px;
+			}
+
+			.main-config {
+				width: auto;
+				min-width: 0;
+				flex: 1;
+
+				.list-config {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 20px;
+
+					.catalog-pharmacy-card,
+					.catalog-pharmacy-skeleton {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#pc-wrap #property-list-page {
+		.catalog-pharmacy-card,
+		.catalog-pharmacy-card *,
+		.catalog-pharmacy-skeleton div,
+		.catalog-pharmacy-skeleton span {
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+}

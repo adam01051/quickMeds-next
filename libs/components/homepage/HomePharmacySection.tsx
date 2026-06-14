@@ -51,7 +51,7 @@ const HomePharmacySection = ({ title, description, initialInput, tone = 'default
 						<p>{description}</p>
 					</div>
 					<Link href="/pharmacies">
-						Browse all pharmacies
+						View all
 						<ArrowForwardRoundedIcon />
 					</Link>
 				</header>

@@ -141,6 +141,18 @@ export const CREATE_PHARMACY = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt
@@ -170,6 +182,18 @@ export const UPDATE_PHARMACY = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt
@@ -199,6 +223,18 @@ export const LIKE_TARGET_PHARMACY = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt

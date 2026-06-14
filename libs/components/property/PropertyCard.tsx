@@ -5,7 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Property } from '../../types/property/property';
 import Link from 'next/link';
-import { formatterStr } from '../../utils';
+import { formatDeliveryFeeUZS } from '../../utils';
 import { REACT_APP_API_URL } from '../../config';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
@@ -53,7 +53,7 @@ const PropertyCard = (props: PropertyCardType) => {
 						</Box>
 					)}
 					<Box component={'div'} className={'price-box'}>
-						<Typography>Delivery: ${formatterStr(property?.pharmacyDeliveryFee)}</Typography>
+						<Typography>{property.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(property.pharmacyDeliveryFee)}` : 'Pickup only'}</Typography>
 					</Box>
 				</Stack>
 				<Stack className="bottom">
@@ -88,6 +88,9 @@ const PropertyCard = (props: PropertyCardType) => {
 					<Stack className="divider"></Stack>
 					<Stack className="type-buttons">
 						<Stack className="type">
+							<Typography sx={{ fontWeight: 500, fontSize: '13px' }}>
+								{property.open24Hours ? 'Open 24/7' : property.hoursConfigured ? (property.isOpenNow ? 'Open now' : 'Closed') : 'Hours not provided'}
+							</Typography>
 							<Typography
 								sx={{ fontWeight: 500, fontSize: '13px' }}
 								className={property.hasDelivery ? '' : 'disabled-type'}

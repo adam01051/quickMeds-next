@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import { PharmacyStatus } from '../../../enums/property.enum';
 import { getPharmacyLocationLabel } from '../../../utils/pharmacy-location';
+import { formatDeliveryFeeUZS } from '../../../utils';
 
 interface Data {
 	id: string;
@@ -177,7 +178,11 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 												</Stack>
 											)}
 										</TableCell>
-										<TableCell align="center">{property.pharmacyDeliveryFee}</TableCell>
+										<TableCell align="center">
+											{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}
+											<br />
+											<small>{property.open24Hours ? 'Open 24/7' : property.hoursConfigured ? 'Hours configured' : 'Hours missing'}</small>
+										</TableCell>
 										<TableCell align="center">{property.memberData?.memberNick}</TableCell>
 										<TableCell align="center">{getPharmacyLocationLabel(property.pharmacyLocation)}</TableCell>
 										<TableCell align="center">{property.pharmacyType}</TableCell>

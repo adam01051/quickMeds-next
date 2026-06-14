@@ -121,3 +121,43 @@ The public pharmacy catalog now uses pharmacy terminology in its canonical URLs 
 | Legacy compatibility | Completed | Added permanent redirects from both old routes and preserved query parameters. |
 | Route consumers | Completed | Updated navigation, homepage search, filters, cards, favorites, owner pages, and admin detail links. |
 | Deferred internal cleanup | Documented | Legacy component, type, SCSS, admin-route, and owner-category names remain for a separate incremental migration. |
+# Delivery Fees And Operating Hours
+
+- Added shared UZS formatting, owner delivery/hour controls, Open now/24/7 filters, operating badges, detail schedules, and admin missing-hours visibility.
+
+## Restart Stabilization Checkpoint
+
+- Frontend production build generated all 73 pages.
+- Live backend schema matches the frontend Pharmacy, operating-hours, and inquiry fields.
+- Public homepage, login, catalog, missing-detail, and mypage routes returned HTTP 200.
+- Invalid-login behavior returned the expected current backend message without changing data.
+- Live catalog smoke testing found one legacy fractional delivery fee (`3.5`) that must be normalized before seed work.
+
+## Five Tashkent Demo Pharmacies
+
+- Created five Pharmacy Owner accounts and five active Tashkent pharmacies through the live GraphQL API.
+- Covered 24/7, missing, standard, closed-day, and overnight operating-hour states.
+- Covered free delivery, paid delivery, pickup-only, and varied insurance support.
+- Verified all five records render on the catalog; homepage and detail surfaces render representative demo records and related pharmacies.
+- Verified the fallback pharmacy image, UZS fee display, Open-now filter, 24/7 filter, and idempotent seed behavior.
+
+## June 14, 2026 Frontend Production Checkpoint
+
+- Fixed the local runtime collision by leaving one healthy backend on `3007` and one frontend development server on `3000`; conflicting Next.js servers had shared `.next` and caused development-chunk 404 responses.
+- Migrated every public desktop navbar to the compact Warm Civic Pharmacy treatment while preserving links, authentication, notifications, language behavior, routes, mobile navigation, and admin navigation.
+- Added separate Login and Register actions across public desktop routes and positioned legacy `LayoutBasic` banners below the fixed navbar.
+- Replaced the public pharmacy detail placeholder and property-era presentation with responsive pharmacy information, truthful services/hours, coordinate map fallback, owner/contact information, comments, nearby pharmacies, loading, error, and empty states.
+- Stabilized login failures so GraphQL/network errors display meaningful messages without reloading or clearing an existing session.
+- Added frontend support for integer UZS delivery fees, owner-defined weekly hours, explicit 24/7 status, Open-now filters, public status badges, and detail schedules.
+- Replaced the desktop catalog’s visible Nestar property card with a catalog-only pharmacy-service card. Removed medication count, rank badge, floating price overlay, property-fact icons, views, likes, and disabled service labels from this surface.
+- Added catalog loading skeletons, query-error recovery, improved empty state, resilient image fallback, semantic favorite/detail controls, and a contained two-column result grid at `1024px`.
+- Preserved the legacy catalog banner/sidebar, mobile catalog placeholder, Favorites card, Recently Visited card, owner/admin presentation, and internal Property/Agent compatibility names for later phases.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Homepage, catalog, pharmacy detail, Pharmacy Owners, community, account, My Page, CS, member, and About route checks returned HTTP 200.
+- Referenced Next.js development assets returned HTTP 200 after the runtime cleanup.
+- Catalog cards were visually checked at `1440px` and `1024px`.

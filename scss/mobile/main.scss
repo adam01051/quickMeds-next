@@ -1301,3 +1301,193 @@
 		transition: none !important;
 	}
 }
+
+/** QUICKMEDS PHARMACY DETAIL MOBILE **/
+#mobile-wrap {
+	#pharmacy-detail-page {
+		padding: 24px 0 70px;
+
+		.pharmacy-detail {
+			width: calc(100% - 32px);
+			margin: 0 auto;
+		}
+	}
+
+	.pharmacy-detail__header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 20px;
+		padding-bottom: 20px;
+	}
+
+	.pharmacy-detail__identity {
+		width: 100%;
+
+		h1 {
+			margin-top: 13px;
+			font-size: clamp(34px, 10vw, 44px);
+			white-space: normal;
+		}
+
+		> p {
+			align-items: flex-start;
+			font-size: 13px;
+		}
+	}
+
+	.pharmacy-detail__services {
+		margin-top: 14px;
+		gap: 6px;
+
+		span {
+			min-height: 27px;
+			padding: 0 8px;
+			font-size: 9px;
+		}
+	}
+
+	.pharmacy-detail__header-actions {
+		width: 100%;
+
+		> div,
+		button {
+			flex: 1;
+			justify-content: center;
+		}
+	}
+
+	.pharmacy-detail__gallery {
+		margin-top: 22px;
+		display: block;
+	}
+
+	.pharmacy-detail__main-image {
+		aspect-ratio: 4 / 3;
+		border-radius: 12px;
+	}
+
+	.pharmacy-detail__thumbnails {
+		margin-top: 8px;
+		display: flex;
+		gap: 7px;
+		overflow-x: auto;
+		scrollbar-width: none;
+
+		button {
+			flex: 0 0 76px;
+			height: 66px;
+		}
+	}
+
+	.pharmacy-detail__layout {
+		margin-top: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.pharmacy-detail__content {
+		display: contents;
+	}
+
+	.pharmacy-detail__section,
+	.pharmacy-detail__owner-card,
+	.pharmacy-detail__message-card {
+		padding: 20px;
+		border-radius: 12px;
+	}
+
+	.pharmacy-detail__section-heading h2 {
+		font-size: 23px;
+	}
+
+	.pharmacy-detail__facts,
+	.pharmacy-detail__service-list {
+		grid-template-columns: 1fr;
+	}
+
+	.pharmacy-detail__facts div {
+		grid-template-columns: 110px 1fr;
+	}
+
+	.pharmacy-detail__map {
+		height: 260px;
+	}
+
+	.pharmacy-detail__comment-form {
+		textarea {
+			font-size: 16px;
+		}
+
+		button {
+			width: 100%;
+		}
+	}
+
+	.pharmacy-detail__sidebar {
+		position: static;
+		display: contents;
+	}
+
+	.pharmacy-detail__owner-card {
+		order: 1;
+	}
+
+	.pharmacy-detail__message-card {
+		order: 2;
+
+		input,
+		textarea {
+			font-size: 16px;
+		}
+	}
+
+	.pharmacy-detail__nearby {
+		margin-top: 34px;
+		padding-top: 28px;
+	}
+
+	.pharmacy-detail__nearby-grid {
+		margin-top: 18px;
+		grid-template-columns: 1fr;
+	}
+
+	.pharmacy-detail__nearby-card {
+		display: grid;
+		grid-template-columns: 120px minmax(0, 1fr);
+
+		> a {
+			height: 100%;
+			aspect-ratio: auto;
+		}
+
+		> div p {
+			min-height: 0;
+		}
+	}
+
+	.pharmacy-detail-state {
+		width: calc(100% - 32px);
+		min-height: 620px;
+		padding-top: 48px;
+	}
+
+	.pharmacy-detail-state__skeleton {
+		&--heading {
+			width: 88%;
+			height: 120px;
+		}
+
+		&--gallery {
+			height: 280px;
+		}
+
+		&--content {
+			width: 100%;
+		}
+	}
+
+	.pharmacy-detail-state--message h1 {
+		font-size: 34px;
+	}
+}

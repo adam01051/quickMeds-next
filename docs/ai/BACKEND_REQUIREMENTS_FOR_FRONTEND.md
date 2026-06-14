@@ -23,7 +23,7 @@ The current `getPharmacies(input: PharmaciesInquiry)` contract already supports 
 
 `All regions` must continue to omit `locationList`. No new backend value is required for it.
 
-## Required Backend Additions
+## Capability Status And Remaining Backend Additions
 
 ### P0: Uzbekistan Region Data Quality
 
@@ -69,7 +69,7 @@ Behavior:
 - Only admins may set or clear `verifiedAt`.
 - Pharmacy Owners must not be able to self-verify.
 
-### P1: Operating Hours, Open Now, And 24/7
+### Implemented: Operating Hours, Open Now, And 24/7
 
 `openedAt` is the pharmacy establishment/opening date. It must not be used to calculate whether a pharmacy is currently open.
 
@@ -264,6 +264,38 @@ Required validation commands:
 
 ## Deferred Backend Work
 
+## Implemented Delivery Fee And Operating Hours Contract
+
+Implemented in June 2026:
+
+- Delivery fees are persisted integer UZS values, not hardcoded UI values.
+- New delivery-enabled pharmacies default to `3000 UZS`; owners may edit the fee or use `0` for free delivery.
+- Disabling delivery normalizes the fee to `0`.
+- The backend exposes `open24Hours`, `pharmacyTimezone`, `operatingHours`, `hoursConfigured`, `isOpenNow`, `nextOpeningAt`, and `nextClosingAt`.
+- Public inquiries accept `openNow` and `open24Hours`.
+- Weekly hours use Monday `1` through Sunday `7`, one interval per day, with overnight intervals supported.
+- Missing hours display as `Hours not provided` and never imply Open now.
+- `openedAt` remains the establishment date.
+
+Run the idempotent backend migration with:
+
+```bash
+npm run migrate:pharmacy-hours -- --dry-run
+npm run migrate:pharmacy-hours
+```
+
+The frontend now formats fees as `3 000 UZS` or `Free`, hides fees for pickup-only pharmacies, enables Open now/24/7 discovery filters, allows Pharmacy Owners to maintain schedules, shows public operating status and detail hours, and flags missing hours in admin. Current-location distance search remains deferred.
+
+Validation completed: frontend typecheck, production build, and diff checks passed. The backend migration was executed and its verification dry-run reports zero missing timezone, 24/7, schedule, or delivery-fee normalization records.
+
+Restart checkpoint note: the live catalog currently contains one legacy pharmacy with `pharmacyDeliveryFee: 3.5`. This violates the integer-UZS contract. Extend migration reporting to detect fractional values, then normalize that record before adding seed pharmacies.
+
+## Demo Data Coverage
+
+Five Tashkent demo pharmacies now exist in MongoDB and render through the existing Apollo-backed frontend. They provide visual coverage for 24/7, Open now, missing hours, closed-day, overnight, free-delivery, paid-delivery, pickup-only, and insurance states.
+
+The legacy fractional fee was normalized to `3000 UZS`. Demo pharmacy details distinguish source-confirmed branch facts from demo-only service and fee values. The records remain unverified and must not be treated as production-confirmed listings.
+
 The following remain outside this pharmacy-discovery backend phase:
 
 - Medicine catalog and medicine search.
@@ -272,3 +304,25 @@ The following remain outside this pharmacy-discovery backend phase:
 - Chat redesign.
 - Notification behavior.
 - Localization of stored pharmacy content.
+
+## June 14, 2026 Frontend Consumption Checkpoint
+
+The frontend currently consumes the implemented backend contract for:
+
+- Uzbekistan region filtering;
+- persisted integer UZS delivery fees;
+- delivery and insurance availability;
+- explicit 24/7 status;
+- computed Open-now status;
+- configured, missing, closed-day, and overnight operating hours;
+- `verifiedAt` display;
+- favorites, comments, owner profiles, and nearby pharmacy queries.
+
+The public catalog card now displays only these truthful backend fields and no longer displays medication count, rank, views, or likes. No backend contract change was required for the card migration.
+
+Still required for future approved frontend capabilities:
+
+- verified-only public inquiry filter;
+- coordinate-radius/current-location search and distance;
+- structured city/district/address search beyond current text and region behavior;
+- production verification of demo pharmacy facts and replacement/removal of demo accounts before launch.

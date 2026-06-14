@@ -1,4 +1,5 @@
 import { PharmacyLocation, PharmacyStatus, PharmacyType } from '../../enums/property.enum';
+import { PharmacyOperatingDay } from './property';
 
 export interface PharmacyUpdate {
 	_id: string;
@@ -15,6 +16,9 @@ export interface PharmacyUpdate {
 	pharmacyDesc?: string;
 	acceptsInsurance?: boolean;
 	hasDelivery?: boolean;
+	open24Hours?: boolean;
+	pharmacyTimezone?: string;
+	operatingHours?: PharmacyOperatingDay[];
 	verifiedAt?: Date;
 	deletedAt?: Date;
 	openedAt?: Date;

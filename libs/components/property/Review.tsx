@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Comment } from '../../types/comment/comment';
 import { REACT_APP_API_URL } from '../../config';
 import Moment from 'react-moment';
@@ -14,10 +13,8 @@ interface ReviewProps {
 
 const Review = (props: ReviewProps) => {
 	const { comment } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
-	const [value, setValue] = React.useState<number | null>(2);
 	const imagePath: string = comment?.memberData?.memberImage
 		? `${REACT_APP_API_URL}/${comment?.memberData?.memberImage}`
 		: '/img/profile/defaultUser.svg';
@@ -27,14 +24,11 @@ const Review = (props: ReviewProps) => {
 		if (id === user?._id) router.push('/mypage');
 		else router.push(`/member?memberId=${id}`);
 	};
-	if (device === 'mobile') {
-		return <div>REVIEW</div>;
-	} else {
-		return (
-			<Stack className={'review-config'}>
+	return (
+			<article className={'review-config'}>
 				<Stack className={'review-mb-info'}>
 					<Stack className={'img-name-box'}>
-						<img src={imagePath} alt="" className={'img-box'} />
+						<img src={imagePath} alt={`${comment.memberData?.memberNick ?? 'Member'} profile`} className={'img-box'} />
 						<Stack>
 							<Typography className={'name'} onClick={() => goMemberPage(comment?.memberData?._id as string)}>
 								{comment.memberData?.memberNick}
@@ -48,9 +42,8 @@ const Review = (props: ReviewProps) => {
 				<Stack className={'desc-box'}>
 					<Typography className={'description'}>{comment.commentContent}</Typography>
 				</Stack>
-			</Stack>
-		);
-	}
+			</article>
+	);
 };
 
 export default Review;

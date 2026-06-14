@@ -197,20 +197,20 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					)}
 				</AnimatePresence>
 			</motion.div>
-			<div className="home-search-future" aria-label="Future pharmacy discovery options">
-				<button type="button" disabled>
+			<div className="home-search-future" aria-label="Pharmacy discovery options">
+				<button type="button" className={searchFilter.search.openNow ? 'is-active' : ''} onClick={() => updateSearch({ openNow: searchFilter.search.openNow ? undefined : true })}>
 					<AccessTimeRoundedIcon />
-					<span><strong>Open now</strong><small className="future-item-label">Coming soon</small></span>
+					<span><strong>Open now</strong></span>
 				</button>
-				<button type="button" disabled>
+				<button type="button" className={searchFilter.search.open24Hours ? 'is-active' : ''} onClick={() => updateSearch({ open24Hours: searchFilter.search.open24Hours ? undefined : true })}>
 					<NightlightOutlinedIcon />
-					<span><strong>24/7 pharmacies</strong><small className="future-item-label">Coming soon</small></span>
+					<span><strong>24/7 pharmacies</strong></span>
 				</button>
 				<button type="button" disabled>
 					<LocationOnOutlinedIcon />
 					<span><strong>Use current location</strong><small className="future-item-label">Coming soon</small></span>
 				</button>
-				{device !== 'mobile' && <span className="home-search-future__label">Coming soon</span>}
+				{device !== 'mobile' && <span className="home-search-future__label">Location coming soon</span>}
 			</div>
 
 			<AnimatePresence>
@@ -262,14 +262,14 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 													type="number"
 													placeholder="Minimum"
 													value={searchFilter.search.deliveryFeeRange?.start ?? ''}
-													onChange={(e) => updateSearch({ deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 1000 } })}
+													onChange={(e) => updateSearch({ deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 100000 } })}
 												/>
 												<div className="minus-line" />
 												<input
 													type="number"
 													placeholder="Maximum"
 													value={searchFilter.search.deliveryFeeRange?.end ?? ''}
-													onChange={(e) => updateSearch({ deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 1000 } })}
+													onChange={(e) => updateSearch({ deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 100000 } })}
 												/>
 											</div>
 										</div>

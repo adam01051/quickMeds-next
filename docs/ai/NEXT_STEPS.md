@@ -1,5 +1,14 @@
 # Next Steps
 
+## Current Priority
+
+1. Continue frontend redesign one approved micro-phase at a time using the five demo pharmacies for visual validation.
+2. Complete authenticated smoke checks for owner create/edit, favorites, and recently visited.
+3. Replace or remove demo records before production and verify real-world facts with operators.
+4. Keep current-location distance search and verified-only filtering deferred.
+
+Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventory, prescription, or price-comparison features.
+
 ## Priority Order
 
 1. Plan MongoDB data migration from old property-era documents to pharmacy-era documents if existing data must be preserved.
@@ -33,3 +42,17 @@
 | P0 | Keep TypeScript checks in migration checklist | `npx tsc -p apps/quickmeds-api/tsconfig.app.json --noEmit` and batch equivalent. |
 | P0 | Keep build check | Run `npm run build` after implementation work. |
 | P1 | Add e2e smoke tests | Cover pharmacy catalog, pharmacy detail, saved pharmacies, and owner pharmacy pages. |
+# Delivery And Hours Follow-up
+
+- Monitor owner completion of missing hours and polish remaining legacy owner/admin presentation incrementally.
+- Current-location distance search remains deferred.
+
+## Next Frontend Micro-Phases After June 14 Checkpoint
+
+1. Replace the public catalog’s legacy Nestar house banner and generic subtitle with pharmacy-discovery content.
+2. Redesign the catalog filter/sorting shell while preserving the current `PharmaciesInquiry` behavior.
+3. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
+4. Audit Pharmacy Owner pages and remove remaining visible real-estate imagery/copy without renaming compatibility internals.
+5. Redesign mobile navigation and mobile catalog in separate approved phases.
+6. Replace Korean footer regions/phone content later; preserve it until that phase.
+7. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.

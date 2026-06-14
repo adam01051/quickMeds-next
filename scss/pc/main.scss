@@ -2344,3 +2344,205 @@ body::-webkit-scrollbar {
 		}
 	}
 }
+
+/** SHARED PUBLIC DESKTOP NAVBAR **/
+#pc-wrap {
+	#top .navbar .navbar-main.public-clinical-navbar {
+		height: 64px;
+		padding: 0;
+		border-top: 0;
+		border-bottom: 1px solid #dfe6e2;
+		background: rgba(253, 252, 251, 0.98);
+		box-shadow: none;
+
+		&.transparent {
+			border-bottom-color: #bfc9c3;
+			background: rgba(253, 252, 251, 0.98);
+			box-shadow: 0 6px 18px rgba(0, 53, 39, 0.06);
+		}
+
+		.container {
+			width: min(calc(100% - 48px), 1300px);
+			height: 64px;
+			gap: 24px;
+
+			.logo-box {
+				flex: 0 0 176px;
+
+				a {
+					border-radius: 4px;
+
+					&:focus-visible {
+						outline: 2px solid #064e3b;
+						outline-offset: 4px;
+					}
+				}
+
+				.brand-logo__mark {
+					width: 30px;
+					height: 30px;
+				}
+
+				.brand-logo__wordmark {
+					color: #003527 !important;
+					font-family: 'Source Serif 4', Georgia, serif;
+					font-size: 20px;
+					font-weight: 700;
+					letter-spacing: -0.035em;
+				}
+
+				.brand-logo__meds {
+					color: #064e3b;
+				}
+			}
+
+			.router-box {
+				width: auto;
+				flex: 1;
+				justify-content: center;
+				gap: 23px;
+
+				a {
+					position: relative;
+					padding: 23px 0 20px;
+					color: #404944;
+					font-family: 'Geist', $font;
+					font-size: 12px;
+					font-weight: 500;
+					white-space: nowrap;
+
+					div {
+						padding: 0;
+						border-radius: 0;
+						color: inherit;
+						font-family: inherit;
+						font-size: inherit;
+						font-weight: inherit;
+						transition: color 150ms ease;
+					}
+
+					&:hover,
+					&[aria-current='page'] {
+						color: #064e3b;
+					}
+
+					&[aria-current='page']::after {
+						content: '';
+						position: absolute;
+						right: 0;
+						bottom: 0;
+						left: 0;
+						height: 2px;
+						background: #064e3b;
+					}
+
+					&:focus-visible {
+						border-radius: 4px;
+						outline: 2px solid #064e3b;
+						outline-offset: 4px;
+					}
+				}
+			}
+
+			.user-box {
+				width: auto;
+				min-width: 250px;
+				align-items: center;
+
+				.public-auth-actions {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+
+					a {
+						min-height: 40px;
+						padding: 0 13px;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						border-radius: 7px;
+						font-family: 'Geist', $font;
+						font-size: 12px;
+						font-weight: 600;
+						white-space: nowrap;
+
+						&:focus-visible {
+							outline: 2px solid #064e3b;
+							outline-offset: 2px;
+						}
+					}
+
+					&__login {
+						color: #003527;
+					}
+
+					&__register {
+						background: #064e3b;
+						color: #fff;
+					}
+				}
+
+				.login-user {
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+
+					img {
+						width: 38px;
+						height: 38px;
+						border: 1px solid #dfe6e2;
+					}
+				}
+
+				.lan-box {
+					margin-left: 10px;
+					gap: 6px;
+
+					.notification-icon {
+						color: #52615b;
+					}
+
+					.btn-lang {
+						width: 44px;
+						height: 44px;
+						border: 1px solid #dfe6e2;
+						border-radius: 8px;
+						background: #fff;
+
+						&:focus-visible {
+							outline: 2px solid #064e3b;
+							outline-offset: 2px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.quickmeds-public-layout--basic .header-basic {
+		margin-top: 64px;
+	}
+}
+
+@media (max-width: 1180px) {
+	#pc-wrap #top .navbar .navbar-main.public-clinical-navbar .container {
+		.logo-box {
+			flex-basis: auto;
+		}
+
+		.router-box {
+			gap: 16px;
+		}
+
+		.user-box {
+			min-width: 220px;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#pc-wrap #top .navbar .navbar-main.public-clinical-navbar,
+	#pc-wrap #top .navbar .navbar-main.public-clinical-navbar * {
+		transition: none !important;
+	}
+}

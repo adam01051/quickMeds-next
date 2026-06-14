@@ -56,7 +56,7 @@ const withLayoutFull = (Component: any) => {
 						<title>quickMeds</title>
 						<meta name={'title'} content={`quickMeds`} />
 					</Head>
-					<Stack id="pc-wrap">
+					<Stack id="pc-wrap" className="quickmeds-public-layout quickmeds-public-layout--full">
 						<Stack id={'top'}>
 							<Top />
 						</Stack>

@@ -20,6 +20,7 @@ const Join: NextPage = () => {
 	const device = useDeviceDetect();
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
 	const [loginView, setLoginView] = useState<boolean>(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		if (!router.isReady) return;
@@ -48,26 +49,30 @@ const Join: NextPage = () => {
 	}, []);
 
 	const doLogin = useCallback(async () => {
-		console.warn(input);
+		if (isSubmitting) return;
+		setIsSubmitting(true);
 		try {
 			await logIn(input.nick, input.password);
 			await router.push(`${router.query.referrer ?? '/'}`);
-		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message);
+		} catch (error: unknown) {
+			await sweetMixinErrorAlert(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
+		} finally {
+			setIsSubmitting(false);
 		}
-	}, [input]);
+	}, [input.nick, input.password, isSubmitting, router]);
 
 	const doSignUp = useCallback(async () => {
-		console.warn(input);
+		if (isSubmitting) return;
+		setIsSubmitting(true);
 		try {
 			await signUp(input.nick, input.password, input.phone, input.type);
 			await router.push(`${router.query.referrer ?? '/'}`);
-		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message);
+		} catch (error: unknown) {
+			await sweetMixinErrorAlert(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
+		} finally {
+			setIsSubmitting(false);
 		}
-	}, [input]);
-
-	console.log('+input: ', input);
+	}, [input, isSubmitting, router]);
 
 	if (device === 'mobile') {
 		return <div>LOGIN MOBILE</div>;
@@ -102,7 +107,7 @@ const Join: NextPage = () => {
 								<div className={'input-box'}>
 									<span>Password</span>
 									<input
-										type="text"
+										type="password"
 										placeholder={'Enter Password'}
 										onChange={(e) => handleInput('password', e.target.value)}
 										required={true}
@@ -175,19 +180,19 @@ const Join: NextPage = () => {
 									<Button
 										variant="contained"
 										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-										disabled={input.nick == '' || input.password == ''}
+										disabled={input.nick == '' || input.password == '' || isSubmitting}
 										onClick={doLogin}
 									>
-										LOGIN
+										{isSubmitting ? 'LOGGING IN...' : 'LOGIN'}
 									</Button>
 								) : (
 									<Button
 										variant="contained"
-										disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == ''}
+										disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == '' || isSubmitting}
 										onClick={doSignUp}
 										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
 									>
-										SIGNUP
+										{isSubmitting ? 'CREATING ACCOUNT...' : 'SIGNUP'}
 									</Button>
 								)}
 							</Box>

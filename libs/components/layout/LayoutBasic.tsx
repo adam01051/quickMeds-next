@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
@@ -22,8 +22,8 @@ const withLayoutBasic = (Component: any) => {
 		const router = useRouter();
 		const { t, i18n } = useTranslation('common');
 		const device = useDeviceDetect();
-		const [authHeader, setAuthHeader] = useState<boolean>(false);
 		const user = useReactiveVar(userVar);
+		const authHeader = router.pathname === '/account/join';
 
 		const memoizedValues = useMemo(() => {
 			let title = '',
@@ -70,7 +70,6 @@ const withLayoutBasic = (Component: any) => {
 					title = 'Login/Signup';
 					desc = 'Authentication Process';
 					bgImage = '/img/banner/header2.svg';
-					setAuthHeader(true);
 					break;
 				case '/member':
 					title = 'Member Page';
@@ -121,7 +120,7 @@ const withLayoutBasic = (Component: any) => {
 						<title>quickMeds</title>
 						<meta name={'title'} content={`quickMeds`} />
 					</Head>
-					<Stack id="pc-wrap">
+					<Stack id="pc-wrap" className="quickmeds-public-layout quickmeds-public-layout--basic">
 						<Stack id={'top'}>
 							<Top />
 						</Stack>

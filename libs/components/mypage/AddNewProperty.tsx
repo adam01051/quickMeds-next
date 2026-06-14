@@ -13,6 +13,8 @@ import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from
 import { REACT_APP_API_URL } from '../../config';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -41,6 +43,9 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				pharmacyDesc: pharmacy.pharmacyDesc,
 				acceptsInsurance: pharmacy.acceptsInsurance,
 				hasDelivery: pharmacy.hasDelivery,
+				open24Hours: pharmacy.open24Hours,
+				pharmacyTimezone: pharmacy.pharmacyTimezone,
+				operatingHours: pharmacy.operatingHours,
 				openedAt: pharmacy.openedAt,
 			});
 		}
@@ -124,8 +129,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
-							<Typography className="title">Delivery fee</Typography>
-							<input className="description-input" type="number" min="0" placeholder="Delivery fee" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
+							<Typography className="title">Delivery fee (UZS)</Typography>
+							<input className="description-input" type="number" min="0" step="1" disabled={!form.hasDelivery} placeholder="0 means free delivery" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
 						</Stack>
 						<Stack className="price-year-after-price">
 							<Typography className="title">Opened date</Typography>
@@ -147,8 +152,31 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					<Typography className="property-title">Pharmacy services</Typography>
 					<Stack className="pharmacy-service-row">
 						<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
-						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked })} />} label="Offers delivery" />
+						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked, pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0 })} />} label="Offers delivery" />
+						<FormControlLabel control={<Checkbox checked={form.open24Hours ?? false} onChange={(e) => update({ open24Hours: e.target.checked, operatingHours: e.target.checked ? [] : form.operatingHours })} />} label="Open 24/7" />
 					</Stack>
+					{!form.open24Hours && (
+						<Stack className="config-column">
+							<Typography className="property-title">Working hours</Typography>
+							<Typography className="sub-title">Optional. Leave all days unset to display Hours not provided.</Typography>
+							{WEEKDAYS.map((label, index) => {
+								const dayOfWeek = index + 1;
+								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
+								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
+									const remaining = (form.operatingHours ?? []).filter((item) => item.dayOfWeek !== dayOfWeek);
+									update({ operatingHours: [...remaining, { dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value }].sort((a, b) => a.dayOfWeek - b.dayOfWeek) });
+								};
+								return (
+									<Stack className="config-row" key={label}>
+										<Typography className="title">{label}</Typography>
+										<FormControlLabel control={<Checkbox checked={day?.isClosed ?? false} onChange={(e) => updateDay({ isClosed: e.target.checked, opensAt: e.target.checked ? undefined : day?.opensAt, closesAt: e.target.checked ? undefined : day?.closesAt })} />} label="Closed" />
+										<input className="description-input" type="time" disabled={day?.isClosed} value={day?.opensAt ?? ''} onChange={(e) => updateDay({ opensAt: e.target.value })} />
+										<input className="description-input" type="time" disabled={day?.isClosed} value={day?.closesAt ?? ''} onChange={(e) => updateDay({ closesAt: e.target.value })} />
+									</Stack>
+								);
+							})}
+						</Stack>
+					)}
 
 					<Typography className="property-title">Pharmacy description</Typography>
 					<Stack className="config-column">
@@ -196,13 +224,16 @@ AddProperty.defaultProps = {
 		pharmacyLocation: PharmacyLocation.TASHKENT_CITY,
 		pharmacyAddress: '',
 		pharmacyName: '',
-		pharmacyDeliveryFee: 0,
+		pharmacyDeliveryFee: 3000,
 		pharmacyLatitude: 0,
 		pharmacyLongitude: 0,
 		pharmacyImages: [],
 		pharmacyDesc: '',
 		acceptsInsurance: false,
 		hasDelivery: false,
+		open24Hours: false,
+		pharmacyTimezone: 'Asia/Tashkent',
+		operatingHours: [],
 	},
 };
 

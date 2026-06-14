@@ -56,6 +56,18 @@ export const UPDATE_PHARMACY_BY_ADMIN = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt
@@ -85,6 +97,18 @@ export const REMOVE_PHARMACY_BY_ADMIN = gql`
 			pharmacyDesc
 			acceptsInsurance
 			hasDelivery
+			open24Hours
+			pharmacyTimezone
+			operatingHours {
+				dayOfWeek
+				isClosed
+				opensAt
+				closesAt
+			}
+			hoursConfigured
+			isOpenNow
+			nextOpeningAt
+			nextClosingAt
 			memberId
 			verifiedAt
 			deletedAt

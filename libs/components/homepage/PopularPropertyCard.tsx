@@ -10,6 +10,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { topPropertyRank } from '../../config';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import { formatDeliveryFeeUZS } from '../../utils';
 
 interface PopularPropertyCardProps {
 	property: Property;
@@ -47,7 +48,7 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 						''
 					)}
 
-					<div className={'price'}>${property.pharmacyDeliveryFee}</div>
+					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
@@ -106,7 +107,7 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 						''
 					)}
 
-					<div className={'price'}>${property.pharmacyDeliveryFee}</div>
+					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {

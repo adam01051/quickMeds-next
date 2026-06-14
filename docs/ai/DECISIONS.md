@@ -19,3 +19,23 @@
 | Frontend GraphQL operations are now stale. | The Next.js app must update to `Pharmacy*` types and operations. | Inventory frontend GraphQL documents and regenerate types. |
 | `MemberType.AGENT` is domain-ambiguous. | Future maintainers may mistake pharmacy owners for real estate agents. | Document the semantic meaning until a later role migration is approved. |
 | Lint uses `--fix`. | Running lint may rewrite unrelated files. | Prefer TypeScript/build checks unless rewriting is acceptable. |
+# Delivery Fees And Hours
+
+- Display pharmacy delivery fees only in UZS; 0 means Free and pickup-only pharmacies hide the fee.
+- Public Open now and 24/7 controls use backend-computed truth. Missing schedules display Hours not provided.
+
+# Demo Pharmacy Data
+
+- Demo pharmacies are real MongoDB records created through normal backend logic, never hardcoded frontend data.
+- Real-source facts and demo-only delivery, insurance, fee, or unpublished-hours values are distinguished in each pharmacy description.
+- Demo records remain unverified and must be replaced or confirmed before production.
+
+# June 14, 2026 Frontend Decisions
+
+- Use one compact warm-white navbar treatment across public desktop routes. Keep mobile and admin navigation separate until their approved redesign phases.
+- Keep existing public route banners temporarily, but place them below the fixed navbar.
+- Replace visible Nestar presentation incrementally. The catalog card is migrated independently from the catalog banner, sidebar, Favorites, Recently Visited, owner, and admin surfaces.
+- Public catalog cards show only real pharmacy discovery data: operating status, verified status when present, address, type, delivery, insurance, favorite action, and detail navigation.
+- Medication count remains outside approved public product scope and must not be displayed on redesigned public cards/details.
+- Legacy internal Property/Agent names remain compatibility debt and are not renamed as part of visual micro-phases.
+- Local development must run only one `next dev` process per `.next` directory to prevent stale or missing chunk responses.

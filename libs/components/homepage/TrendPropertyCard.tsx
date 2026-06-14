@@ -11,6 +11,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { topPropertyRank } from '../../config';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import { formatDeliveryFeeUZS } from '../../utils';
 
 interface TrendPropertyCardProps {
 	property: Property;
@@ -46,7 +47,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 							<span>top</span>
 						</div>
 					)}
-					<div className="price">${property.pharmacyDeliveryFee}</div>
+					<div className="price">{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
@@ -113,7 +114,7 @@ const TrendPropertyCard = (props: TrendPropertyCardProps) => {
 							<span>top</span>
 						</div>
 					)}
-					<div className="price">${property.pharmacyDeliveryFee}</div>
+					<div className="price">{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong

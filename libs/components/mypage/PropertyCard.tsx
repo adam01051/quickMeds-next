@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Property } from '../../types/property/property';
-import { formatterStr } from '../../utils';
+import { formatDeliveryFeeUZS } from '../../utils';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
 import { PharmacyStatus } from '../../enums/property.enum';
@@ -62,7 +62,7 @@ export const PropertyCard = (props: PropertyCardProps) => {
 					<Typography className="name">{property.pharmacyName}</Typography>
 					<Typography className="address">{property.pharmacyAddress}</Typography>
 					<Typography className="price">
-						<strong>Delivery: ${formatterStr(property?.pharmacyDeliveryFee)}</strong>
+						<strong>{property.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(property.pharmacyDeliveryFee)}` : 'Pickup only'}</strong>
 					</Typography>
 				</Stack>
 				<Stack className="date-box">
