@@ -262,3 +262,29 @@ Validation completed:
 - Scoped Toast UI viewer spacing and typography to Community detail without changing shared viewer behavior.
 - Removed the detail-page Write an article link and restyled comments as compact individual bordered cards.
 - Preserved real category labels, exact article dates, relative comment dates, likes, comments, author links, edit/delete behavior, pagination, and all existing states.
+
+## Pharmacy Owner Directory Redesign
+
+- Rebuilt the public `/agent` directory as a responsive Warm Civic Pharmacy Owner directory while preserving the legacy route and backend `Agent` compatibility terminology.
+- Added a dedicated Pharmacy Owner card using real owner image, name, address, pharmacy count, views, likes, like state, and profile navigation.
+- Corrected owner profile links to pass each real owner ID instead of the previous hardcoded value.
+- Added explicit owner search, Enter-key search, supported recent/oldest/most-liked/most-viewed sorting, page-one reset after filter changes, and serialized query-state persistence.
+- Preserved `GET_AGENTS` and `LIKE_TARGET_MEMBER`; likes now refetch with the active directory inquiry instead of resetting search and sort state.
+- Replaced the mobile placeholder with the complete responsive directory and added loading skeletons, retryable error state, no-results state, accessible controls, image fallback, and reduced-motion handling.
+- Left `/agent/detail`, My Page owner tools, admin owner pages, shared navbar, footer, backend contracts, and internal legacy names unchanged.
+
+Validation completed:
+
+- Live `getAgents` GraphQL checks returned six Pharmacy Owners and confirmed text search plus recent, oldest, most-liked, and most-viewed sorting.
+- `/agent`, malformed `/agent?input=not-json`, and a real `/agent/detail?agentId=...` request returned HTTP 200.
+- Desktop and mobile directory shells were visually checked in headless Chromium.
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Remaining verification limitations:
+
+- Authenticated like mutation behavior was not browser-tested because no authenticated browser session was available; unauthenticated protection and active-query refetch behavior were verified in code.
+- Headless Chromium remained on the Apollo loading skeleton during the screenshot window even though direct live GraphQL requests succeeded.
+- Pagination interaction could not be exercised with the current six-owner dataset and page limit of nine.
+- The existing global mobile navbar clipping and Pharmacy Owner detail redesign remain separate phases.

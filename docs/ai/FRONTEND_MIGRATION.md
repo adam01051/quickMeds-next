@@ -143,3 +143,20 @@ Intentionally deferred Nestar surfaces:
 - Article bookmarks, tags, ratings, nested replies, provider verification, and backend category changes remain intentionally unsupported.
 - Community detail was refined to the approved Stitch reference with a centered bordered article panel, compact real metadata, page-scoped Toast UI spacing, a centered like action, and separate compact comment cards.
 - The detail-page Write an article action was removed; article creation remains available from Community and My Page.
+
+## Pharmacy Owner Directory Migration
+
+- `/agent` remains the compatibility route, while all visible directory terminology now uses Pharmacy Owner.
+- The directory now has a page-specific responsive presentation and no longer uses the shared legacy Agent card or mobile placeholder.
+- Existing `GET_AGENTS`, `LIKE_TARGET_MEMBER`, serialized `AgentsInquiry`, pagination, and `/agent/detail?agentId=...` contracts remain unchanged.
+- Owner profile navigation now uses the real member ID.
+- Search and supported sorting persist through the serialized `input` query and reset pagination to page one when changed.
+- Like reconciliation refetches the active inquiry so current search, sorting, and pagination state are retained.
+- Missing owner images use the existing default-user asset; no fake roles, verification, ratings, reviews, specialties, or professional claims were added.
+
+Deferred compatibility work:
+
+- Redesign `/agent/detail` separately while preserving its existing GraphQL behavior.
+- Keep internal Agent names and the legacy `/agent` route until a coordinated route and contract migration is approved.
+- Complete authenticated browser checks for owner likes and pagination with a dataset larger than one page.
+- Resolve the shared global mobile-navbar clipping in the future mobile-navigation phase.

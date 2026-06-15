@@ -1,20 +1,21 @@
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
-import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Stack, Box, Button, Pagination } from '@mui/material';
-import { Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem, Pagination } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import AgentCard from '../../libs/components/common/AgentCard';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Member } from '../../libs/types/member/member';
 import { GET_AGENTS } from '../../apollo/user/query';
-import { useMutation, useQuery } from '@apollo/client';
 import { LIKE_TARGET_MEMBER } from '../../apollo/user/mutation';
+import { userVar } from '../../apollo/store';
+import PharmacyOwnerCard from '../../libs/components/agent/PharmacyOwnerCard';
+import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
+import { Direction, Message } from '../../libs/enums/common.enum';
+import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { T } from '../../libs/types/common';
-import { Message } from '../../libs/enums/common.enum';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { Member } from '../../libs/types/member/member';
+import { AgentsInquiry } from '../../libs/types/member/member.input';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -22,211 +23,193 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const AgentList: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
-	const router = useRouter();
-	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [filterSortName, setFilterSortName] = useState('Recent');
-	const [sortingOpen, setSortingOpen] = useState(false);
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [searchFilter, setSearchFilter] = useState<any>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
-	);
-	const [agents, setAgents] = useState<Member[]>([]);
-	const [total, setTotal] = useState<number>(0);
-	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [searchText, setSearchText] = useState<string>('');
+const sortOptions = {
+	recent: { label: 'Recent', sort: 'createdAt', direction: Direction.DESC },
+	old: { label: 'Oldest', sort: 'createdAt', direction: Direction.ASC },
+	likes: { label: 'Most liked', sort: 'memberLikes', direction: Direction.DESC },
+	views: { label: 'Most viewed', sort: 'memberViews', direction: Direction.DESC },
+} as const;
 
-	/** APOLLO REQUESTS **/
-		const [likeTargetMember] =useMutation(LIKE_TARGET_MEMBER);
-		/** HANDLERS **/
-		const {
-			loading: getAgetnsLoading,
-			data: getAgentsData,
-			error: getAgentsError,
-			refetch: getAgentsRefetch,
-		} = useQuery(GET_AGENTS, {
-			fetchPolicy: 'network-only',
-			variables: { input: searchFilter },
-			notifyOnNetworkStatusChange: true,
-			onCompleted: (data: T) => {
-				setAgents(data?.getAgents?.list);
-			setTotal(data?.getAgents?.metaCounter[0]?.total);
-			},
-		});
-	
-	/** LIFECYCLES **/
-	useEffect(() => {
-		if (router.query.input) {
-			const input_obj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(input_obj);
-		} else
-			router.replace(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`);
-
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
-
-	/** HANDLERS **/
-	const likeMemberHandler = async (user: T, id: string) => {
-		try {
-			if (!id) return;
-			if (!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
-			await likeTargetMember({
-				variables: { input: id },
-			});
-			await getAgentsRefetch({ input: initialInput });
-			await sweetTopSmallSuccessAlert('success', 800);
-		} catch (error: any) {
-			console.log('error in likePropertHandler', error.message);
-			sweetMixinErrorAlert(error.message).then();
-		}
-	};
-
-	
-
-
-
-
-
-	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
-		setAnchorEl(e.currentTarget);
-		setSortingOpen(true);
-	};
-
-	const sortingCloseHandler = () => {
-		setSortingOpen(false);
-		setAnchorEl(null);
-	};
-
-	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
-		switch (e.currentTarget.id) {
-			case 'recent':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'DESC' });
-				setFilterSortName('Recent');
-				break;
-			case 'old':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'ASC' });
-				setFilterSortName('Oldest order');
-				break;
-			case 'likes':
-				setSearchFilter({ ...searchFilter, sort: 'memberLikes', direction: 'DESC' });
-				setFilterSortName('Likes');
-				break;
-			case 'views':
-				setSearchFilter({ ...searchFilter, sort: 'memberViews', direction: 'DESC' });
-				setFilterSortName('Views');
-				break;
-		}
-		setSortingOpen(false);
-		setAnchorEl2(null);
-	};
-
-	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`, {
-			scroll: false,
-		});
-		setCurrentPage(value);
-	};
-
-	if (device === 'mobile') {
-		return <h1>PHARMACY OWNERS MOBILE</h1>;
-	} else {
-		return (
-			<Stack className={'agent-list-page'}>
-				<Stack className={'container'}>
-					<header className="agent-directory-header">
-						<span>Pharmacy Owner directory</span>
-						<h1>Meet Pharmacy Owners</h1>
-						<p>Discover the people and businesses helping communities access pharmacy services across Uzbekistan.</p>
-					</header>
-					<Stack className={'filter'}>
-						<Box component={'div'} className={'left'}>
-							<input
-								type="text"
-								placeholder={'Search for a pharmacy owner'}
-								value={searchText}
-								onChange={(e: any) => setSearchText(e.target.value)}
-								onKeyDown={(event: any) => {
-									if (event.key == 'Enter') {
-										setSearchFilter({
-											...searchFilter,
-											search: { ...searchFilter.search, text: searchText },
-										});
-									}
-								}}
-							/>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<span>Sort by</span>
-							<div>
-								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-									{filterSortName}
-								</Button>
-								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-									<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
-										Recent
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'old'} disableRipple>
-										Oldest
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'likes'} disableRipple>
-										Likes
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'views'} disableRipple>
-										Views
-									</MenuItem>
-								</Menu>
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'card-wrap'}>
-						{agents?.length === 0 ? (
-							<div className={'no-data'}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No pharmacy owners found!</p>
-							</div>
-						) : (
-							agents.map((agent: Member) => {
-								return <AgentCard agent={agent} key={agent._id}  likeMemberHandler= {likeMemberHandler}/>;
-							})
-						)}
-					</Stack>
-					<Stack className={'pagination'}>
-						<Stack className="pagination-box">
-							{agents.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
-								<Stack className="pagination-box">
-									<Pagination
-										page={currentPage}
-										count={Math.ceil(total / searchFilter.limit)}
-										onChange={paginationChangeHandler}
-										shape="circular"
-										color="primary"
-									/>
-								</Stack>
-							)}
-						</Stack>
-
-						{agents.length !== 0 && (
-							<span>
-								Total {total} pharmacy owners available
-							</span>
-						)}
-					</Stack>
-				</Stack>
-			</Stack>
-		);
+const parseInput = (value: string | string[] | undefined, fallback: AgentsInquiry): AgentsInquiry => {
+	if (!value || Array.isArray(value)) return fallback;
+	try {
+		const parsed = JSON.parse(value);
+		return {
+			...fallback,
+			...parsed,
+			search: { ...fallback.search, ...parsed.search },
+		};
+	} catch {
+		return fallback;
 	}
 };
 
-AgentList.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		direction: 'DESC',
-		search: {},
-	},
+const AgentList: NextPage<{ initialInput?: AgentsInquiry }> = ({ initialInput = defaultInput }) => {
+	const router = useRouter();
+	const user = useReactiveVar(userVar);
+	const [searchFilter, setSearchFilter] = useState<AgentsInquiry>(initialInput);
+	const [searchText, setSearchText] = useState('');
+	const [agents, setAgents] = useState<Member[]>([]);
+	const [total, setTotal] = useState(0);
+	const [likingId, setLikingId] = useState<string | null>(null);
+	const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
+	const activeSort = useMemo(
+		() =>
+			Object.values(sortOptions).find(
+				(option) => option.sort === searchFilter.sort && option.direction === searchFilter.direction,
+			) ?? sortOptions.recent,
+		[searchFilter.direction, searchFilter.sort],
+	);
+
+	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+	const { loading, error, refetch } = useQuery(GET_AGENTS, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setAgents(data?.getAgents?.list ?? []);
+			setTotal(data?.getAgents?.metaCounter?.[0]?.total ?? 0);
+		},
+	});
+
+	useEffect(() => {
+		if (!router.isReady) return;
+		const input = parseInput(router.query.input, initialInput);
+		setSearchFilter(input);
+		setSearchText(input.search?.text ?? '');
+		if (!router.query.input) {
+			router.replace({ pathname: '/agent', query: { input: JSON.stringify(input) } }, undefined, { shallow: true });
+		}
+	}, [router.isReady, router.query.input]);
+
+	const updateDirectory = async (input: AgentsInquiry) => {
+		setSearchFilter(input);
+		await router.push({ pathname: '/agent', query: { input: JSON.stringify(input) } }, undefined, { shallow: true, scroll: false });
+	};
+
+	const submitSearch = async () => {
+		await updateDirectory({
+			...searchFilter,
+			page: 1,
+			search: { ...searchFilter.search, text: searchText.trim() || undefined },
+		});
+	};
+
+	const likeOwner = async (ownerId: string) => {
+		try {
+			if (!user._id) throw new Error(Message.SOMETHING_WENT_WRONG);
+			setLikingId(ownerId);
+			await likeTargetMember({ variables: { input: ownerId } });
+			await refetch({ input: searchFilter });
+		} catch (err: any) {
+			await sweetMixinErrorAlert(err.message);
+		} finally {
+			setLikingId(null);
+		}
+	};
+
+	return (
+		<main className="pharmacy-owner-directory">
+			<div className="container">
+				<header className="pharmacy-owner-directory__header">
+					<div>
+						<span>Pharmacy Owner Directory</span>
+						<h1>Meet Pharmacy Owners</h1>
+						<p>Discover the people and businesses helping communities access pharmacy services across Uzbekistan.</p>
+					</div>
+					<strong>{total} {total === 1 ? 'owner' : 'owners'}</strong>
+				</header>
+
+				<section className="pharmacy-owner-directory__toolbar" aria-label="Pharmacy Owner directory controls">
+					<label>
+						<span>Search Pharmacy Owners</span>
+						<div>
+							<SearchRoundedIcon />
+							<input
+								type="search"
+								value={searchText}
+								placeholder="Search by owner name"
+								onChange={(event) => setSearchText(event.target.value)}
+								onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => event.key === 'Enter' && submitSearch()}
+							/>
+						</div>
+					</label>
+					<Button className="pharmacy-owner-directory__search" onClick={submitSearch}>Search</Button>
+					<div className="pharmacy-owner-directory__sort">
+						<span>Sort by</span>
+						<Button onClick={(event) => setSortAnchor(event.currentTarget)} endIcon={<KeyboardArrowDownRoundedIcon />}>
+							{activeSort.label}
+						</Button>
+						<Menu anchorEl={sortAnchor} open={Boolean(sortAnchor)} onClose={() => setSortAnchor(null)}>
+							{Object.entries(sortOptions).map(([key, option]) => (
+								<MenuItem
+									key={key}
+									onClick={async () => {
+										setSortAnchor(null);
+										await updateDirectory({ ...searchFilter, page: 1, sort: option.sort, direction: option.direction });
+									}}
+								>
+									{option.label}
+								</MenuItem>
+							))}
+						</Menu>
+					</div>
+				</section>
+
+				{loading && !agents.length ? (
+					<section className="pharmacy-owner-directory__grid" aria-label="Loading Pharmacy Owners">
+						{Array.from({ length: 6 }).map((_, index) => <div className="pharmacy-owner-card-skeleton" key={index} />)}
+					</section>
+				) : error ? (
+					<section className="pharmacy-owner-directory__state" role="alert">
+						<h2>Pharmacy Owners could not be loaded</h2>
+						<p>Please check your connection and try again.</p>
+						<button type="button" onClick={() => refetch({ input: searchFilter })}>Try again</button>
+					</section>
+				) : agents.length ? (
+					<section className="pharmacy-owner-directory__grid" aria-label="Pharmacy Owners">
+						{agents.map((owner) => (
+							<PharmacyOwnerCard key={owner._id} owner={owner} onLike={likeOwner} liking={likingId === owner._id} />
+						))}
+					</section>
+				) : (
+					<section className="pharmacy-owner-directory__state">
+						<h2>No Pharmacy Owners found</h2>
+						<p>Try another owner name or clear your current search.</p>
+						<button
+							type="button"
+							onClick={async () => {
+								setSearchText('');
+								await updateDirectory({ ...initialInput, search: {} });
+							}}
+						>
+							Clear search
+						</button>
+					</section>
+				)}
+
+				{agents.length > 0 && (
+					<footer className="pharmacy-owner-directory__pagination">
+						<Pagination
+							page={searchFilter.page}
+							count={Math.ceil(total / searchFilter.limit)}
+							shape="rounded"
+							onChange={(_: ChangeEvent<unknown>, page) => updateDirectory({ ...searchFilter, page })}
+						/>
+						<p>{total} Pharmacy {total === 1 ? 'Owner' : 'Owners'} available</p>
+					</footer>
+				)}
+			</div>
+		</main>
+	);
+};
+
+const defaultInput: AgentsInquiry = {
+	page: 1,
+	limit: 9,
+	sort: 'createdAt',
+	direction: Direction.DESC,
+	search: {},
 };
 
 export default withLayoutBasic(AgentList);

@@ -3,7 +3,7 @@
 ## Current Priority
 
 1. Continue frontend redesign one approved micro-phase at a time using the five demo pharmacies for visual validation.
-2. Complete authenticated smoke checks for owner create/edit, favorites, and recently visited.
+2. Complete authenticated smoke checks for owner create/edit, Pharmacy Owner directory likes, favorites, and recently visited.
 3. Replace or remove demo records before production and verify real-world facts with operators.
 4. Keep current-location distance search and verified-only filtering deferred.
 
@@ -51,10 +51,18 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. Redesign the catalog filter shell while preserving the current `PharmaciesInquiry` behavior.
 2. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
-3. Audit Pharmacy Owner pages and remove remaining visible real-estate imagery/copy without renaming compatibility internals.
+3. Redesign Pharmacy Owner detail at `/agent/detail`; the public directory is complete and compatibility internals remain intentionally unchanged.
 4. Redesign mobile navigation and mobile catalog in separate approved phases.
 5. Replace Korean footer regions/phone content later; preserve it until that phase.
 6. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
+
+## Pharmacy Owner Directory Follow-up
+
+1. Complete an authenticated browser smoke test for like and unlike behavior while a search or non-default sort is active.
+2. Verify pagination interaction after the owner dataset exceeds the current nine-owner page limit.
+3. Investigate why local headless Chromium remains on the Apollo loading skeleton even though direct live GraphQL requests succeed.
+4. Redesign `/agent/detail` as its own approved micro-phase.
+5. Correct the shared global mobile-navbar clipping during the separate mobile-navigation phase.
 
 ## Pharmacy Detail Feedback Follow-up
 
