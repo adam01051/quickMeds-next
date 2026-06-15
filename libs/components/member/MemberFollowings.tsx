@@ -68,11 +68,6 @@ const {
 	} else {
 		return (
 			<div id="member-follows-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">{category === 'followers' ? 'Followers' : 'Followings'}</Typography>
-					</Stack>
-				</Stack>
 				<Stack className="follows-list-box">
 					<Stack className="listing-title-box">
 						<Typography className="title-text">Name</Typography>

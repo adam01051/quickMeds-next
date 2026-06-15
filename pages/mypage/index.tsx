@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { Stack } from '@mui/material';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProperties from '../../libs/components/mypage/MyProperties';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
@@ -28,10 +27,64 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const MyPage: NextPage = () => {
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
-	const category: any = router.query?.category ?? 'myProfile';
+	const requestedCategory = Array.isArray(router.query.category) ? router.query.category[0] : router.query.category;
+	const pageDetails: Record<string, { eyebrow: string; title: string; description: string }> = {
+		myProfile: {
+			eyebrow: 'Account',
+			title: 'My Profile',
+			description: 'Keep your QuickMeds account information current.',
+		},
+		myFavorites: {
+			eyebrow: 'Pharmacy discovery',
+			title: 'My Favorites',
+			description: 'Return to the pharmacies you trust and want to remember.',
+		},
+		recentlyVisited: {
+			eyebrow: 'Pharmacy discovery',
+			title: 'Recently Visited',
+			description: 'Continue exploring pharmacies you recently viewed.',
+		},
+		followers: {
+			eyebrow: 'Connections',
+			title: 'Followers',
+			description: 'View members who follow your QuickMeds activity.',
+		},
+		followings: {
+			eyebrow: 'Connections',
+			title: 'Followings',
+			description: 'Manage the QuickMeds members you follow.',
+		},
+		myArticles: {
+			eyebrow: 'Community',
+			title: 'My Articles',
+			description: 'Review the articles you have shared with the community.',
+		},
+		writeArticle: {
+			eyebrow: 'Community',
+			title: 'Write Article',
+			description: 'Share a useful experience or update with the QuickMeds community.',
+		},
+		myPharmacies: {
+			eyebrow: 'Pharmacy Owner',
+			title: 'My Pharmacies',
+			description: 'Manage the pharmacies registered to your account.',
+		},
+		addPharmacy: {
+			eyebrow: 'Pharmacy Owner',
+			title: 'Add Pharmacy',
+			description: 'Register a pharmacy and provide accurate service information.',
+		},
+	};
+	const aliasedCategory =
+		requestedCategory === 'addProperty'
+			? 'addPharmacy'
+			: requestedCategory === 'myProperties'
+				? 'myPharmacies'
+				: requestedCategory;
+	const category = aliasedCategory && pageDetails[aliasedCategory] ? aliasedCategory : 'myProfile';
+	const pageDetail = pageDetails[category] ?? pageDetails.myProfile;
 
 	/** APOLLO REQUESTS **/
 
@@ -106,26 +159,20 @@ const MyPage: NextPage = () => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>MY PAGE</div>;
-	} else {
-		return (
-			<div id="my-page" style={{ position: 'relative' }}>
-				<div className="container">
+	return (
+		<div id="my-page">
+			<div className="my-page-shell">
+				<MyMenu />
+				<main className="my-page-workspace" id="my-page-content">
 					<header className="my-page-header">
-						<span>Account</span>
-						<h1>My Page</h1>
-						<p>Manage your profile, pharmacies, saved items, and community articles.</p>
+						<span>{pageDetail.eyebrow}</span>
+						<h1>{pageDetail.title}</h1>
+						<p>{pageDetail.description}</p>
 					</header>
-					<Stack className={'my-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
-								<MyMenu />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
-									{category === 'addProperty' && <AddProperty />}
-									{category === 'myProperties' && <MyProperties />}
+					<Stack className="main-config">
+						<Stack className="list-config">
+									{category === 'addPharmacy' && <AddProperty />}
+									{category === 'myPharmacies' && <MyProperties />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}
 									{category === 'myArticles' && <MyArticles />}
@@ -147,14 +194,12 @@ const MyPage: NextPage = () => {
 											likeMemberHandler= {likeMemberHandler}
 										/>
 									)}
-								</Stack>
-							</Stack>
 						</Stack>
 					</Stack>
-				</div>
+				</main>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 export default withLayoutBasic(MyPage);

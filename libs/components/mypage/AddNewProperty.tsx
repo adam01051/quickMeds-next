@@ -80,7 +80,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 			if (id) await updatePharmacy({ variables: { input: { ...form, _id: id } } });
 			else await createPharmacy({ variables: { input: form } });
 			await sweetMixinSuccessAlert(`Pharmacy ${id ? 'updated' : 'created'} successfully.`);
-			await router.push({ pathname: '/mypage', query: { category: 'myProperties' } });
+			await router.push({ pathname: '/mypage', query: { category: 'myPharmacies' } });
 		} catch (error) {
 			await sweetErrorHandling(error);
 		}
@@ -92,10 +92,6 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 	return (
 		<div id="add-property-page">
-			<Stack className="main-title-box">
-				<Typography className="main-title">Add or edit pharmacy</Typography>
-				<Typography className="sub-title">Keep your pharmacy information accurate and useful.</Typography>
-			</Stack>
 			<Stack className="config">
 				<Stack className="description-box">
 					<Stack className="config-column">

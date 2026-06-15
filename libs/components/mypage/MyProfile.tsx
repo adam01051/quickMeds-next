@@ -114,12 +114,6 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	} else
 		return (
 			<div id="my-profile-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">My Profile</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
 				<Stack className="top-box">
 					<Stack className="photo-box">
 						<Typography className="title">Photo</Typography>

@@ -238,3 +238,27 @@ Validation completed:
 - `yarn build` passed and generated all 73 pages.
 - `git diff --check` passed.
 - The known legacy public accent tokens no longer appear outside intentionally excluded admin styling.
+
+## Community List And Detail Editorial Redesign
+
+- Replaced the legacy Community sidebar/card-grid presentation with a Stitch-guided editorial article feed.
+- Added truthful category labels, supported sorting, result totals, pagination, optional real article images, content excerpts, real engagement data, and authenticated article-writing actions.
+- Added Community-specific loading skeletons, retryable error states, category empty states, and accessible like feedback without changing shared member/My Page cards.
+- Rebuilt Community detail with a readable article column, real metadata, optional article image, semantic like control, responsive comments, comment editing/deletion, and unavailable/no-comment states.
+- Replaced the Community list and detail mobile placeholders with responsive page layouts while preserving the existing global mobile navigation.
+- Kept all backend, GraphQL, enum, route, authentication, editor, navbar, footer, and admin contracts unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Community list and unavailable-detail states were visually checked in headless Chromium at desktop and narrow viewport sizes.
+- Live article rows and valid article-detail content could not be visually confirmed because the current Community query remained in its loading state during the local screenshot window.
+
+## Community Detail Reference-Match Refinement
+
+- Matched the approved Stitch detail composition with a centered `820px` article panel, compact category/title/author/engagement hierarchy, optional real image, contained article body, and centered emerald like action.
+- Scoped Toast UI viewer spacing and typography to Community detail without changing shared viewer behavior.
+- Removed the detail-page Write an article link and restyled comments as compact individual bordered cards.
+- Preserved real category labels, exact article dates, relative comment dates, likes, comments, author links, edit/delete behavior, pagination, and all existing states.

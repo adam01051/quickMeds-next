@@ -73,12 +73,6 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 	} else
 		return (
 			<div id="my-articles-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Article</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
 				<Stack className="article-list-box">
 					{boardArticles?.length > 0 ? (
 						boardArticles?.map((boardArticle: BoardArticle) => {

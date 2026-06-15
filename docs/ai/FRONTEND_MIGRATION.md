@@ -132,3 +132,14 @@ Intentionally deferred Nestar surfaces:
 - Updated Community, CS, account, Pharmacy Owner, My Page, older shared cards, About surfaces, member Follow controls, and the shared brand mark accent.
 - Updated the shared MUI primary and secondary colors so pagination, favorites, selected controls, and other Material components use emerald.
 - Semantic validation and error colors remain red.
+
+## Community Editorial Migration
+
+- `/community` now uses a full-width editorial feed instead of the legacy sidebar and image-card grid.
+- Existing `FREE`, `RECOMMEND`, `NEWS`, and `HUMOR` values remain unchanged and are presented as Discussions, Recommendations, News, and Community Corner.
+- Public sorting uses only supported backend fields: newest, most viewed, and most liked.
+- Article rows use real category, date, title, content excerpt, author, views, likes, comments, and optional article-image data.
+- `/community/detail` now uses a responsive publication layout while preserving article likes, author links, rendered content, and the complete comment lifecycle.
+- Article bookmarks, tags, ratings, nested replies, provider verification, and backend category changes remain intentionally unsupported.
+- Community detail was refined to the approved Stitch reference with a centered bordered article panel, compact real metadata, page-scoped Toast UI spacing, a centered like action, and separate compact comment cards.
+- The detail-page Write an article action was removed; article creation remains available from Community and My Page.

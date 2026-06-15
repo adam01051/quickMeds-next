@@ -93,12 +93,6 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	} else {
 		return (
 			<div id="my-property-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">My Pharmacies</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
 				<Stack className="property-list-box">
 					<Stack className="tab-name-box">
 						<Typography
