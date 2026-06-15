@@ -68,3 +68,15 @@
 - Legacy Nestar coral, red, orange, purple, and unrelated neon-green decorative accents must not be used for public navigation, tabs, buttons, favorites, cards, or active states.
 - Red remains reserved for truthful errors, destructive warnings, and validation states.
 - The shared MUI primary and secondary palettes use QuickMeds emerald values so Material controls do not reintroduce the legacy red/blue palette.
+
+# Admin Member Query Decision
+
+- Keep `GET_ALL_MEMBERS_BY_ADMIN` as a GraphQL query. The backend resolver now correctly exposes the read operation under `Query`.
+- Do not add a frontend mutation workaround for member-list reads. `updateMemberByAdmin` remains the mutation used for admin member changes.
+
+# Admin Workspace Redesign Decisions
+
+- The admin panel is a light-theme desktop and tablet operations workspace using the Warm Civic Pharmacy palette.
+- `/_admin` is a real overview using existing member, pharmacy, pending-pharmacy, and Community article meta counters.
+- Support remains visible but is marked Coming soon until real backend contracts replace the current prototype screens.
+- Phone-sized admin access presents a desktop-required message while preserving administrator logout.

@@ -308,3 +308,52 @@ Validation completed:
 - `git diff --check` passed.
 - Login, registration, and narrow mobile account layouts were visually checked in headless Chromium.
 - The existing global mobile-navbar clipping remains visible at narrow widths and is deferred to the separate mobile-navigation phase.
+
+## Admin Member Query Contract Alignment
+
+- Confirmed the frontend already calls `getAllMembersByAdmin` with the correct GraphQL query operation; no frontend source workaround was added.
+- Coordinated the backend resolver correction so the Admin Users request now validates against the live schema.
+
+Validation completed:
+
+- Live schema introspection lists `getAllMembersByAdmin` under `Query`, not `Mutation`.
+- A live unauthenticated Admin Users query reaches the expected authorization guard instead of returning `Cannot query field`.
+- `yarn typecheck --pretty false` and frontend `git diff --check` passed.
+
+Validation limitations:
+
+- `yarn build` compiled but could not complete while the active `next dev` process on port `3000` was using the shared `.next` directory; the missing vendor-chunk error is unrelated to this backend contract correction.
+- Authenticated Admin Users interactions require an available admin browser session.
+
+## Admin Redesign A1 — Shell And Real Overview
+
+- Rebuilt the shared admin shell with a pale-blue navigation sidebar, warm off-white workspace, compact top bar, clear administrator identity, accessible logout, and active-route states.
+- Added tablet drawer navigation and an honest phone-sized desktop-required state.
+- Renamed visible `Cs` navigation to Support and marked it Coming soon without changing existing routes.
+- Replaced the `/_admin` Users redirect with a real overview using existing admin query meta counters for users, pharmacies, pending pharmacy reviews, and Community articles.
+- Preserved admin authorization, Apollo operations, backend contracts, legacy `/_admin/properties`, and all existing module behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- The in-app browser tool was unavailable, so authenticated desktop and tablet visual checks remain pending.
+
+## My Profile Avatar Sizing
+
+- Reduced the profile editor image preview from a large rectangular panel to a compact circular avatar.
+- Tightened upload-control spacing and added a narrow-workspace stacked layout.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated profile-page visual verification was unavailable because the isolated headless session redirected to the signed-out homepage.

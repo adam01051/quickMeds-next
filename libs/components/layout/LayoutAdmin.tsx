@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import MenuList from '../admin/AdminMenuList';
 import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -19,18 +18,18 @@ import { userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { MemberType } from '../../enums/member.enum';
 import BrandLogo from '../common/BrandLogo';
+import { List, SignOut, X } from 'phosphor-react';
 const drawerWidth = 280;
 
 const withAdminLayout = (Component: ComponentType) => {
 	return (props: object) => {
 		const router = useRouter();
 		const user = useReactiveVar(userVar);
-		const [settingsState, setSettingsStateState] = useState(false);
 		const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-		const [openMenu, setOpenMenu] = useState(false);
-		const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-		const [title, setTitle] = useState('admin');
 		const [loading, setLoading] = useState(true);
+		const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+		const tabletLayout = useMediaQuery('(max-width:1100px)');
+		const phoneLayout = useMediaQuery('(max-width:600px)');
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -59,24 +58,99 @@ const withAdminLayout = (Component: ComponentType) => {
 			router.push('/').then();
 		};
 
-		if (!user || user?.memberType !== MemberType.ADMIN) return null;
+		const drawerContent: React.ReactNode = (
+			<>
+				<div className="admin-sidebar__brand">
+					<BrandLogo />
+					{tabletLayout && (
+						<IconButton
+							className="admin-sidebar__close"
+							onClick={() => setMobileDrawerOpen(false)}
+							aria-label="Close admin navigation"
+						>
+							<X size={20} />
+						</IconButton>
+					)}
+				</div>
+				<div className="admin-sidebar__identity">
+					<Avatar
+						alt={`${user?.memberNick ?? 'Administrator'} profile`}
+						src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'}
+					/>
+					<div>
+						<Typography component="strong">{user?.memberNick ?? 'Administrator'}</Typography>
+						<Typography component="span">Platform administrator</Typography>
+					</div>
+				</div>
+				<Divider />
+				<MenuList onNavigate={() => setMobileDrawerOpen(false)} />
+				<div className="admin-sidebar__footer">
+					<Button onClick={logoutHandler} startIcon={<SignOut size={19} />} fullWidth>
+						Logout
+					</Button>
+				</div>
+			</>
+		);
+
+		if (loading) {
+			return (
+				<main id="pc-wrap" className="admin admin-session-state">
+					<div className="admin-session-state__panel" role="status">
+						<span className="admin-session-state__mark" />
+						<Typography component="h1">Checking administrator access</Typography>
+						<Typography component="p">Preparing your QuickMeds operations workspace.</Typography>
+					</div>
+				</main>
+			);
+		}
+
+		if (!user || user.memberType !== MemberType.ADMIN) return null;
+
+		if (phoneLayout) {
+			return (
+				<main id="pc-wrap" className="admin admin-phone-state">
+					<div className="admin-phone-state__top">
+						<BrandLogo />
+						<Button onClick={logoutHandler} startIcon={<SignOut size={18} />}>
+							Logout
+						</Button>
+					</div>
+					<div className="admin-phone-state__panel">
+						<Typography component="span">ADMIN WORKSPACE</Typography>
+						<Typography component="h1">Use a larger screen to manage QuickMeds</Typography>
+						<Typography component="p">
+							Administrative tables and moderation actions are designed for tablet and desktop screens.
+						</Typography>
+						<Button variant="contained" onClick={() => router.push('/')}>
+							Return to QuickMeds
+						</Button>
+					</div>
+				</main>
+			);
+		}
 
 		return (
 			<main id="pc-wrap" className="admin">
-				<Box component={'div'} sx={{ display: 'flex' }}>
-					<AppBar
-						position="fixed"
-						sx={{
-							width: `calc(100% - ${drawerWidth}px)`,
-							ml: `${drawerWidth}px`,
-							boxShadow: 'rgb(100 116 139 / 12%) 0px 1px 4px',
-							background: 'none',
-						}}
-					>
+				<div className="admin-workspace">
+					<AppBar position="fixed" className="admin-topbar">
 						<Toolbar>
-							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+							{tabletLayout && (
+								<IconButton
+									className="admin-topbar__menu"
+									onClick={() => setMobileDrawerOpen(true)}
+									aria-label="Open admin navigation"
+								>
+									<List size={22} />
+								</IconButton>
+							)}
+							<div className="admin-topbar__context">
+								<Typography component="span">QuickMeds administration</Typography>
+								<Typography component="strong">Operations workspace</Typography>
+							</div>
+							<Tooltip title="Open administrator menu">
+								<IconButton onClick={handleOpenUserMenu} className="admin-topbar__profile" aria-label="Open administrator menu">
 									<Avatar
+										alt={`${user.memberNick} profile`}
 										src={
 											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
 										}
@@ -100,83 +174,45 @@ const withAdminLayout = (Component: ComponentType) => {
 								open={Boolean(anchorElUser)}
 								onClose={handleCloseUserMenu}
 							>
-								<Box
-									component={'div'}
+								<div
 									onClick={handleCloseUserMenu}
-									sx={{
-										width: '200px',
-									}}
+									className="admin-profile-menu"
 								>
-									<Stack sx={{ px: '20px', my: '12px' }}>
-										<Typography variant={'h6'} component={'h6'} sx={{ mb: '4px' }}>
+									<Stack className="admin-profile-menu__identity">
+										<Typography component="strong">
 											{user?.memberNick}
 										</Typography>
-										<Typography variant={'subtitle1'} component={'p'} color={'#757575'}>
+										<Typography component="span">
 											{user?.memberPhone}
 										</Typography>
 									</Stack>
 									<Divider />
-									<Box component={'div'} sx={{ p: 1, py: '6px' }} onClick={logoutHandler}>
-										<MenuItem sx={{ px: '16px', py: '6px' }}>
-											<Typography variant={'subtitle1'} component={'span'}>
-												Logout
-											</Typography>
+									<div onClick={logoutHandler}>
+										<MenuItem className="admin-profile-menu__logout">
+											<SignOut size={18} />
+											<Typography component="span">Logout</Typography>
 										</MenuItem>
-									</Box>
-								</Box>
+									</div>
+								</div>
 							</Menu>
 						</Toolbar>
 					</AppBar>
 
 					<Drawer
-						sx={{
-							width: drawerWidth,
-							flexShrink: 0,
-							'& .MuiDrawer-paper': {
-								width: drawerWidth,
-								boxSizing: 'border-box',
-							},
-						}}
-						variant="permanent"
-						anchor="left"
-						className="aside"
+						variant={tabletLayout ? 'temporary' : 'permanent'}
+						open={tabletLayout ? mobileDrawerOpen : true}
+						onClose={() => setMobileDrawerOpen(false)}
+						ModalProps={{ keepMounted: true }}
+						className="admin-sidebar"
+						sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth } }}
 					>
-						<Toolbar sx={{ flexDirection: 'column', alignItems: 'flexStart' }}>
-							<Stack className={'logo-box'}>
-								<BrandLogo />
-							</Stack>
-
-							<Stack
-								className="user"
-								direction={'row'}
-								alignItems={'center'}
-								sx={{
-									bgcolor: openMenu ? 'rgba(255, 255, 255, 0.04)' : 'none',
-									borderRadius: '8px',
-									px: '24px',
-									py: '11px',
-								}}
-							>
-								<Avatar
-									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
-								/>
-								<Typography variant={'body2'} p={1} ml={1}>
-									{user?.memberNick} <br />
-									{user?.memberPhone}
-								</Typography>
-							</Stack>
-						</Toolbar>
-
-						<Divider />
-
-						<MenuList />
+						{drawerContent}
 					</Drawer>
 
-					<Box component={'div'} id="bunker" sx={{ flexGrow: 1 }}>
-						{/*@ts-ignore*/}
-						<Component {...props} setSnackbar={setSnackbar} setTitle={setTitle} />
-					</Box>
-				</Box>
+					<div id="bunker">
+						<Component {...props} />
+					</div>
+				</div>
 			</main>
 		);
 	};

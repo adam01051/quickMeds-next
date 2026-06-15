@@ -1,168 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter, withRouter } from 'next/router';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { ChatsCircle, Headset, User, UserCircleGear } from 'phosphor-react';
-import cookies from 'js-cookie';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { ChatsCircle, Gauge, Headset, User, UserCircleGear } from 'phosphor-react';
 
-const AdminMenuList = (props: any) => {
+interface AdminMenuListProps {
+	onNavigate?: () => void;
+}
+
+const AdminMenuList = ({ onNavigate }: AdminMenuListProps) => {
 	const router = useRouter();
-	const device = useDeviceDetect();
-	const [mobileLayout, setMobileLayout] = useState(false);
-	const [openSubMenu, setOpenSubMenu] = useState('Users');
-	const [openMenu, setOpenMenu] = useState(typeof window === 'object' ? cookies.get('admin_menu') === 'true' : false);
-	const [clickMenu, setClickMenu] = useState<any>([]);
-	const [clickSubMenu, setClickSubMenu] = useState('');
-
-	const {
-		router: { pathname },
-	} = props;
-
-	const pathnames = pathname.split('/').filter((x: any) => x);
-
-	/** LIFECYCLES **/
-	useEffect(() => {
-		if (device === 'mobile') setMobileLayout(true);
-
-		switch (pathnames[1]) {
-			case 'properties':
-				setClickMenu(['Pharmacies']);
-				break;
-			case 'community':
-				setClickMenu(['Community']);
-				break;
-			case 'cs':
-				setClickMenu(['Cs']);
-				break;
-			default:
-				setClickMenu(['Users']);
-				break;
-		}
-
-		switch (pathnames[2]) {
-			case 'logs':
-				setClickSubMenu('Logs');
-				break;
-			case 'inquiry':
-				setClickSubMenu('1:1 Inquiry');
-				break;
-			case 'notice':
-				setClickSubMenu('Notice');
-				break;
-			case 'faq':
-				setClickSubMenu('FAQ');
-				break;
-			case 'board_create':
-				setClickSubMenu('Board Create');
-				break;
-			default:
-				setClickSubMenu('List');
-				break;
-		}
-	}, []);
+	const [expanded, setExpanded] = useState<string | null>(null);
 
 	/** HANDLERS **/
 	const subMenuChangeHandler = (target: string) => {
-		if (clickMenu.find((item: string) => item === target)) {
-			// setOpenSubMenu('');
-			setClickMenu(clickMenu.filter((menu: string) => target !== menu));
-		} else {
-			// setOpenSubMenu(target);
-			setClickMenu([...clickMenu, target]);
-		}
+		setExpanded(expanded === target ? null : target);
 	};
 
 	const menu_set = [
 		{
+			title: 'Overview',
+			icon: <Gauge size={20} />,
+			url: '/_admin',
+		},
+		{
 			title: 'Users',
-			icon: <User size={20} color="#bdbdbd" weight="fill" />,
-			on_click: () => subMenuChangeHandler('Users'),
+			icon: <User size={20} />,
+			url: '/_admin/users',
 		},
 		{
 			title: 'Pharmacies',
-			icon: <UserCircleGear size={20} color="#bdbdbd" weight="fill" />,
-			on_click: () => subMenuChangeHandler('Pharmacies'),
+			icon: <UserCircleGear size={20} />,
+			url: '/_admin/properties',
 		},
 		{
 			title: 'Community',
-			icon: <ChatsCircle size={20} color="#bdbdbd" weight="fill" />,
-			on_click: () => subMenuChangeHandler('Community'),
+			icon: <ChatsCircle size={20} />,
+			url: '/_admin/community',
 		},
 		{
-			title: 'Cs',
-			icon: <Headset size={20} color="#bdbdbd" weight="fill" />,
-			on_click: () => subMenuChangeHandler('Cs'),
+			title: 'Support',
+			icon: <Headset size={20} />,
+			children: [
+				{ title: 'FAQ', url: '/_admin/cs/faq' },
+				{ title: 'Notices', url: '/_admin/cs/notice' },
+				{ title: 'Inquiries', url: '/_admin/cs/inquiry' },
+			],
 		},
 	];
 
-	const sub_menu_set: any = {
-		Users: [{ title: 'List', url: '/_admin/users' }],
-		Pharmacies: [{ title: 'List', url: '/_admin/properties' }],
-		Community: [{ title: 'List', url: '/_admin/community' }],
-		Cs: [
-			{ title: 'FAQ', url: '/_admin/cs/faq' },
-			{ title: 'Notice', url: '/_admin/cs/notice' },
-		],
-	};
+	const isRouteActive = (url: string) => (url === '/_admin' ? router.pathname === url : router.pathname.startsWith(url));
 
 	return (
-		<>
+		<nav className="admin-nav" aria-label="Admin navigation">
+			<span className="admin-nav__label">OPERATIONS</span>
 			{menu_set.map((item, index) => (
-				<List className={'menu_wrap'} key={index} disablePadding>
-					<ListItemButton
-						onClick={item.on_click}
-						component={'li'}
-						className={clickMenu[0] === item.title ? 'menu on' : 'menu'}
-						sx={{
-							minHeight: 48,
-							justifyContent: openMenu ? 'initial' : 'center',
-							px: 2.5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: openMenu ? 3 : 'auto',
-								justifyContent: 'center',
-							}}
-						>
-							{item.icon}
-						</ListItemIcon>
-						<ListItemText>{item.title}</ListItemText>
-						{clickMenu.find((menu: string) => item.title === menu) ? <ExpandLess /> : <ExpandMore />}
-					</ListItemButton>
-					<Collapse
-						in={!!clickMenu.find((menu: string) => menu === item.title)}
-						className="menu"
-						timeout="auto"
-						component="li"
-						unmountOnExit
-					>
-						<List className="menu-list" disablePadding>
-							{sub_menu_set[item.title] &&
-								sub_menu_set[item.title].map((sub: any, i: number) => (
-									<Link href={sub.url} shallow={true} replace={true} key={i}>
-										<ListItemButton
-											component="li"
-											className={clickMenu[0] === item.title && clickSubMenu === sub.title ? 'li on' : 'li'}
-										>
-											<Typography variant={sub.title} component={'span'}>
-												{sub.title}
-											</Typography>
-										</ListItemButton>
-									</Link>
-								))}
-						</List>
-					</Collapse>
+				<List className="admin-nav__group" key={item.title} disablePadding>
+					{item.url ? (
+						<Link href={item.url} onClick={onNavigate}>
+							<ListItemButton className={isRouteActive(item.url) ? 'admin-nav__item is-active' : 'admin-nav__item'}>
+								<ListItemIcon>{item.icon}</ListItemIcon>
+								<ListItemText primary={item.title} />
+							</ListItemButton>
+						</Link>
+					) : (
+						<>
+							<ListItemButton
+								onClick={() => subMenuChangeHandler(item.title)}
+								className={router.pathname.startsWith('/_admin/cs') ? 'admin-nav__item is-active' : 'admin-nav__item'}
+								aria-expanded={expanded === item.title}
+							>
+								<ListItemIcon>{item.icon}</ListItemIcon>
+								<ListItemText primary={item.title} secondary="Coming soon" />
+								{expanded === item.title ? <ExpandLess /> : <ExpandMore />}
+							</ListItemButton>
+							<Collapse in={expanded === item.title} timeout="auto" unmountOnExit>
+								<List className="admin-nav__sublist" disablePadding>
+									{item.children?.map((sub) => (
+										<Link href={sub.url} onClick={onNavigate} key={sub.url}>
+											<ListItemButton className={isRouteActive(sub.url) ? 'admin-nav__subitem is-active' : 'admin-nav__subitem'}>
+												<ListItemText primary={sub.title} />
+											</ListItemButton>
+										</Link>
+									))}
+								</List>
+							</Collapse>
+						</>
+					)}
 				</List>
 			))}
-		</>
+		</nav>
 	);
 };
 
-export default withRouter(AdminMenuList);
+export default AdminMenuList;

@@ -54,17 +54,22 @@
 					}
 					.image-big-box {
 						flex-direction: row;
-						gap: 50px;
+						align-items: center;
+						gap: 28px;
 						.image-box {
 							position: relative;
-							width: 194px;
-							height: 157px;
+							width: 112px;
+							height: 112px;
+							flex: 0 0 112px;
+							overflow: hidden;
+							border: 1px solid #d8e2dd;
+							border-radius: 50%;
+							background: #f5f8f7;
 							img {
 								width: 100%;
 								height: 100%;
 								object-fit: cover;
-								border-radius: 15px;
-								object-fit: cover;
+								border-radius: 50%;
 							}
 							.delete-box {
 								position: absolute;
@@ -79,8 +84,8 @@
 							}
 						}
 						.upload-big-box {
-							align-self: flex-end;
-							gap: 22px;
+							align-self: center;
+							gap: 10px;
 							.labeler {
 								display: flex;
 								width: 210.023px;
@@ -317,5 +322,13 @@
 				}
 			}
 		}
+	}
+}
+
+@media (max-width: 900px) {
+	#pc-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 18px;
 	}
 }

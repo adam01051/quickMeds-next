@@ -547,3 +547,588 @@
     }
   }
 }
+
+// Warm Civic admin shell. Kept under `.admin` so public surfaces remain unchanged.
+#pc-wrap.admin {
+  --admin-ink: #102e27;
+  --admin-muted: #667c75;
+  --admin-emerald: #08634f;
+  --admin-emerald-dark: #064e3b;
+  --admin-mint: #d8f0e6;
+  --admin-page: #f6f8f5;
+  --admin-sidebar: #edf3fb;
+  --admin-surface: #ffffff;
+  --admin-border: #d7e1dc;
+
+  min-height: 100vh;
+  background: var(--admin-page);
+  color: var(--admin-ink);
+
+  .admin-workspace {
+    min-height: 100vh;
+    display: flex;
+  }
+
+  .admin-topbar.MuiAppBar-root {
+    width: calc(100% - 280px);
+    height: 72px;
+    padding: 0;
+    margin-left: 280px;
+    background: rgba(255, 255, 255, 0.97);
+    border-bottom: 1px solid var(--admin-border);
+    box-shadow: none;
+    color: var(--admin-ink);
+
+    .MuiToolbar-root {
+      width: 100%;
+      min-height: 72px;
+      padding: 0 32px;
+      display: flex;
+      gap: 16px;
+    }
+  }
+
+  .admin-topbar__context {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: auto;
+
+    span {
+      color: var(--admin-muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    strong {
+      color: var(--admin-ink);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 650;
+    }
+  }
+
+  .admin-topbar__profile,
+  .admin-topbar__menu {
+    width: 44px;
+    height: 44px;
+    color: var(--admin-ink);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+
+    &:focus-visible {
+      outline: 3px solid rgba(8, 99, 79, 0.22);
+      outline-offset: 2px;
+    }
+  }
+
+  .admin-topbar__profile {
+    padding: 4px;
+
+    .MuiAvatar-root {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  .admin-sidebar {
+    .MuiDrawer-paper {
+      box-sizing: border-box;
+      display: flex;
+      background: var(--admin-sidebar);
+      border-right: 1px solid #cedbd5;
+      color: var(--admin-ink);
+    }
+
+    .MuiDivider-root {
+      border-color: rgba(16, 46, 39, 0.12);
+    }
+  }
+
+  .admin-sidebar__brand {
+    min-height: 72px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(16, 46, 39, 0.1);
+
+    .brand-logo__mark {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand-logo__wordmark {
+      font-size: 23px;
+    }
+  }
+
+  .admin-sidebar__close {
+    width: 44px;
+    height: 44px;
+    color: var(--admin-ink);
+  }
+
+  .admin-sidebar__identity {
+    margin: 22px 18px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(16, 46, 39, 0.12);
+    border-radius: 12px;
+
+    .MuiAvatar-root {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--admin-border);
+    }
+
+    div {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    strong {
+      overflow: hidden;
+      color: var(--admin-ink);
+      font-size: 14px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    span {
+      color: var(--admin-muted);
+      font-size: 12px;
+    }
+  }
+
+  .admin-nav {
+    flex: 1;
+    padding: 22px 14px;
+  }
+
+  .admin-nav__label {
+    display: block;
+    margin: 0 12px 10px;
+    color: #728780;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+
+  .admin-nav__group {
+    margin-bottom: 4px;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  .admin-nav__item.MuiListItemButton-root {
+    min-height: 48px;
+    padding: 9px 12px;
+    gap: 11px;
+    color: #355249;
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    .MuiListItemIcon-root {
+      min-width: 22px;
+      margin: 0;
+      color: currentColor;
+    }
+
+    .MuiListItemText-primary {
+      font-size: 14px;
+      font-weight: 570;
+    }
+
+    .MuiListItemText-secondary {
+      color: #758a83;
+      font-size: 10px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.66);
+      border-color: rgba(8, 99, 79, 0.12);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(8, 99, 79, 0.2);
+      outline-offset: 2px;
+    }
+
+    &.is-active {
+      color: var(--admin-emerald-dark);
+      background: var(--admin-mint);
+      border-color: #add9ca;
+      box-shadow: inset 3px 0 0 var(--admin-emerald);
+    }
+  }
+
+  .admin-nav__sublist {
+    padding: 4px 0 4px 34px;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  .admin-nav__subitem.MuiListItemButton-root {
+    min-height: 44px;
+    padding: 8px 12px;
+    color: var(--admin-muted);
+    border-radius: 8px;
+
+    .MuiListItemText-primary {
+      font-size: 13px;
+    }
+
+    &.is-active {
+      color: var(--admin-emerald-dark);
+      background: rgba(255, 255, 255, 0.72);
+      font-weight: 650;
+    }
+  }
+
+  .admin-sidebar__footer {
+    padding: 16px 18px 22px;
+    border-top: 1px solid rgba(16, 46, 39, 0.1);
+
+    .MuiButton-root {
+      min-height: 44px;
+      justify-content: flex-start;
+      color: #a12b2b;
+      border-radius: 9px;
+      text-transform: none;
+    }
+  }
+
+  #bunker {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    min-height: 100vh;
+    margin-left: 0;
+    padding: 112px 32px 56px;
+    align-items: initial;
+    background: var(--admin-page);
+  }
+
+  .admin-page-header {
+    max-width: 720px;
+    margin-bottom: 30px;
+
+    > span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--admin-emerald);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--admin-ink);
+      font-size: clamp(30px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      font-weight: 680;
+    }
+
+    p {
+      margin: 0;
+      color: var(--admin-muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  }
+
+  .admin-overview {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+  }
+
+  .admin-overview__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .admin-overview-card {
+    min-height: 238px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(37, 75, 64, 0.05);
+
+    > p {
+      margin: 6px 0 20px;
+      color: var(--admin-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  .admin-overview-card__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--admin-ink);
+
+    > span:last-child {
+      font-size: 14px;
+      font-weight: 620;
+    }
+  }
+
+  .admin-overview-card__icon {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--admin-emerald-dark);
+    background: var(--admin-mint);
+    border-radius: 10px;
+  }
+
+  .admin-overview-card__value {
+    display: block;
+    margin-top: 22px;
+    color: var(--admin-ink);
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .admin-overview-card__link {
+    min-height: 44px;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--admin-emerald);
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--admin-emerald-dark);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(8, 99, 79, 0.2);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+  }
+
+  .admin-overview-card__error {
+    min-height: 72px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    strong {
+      color: #9b2c2c;
+      font-size: 14px;
+    }
+
+    .MuiButton-root {
+      min-height: 44px;
+      color: var(--admin-emerald);
+      text-transform: none;
+    }
+  }
+
+  .content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+
+    > .table-wrap {
+      overflow: hidden;
+      border: 1px solid var(--admin-border);
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(37, 75, 64, 0.05);
+
+      .MuiTablePagination-root {
+        background: #fbfcfb;
+        border-top: 1px solid var(--admin-border);
+      }
+    }
+  }
+}
+
+.admin-profile-menu {
+  width: 220px;
+
+  .admin-profile-menu__identity {
+    padding: 16px 18px;
+
+    strong {
+      color: #102e27;
+      font-size: 14px;
+    }
+
+    span {
+      margin-top: 3px;
+      color: #667c75;
+      font-size: 12px;
+    }
+  }
+
+  .admin-profile-menu__logout {
+    min-height: 44px;
+    gap: 10px;
+    color: #a12b2b;
+  }
+}
+
+#pc-wrap.admin-session-state,
+#pc-wrap.admin-phone-state {
+  min-height: 100vh;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  background: #f6f8f5;
+}
+
+.admin-session-state__panel,
+.admin-phone-state__panel {
+  width: min(100%, 520px);
+  padding: 40px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #d7e1dc;
+  border-radius: 14px;
+
+  h1 {
+    margin: 16px 0 8px;
+    color: #102e27;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: #667c75;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+.admin-session-state__mark {
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+  border: 3px solid #d8f0e6;
+  border-top-color: #08634f;
+  border-radius: 50%;
+  animation: admin-session-spin 0.8s linear infinite;
+}
+
+#pc-wrap.admin-phone-state {
+  padding-top: 84px;
+  display: block;
+
+  .admin-phone-state__top {
+    height: 68px;
+    padding: 0 16px;
+    position: fixed;
+    inset: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-bottom: 1px solid #d7e1dc;
+
+    .brand-logo__mark {
+      width: 36px;
+      height: 36px;
+    }
+
+    .brand-logo__wordmark {
+      font-size: 20px;
+    }
+
+    .MuiButton-root {
+      min-height: 44px;
+      color: #a12b2b;
+      text-transform: none;
+    }
+  }
+
+  .admin-phone-state__panel {
+    margin: 32px auto;
+    padding: 30px 22px;
+
+    > span {
+      color: #08634f;
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: 0.13em;
+    }
+
+    .MuiButton-root {
+      min-height: 46px;
+      margin-top: 24px;
+      padding: 0 20px;
+      color: #fff;
+      background: #08634f;
+      border-radius: 9px;
+      box-shadow: none;
+      text-transform: none;
+    }
+  }
+}
+
+@keyframes admin-session-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1250px) {
+  #pc-wrap.admin {
+    .admin-overview__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  #pc-wrap.admin {
+    .admin-topbar.MuiAppBar-root {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    #bunker {
+      width: 100%;
+      margin-left: 0;
+      padding: 106px 24px 48px;
+    }
+
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-session-state__mark {
+    animation: none;
+  }
+}

@@ -71,6 +71,11 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 3. Keep password recovery, social login, email authentication, and email verification out of the interface until backend contracts are approved.
 4. Correct the shared global mobile-navbar clipping during the separate mobile-navigation phase.
 
+## Admin Users Follow-up
+
+1. Complete an authenticated Admin Users smoke check covering member loading, search, type/status filters, pagination, and member updates.
+2. Continue the approved admin redesign with A2 Users Management before changing Pharmacy, Community, or Support content.
+
 ## Pharmacy Detail Feedback Follow-up
 
 1. Visually verify the Community Feedback section with a valid pharmacy record containing more than five comments.

@@ -171,3 +171,15 @@ Deferred compatibility work:
 - Registration continues to support only the existing `USER` and internal `AGENT` member types; visible `AGENT` terminology is Pharmacy Owner.
 - The old city-building account image and mobile placeholder were removed from the active account flow.
 - Global mobile navigation remains a separate migration and is not changed by the account page.
+
+## Admin Member Query Alignment
+
+- The existing frontend `GET_ALL_MEMBERS_BY_ADMIN` operation remains a GraphQL query.
+- The backend resolver now exposes `getAllMembersByAdmin` under `Query`, removing the Admin Users schema-validation error without a frontend source workaround.
+- Admin member updates continue through the existing mutation contract.
+
+## Admin Workspace Migration
+
+- The shared admin shell now uses the QuickMeds Warm Civic Pharmacy visual language with a tablet drawer, clear administrator identity, accessible navigation, and honest Support Coming soon labeling.
+- `/_admin` no longer redirects to Users; it displays real overview totals from existing admin queries and links into each management module.
+- Users, Pharmacies, Community, and Support page-content redesigns remain separate incremental phases.
