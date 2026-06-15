@@ -64,6 +64,13 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 4. Redesign `/agent/detail` as its own approved micro-phase.
 5. Correct the shared global mobile-navbar clipping during the separate mobile-navigation phase.
 
+## Account Access Follow-up
+
+1. Complete authenticated browser smoke checks for successful login, User signup, and Pharmacy Owner signup with disposable test accounts.
+2. Verify normalized wrong-nickname, wrong-password, blocked-account, and unavailable-backend messages in the rendered inline error state.
+3. Keep password recovery, social login, email authentication, and email verification out of the interface until backend contracts are approved.
+4. Correct the shared global mobile-navbar clipping during the separate mobile-navigation phase.
+
 ## Pharmacy Detail Feedback Follow-up
 
 1. Visually verify the Community Feedback section with a valid pharmacy record containing more than five comments.

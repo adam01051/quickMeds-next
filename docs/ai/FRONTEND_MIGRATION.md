@@ -160,3 +160,14 @@ Deferred compatibility work:
 - Keep internal Agent names and the legacy `/agent` route until a coordinated route and contract migration is approved.
 - Complete authenticated browser checks for owner likes and pagination with a dataset larger than one page.
 - Resolve the shared global mobile-navbar clipping in the future mobile-navigation phase.
+
+## Account Access Migration
+
+- `/account/join` now uses one responsive Warm Civic Pharmacy account-access presentation for login and registration.
+- Existing `LOGIN`, `SIGN_UP`, token storage, normalized authentication errors, session updates, and backend contracts remain unchanged.
+- Login remains canonical at `/account/join`; registration remains directly addressable at `/account/join?mode=signup`.
+- In-page mode changes update the URL while preserving a safe internal referrer.
+- Unsupported password recovery and Remember me controls were removed instead of being presented as functional.
+- Registration continues to support only the existing `USER` and internal `AGENT` member types; visible `AGENT` terminology is Pharmacy Owner.
+- The old city-building account image and mobile placeholder were removed from the active account flow.
+- Global mobile navigation remains a separate migration and is not changed by the account page.

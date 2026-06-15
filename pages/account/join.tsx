@@ -1,227 +1,227 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
-import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
+import { Button } from '@mui/material';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import LocalPharmacyOutlinedIcon from '@mui/icons-material/LocalPharmacyOutlined';
+import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useRouter } from 'next/router';
-import { logIn, signUp } from '../../libs/auth';
-import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import BrandLogo from '../../libs/components/common/BrandLogo';
+import { logIn, signUp } from '../../libs/auth';
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getStaticProps = async ({ locale }: { locale?: string }) => ({
 	props: {
-		...(await serverSideTranslations(locale, ['common'])),
+		...(await serverSideTranslations(locale ?? 'en', ['common'])),
 	},
 });
 
+type AccountMode = 'login' | 'signup';
+type AccountType = 'USER' | 'AGENT';
+
+const safeReferrer = (referrer: string | string[] | undefined): string => {
+	if (typeof referrer !== 'string' || !referrer.startsWith('/') || referrer.startsWith('//')) return '/';
+	return referrer;
+};
+
 const Join: NextPage = () => {
 	const router = useRouter();
-	const device = useDeviceDetect();
-	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' });
-	const [loginView, setLoginView] = useState<boolean>(true);
+	const [mode, setMode] = useState<AccountMode>('login');
+	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' as AccountType });
+	const [showPassword, setShowPassword] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
 		if (!router.isReady) return;
-		setLoginView(router.query.mode !== 'signup');
+		setMode(router.query.mode === 'signup' ? 'signup' : 'login');
+		setErrorMessage('');
 	}, [router.isReady, router.query.mode]);
 
-	/** HANDLERS **/
-	const viewChangeHandler = (state: boolean) => {
-		setLoginView(state);
+	const changeMode = async (nextMode: AccountMode) => {
+		setErrorMessage('');
+		setMode(nextMode);
+		const query = nextMode === 'signup' ? { ...router.query, mode: 'signup' } : { ...router.query };
+		if (nextMode === 'login') delete query.mode;
+		await router.push({ pathname: '/account/join', query }, undefined, { shallow: true, scroll: false });
 	};
 
-	const checkUserTypeHandler = (e: any) => {
-		const checked = e.target.checked;
-		if (checked) {
-			const value = e.target.name;
-			handleInput('type', value);
-		} else {
-			handleInput('type', 'USER');
-		}
-	};
-
-	const handleInput = useCallback((name: any, value: any) => {
-		setInput((prev) => {
-			return { ...prev, [name]: value };
-		});
-	}, []);
-
-	const doLogin = useCallback(async () => {
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		if (isSubmitting) return;
+
+		setErrorMessage('');
 		setIsSubmitting(true);
 		try {
-			await logIn(input.nick, input.password);
-			await router.push(`${router.query.referrer ?? '/'}`);
+			if (mode === 'login') {
+				await logIn(input.nick.trim(), input.password);
+			} else {
+				await signUp(input.nick.trim(), input.password, input.phone.trim(), input.type);
+			}
+			await router.push(safeReferrer(router.query.referrer));
 		} catch (error: unknown) {
-			await sweetMixinErrorAlert(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
+			setErrorMessage(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [input.nick, input.password, isSubmitting, router]);
+	};
 
-	const doSignUp = useCallback(async () => {
-		if (isSubmitting) return;
-		setIsSubmitting(true);
-		try {
-			await signUp(input.nick, input.password, input.phone, input.type);
-			await router.push(`${router.query.referrer ?? '/'}`);
-		} catch (error: unknown) {
-			await sweetMixinErrorAlert(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
-		} finally {
-			setIsSubmitting(false);
-		}
-	}, [input, isSubmitting, router]);
+	const isSignup = mode === 'signup';
+	const isDisabled =
+		isSubmitting || input.nick.trim() === '' || input.password === '' || (isSignup && input.phone.trim() === '');
 
-	if (device === 'mobile') {
-		return <div>LOGIN MOBILE</div>;
-	} else {
-		return (
-			<Stack className={'join-page'}>
-				<Stack className={'container'}>
-					<Stack className={'main'}>
-						<Stack className={'left'}>
-							{/* @ts-ignore */}
-							<Box className={'logo'}>
-								<BrandLogo />
-							</Box>
-							<Box className={'info'}>
-								<span>{loginView ? 'login' : 'signup'}</span>
-								<p>{loginView ? 'Login' : 'Sign'} in with this account across the following sites.</p>
-							</Box>
-							<Box className={'input-wrap'}>
-								<div className={'input-box'}>
-									<span>Nickname</span>
+	return (
+		<main className="join-page">
+			<div className="join-page__container">
+				<section className="join-page__panel" aria-labelledby="account-title">
+					<div className="join-page__form-side">
+					
+
+						<div className="join-page__mode-tabs" aria-label="Account access">
+							<button type="button" className={mode === 'login' ? 'active' : ''} onClick={() => changeMode('login')}>
+								Login
+							</button>
+							<button type="button" className={isSignup ? 'active' : ''} onClick={() => changeMode('signup')}>
+								Register
+							</button>
+						</div>
+
+						<header className="join-page__header">
+							<p>{isSignup ? 'Join QuickMeds' : 'Welcome back'}</p>
+							<h1 id="account-title">{isSignup ? 'Create your QuickMeds account' : 'Welcome back to QuickMeds'}</h1>
+							<span>
+								{isSignup
+									? 'Create an account to save pharmacies, join the community, or manage your pharmacy presence.'
+									: 'Log in to access saved pharmacies, community activity, and Pharmacy Owner tools.'}
+							</span>
+						</header>
+
+						<form className="join-page__form" onSubmit={handleSubmit}>
+							<label>
+								<span>Nickname</span>
+								<input
+									type="text"
+									value={input.nick}
+									onChange={(event) => setInput((current) => ({ ...current, nick: event.target.value }))}
+									placeholder="Enter your nickname"
+									autoComplete="username"
+									required
+								/>
+							</label>
+
+							<label>
+								<span>Password</span>
+								<div className="join-page__password">
 									<input
-										type="text"
-										placeholder={'Enter Nickname'}
-										onChange={(e) => handleInput('nick', e.target.value)}
-										required={true}
-										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
-										}}
+										type={showPassword ? 'text' : 'password'}
+										value={input.password}
+										onChange={(event) => setInput((current) => ({ ...current, password: event.target.value }))}
+										placeholder="Enter your password"
+										autoComplete={isSignup ? 'new-password' : 'current-password'}
+										required
 									/>
+									<button
+										type="button"
+										onClick={() => setShowPassword((current) => !current)}
+										aria-label={showPassword ? 'Hide password' : 'Show password'}
+										aria-pressed={showPassword}
+									>
+										{showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+									</button>
 								</div>
-								<div className={'input-box'}>
-									<span>Password</span>
-									<input
-										type="password"
-										placeholder={'Enter Password'}
-										onChange={(e) => handleInput('password', e.target.value)}
-										required={true}
-										onKeyDown={(event) => {
-											if (event.key == 'Enter' && loginView) doLogin();
-											if (event.key == 'Enter' && !loginView) doSignUp();
-										}}
-									/>
-								</div>
-								{!loginView && (
-									<div className={'input-box'}>
-										<span>Phone</span>
+							</label>
+
+							{isSignup && (
+								<>
+									<label>
+										<span>Phone number</span>
 										<input
-											type="text"
-											placeholder={'Enter Phone'}
-											onChange={(e) => handleInput('phone', e.target.value)}
-											required={true}
-											onKeyDown={(event) => {
-												if (event.key == 'Enter') doSignUp();
-											}}
+											type="tel"
+											value={input.phone}
+											onChange={(event) => setInput((current) => ({ ...current, phone: event.target.value }))}
+											placeholder="Enter your phone number"
+											autoComplete="tel"
+											required
 										/>
-									</div>
-								)}
-							</Box>
-							<Box className={'register'}>
-								{!loginView && (
-									<div className={'type-option'}>
-										<span className={'text'}>I want to be registered as:</span>
-										<div>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'USER'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type == 'USER'}
-														/>
-													}
-													label="User"
-												/>
-											</FormGroup>
-											<FormGroup>
-												<FormControlLabel
-													control={
-														<Checkbox
-															size="small"
-															name={'AGENT'}
-															onChange={checkUserTypeHandler}
-															checked={input?.type == 'AGENT'}
-														/>
-													}
-													label="Pharmacy Owner"
-												/>
-											</FormGroup>
-										</div>
-									</div>
-								)}
+									</label>
 
-								{loginView && (
-									<div className={'remember-info'}>
-										<FormGroup>
-											<FormControlLabel control={<Checkbox defaultChecked size="small" />} label="Remember me" />
-										</FormGroup>
-										<a>Lost your password?</a>
-									</div>
-								)}
+									<fieldset className="join-page__roles">
+										<legend>Register as</legend>
+										<label className={input.type === 'USER' ? 'selected' : ''}>
+											<input
+												type="radio"
+												name="accountType"
+												value="USER"
+												checked={input.type === 'USER'}
+												onChange={() => setInput((current) => ({ ...current, type: 'USER' }))}
+											/>
+											<PersonOutlineRoundedIcon />
+											<span>
+												<strong>User</strong>
+												<small>Discover and save pharmacies</small>
+											</span>
+										</label>
+										<label className={input.type === 'AGENT' ? 'selected' : ''}>
+											<input
+												type="radio"
+												name="accountType"
+												value="AGENT"
+												checked={input.type === 'AGENT'}
+												onChange={() => setInput((current) => ({ ...current, type: 'AGENT' }))}
+											/>
+											<LocalPharmacyOutlinedIcon />
+											<span>
+												<strong>Pharmacy Owner</strong>
+												<small>Register and manage pharmacies</small>
+											</span>
+										</label>
+									</fieldset>
+								</>
+							)}
 
-								{loginView ? (
-									<Button
-										variant="contained"
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-										disabled={input.nick == '' || input.password == '' || isSubmitting}
-										onClick={doLogin}
-									>
-										{isSubmitting ? 'LOGGING IN...' : 'LOGIN'}
-									</Button>
-								) : (
-									<Button
-										variant="contained"
-										disabled={input.nick == '' || input.password == '' || input.phone == '' || input.type == '' || isSubmitting}
-										onClick={doSignUp}
-										endIcon={<img src="/img/icons/rightup.svg" alt="" />}
-									>
-										{isSubmitting ? 'CREATING ACCOUNT...' : 'SIGNUP'}
-									</Button>
-								)}
-							</Box>
-							<Box className={'ask-info'}>
-								{loginView ? (
-									<p>
-										Not registered yet?
-										<b
-											onClick={() => {
-												viewChangeHandler(false);
-											}}
-										>
-											SIGNUP
-										</b>
-									</p>
-								) : (
-									<p>
-										Have account?
-										<b onClick={() => viewChangeHandler(true)}> LOGIN</b>
-									</p>
-								)}
-							</Box>
-						</Stack>
-						<Stack className={'right'}></Stack>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+							{errorMessage && (
+								<p className="join-page__error" role="alert">
+									{errorMessage}
+								</p>
+							)}
+
+							<Button type="submit" variant="contained" disabled={isDisabled} className="join-page__submit">
+								{isSubmitting
+									? isSignup
+										? 'Creating account...'
+										: 'Logging in...'
+									: isSignup
+										? 'Create account'
+										: 'Login'}
+							</Button>
+						</form>
+
+						<p className="join-page__switch">
+							{isSignup ? 'Already have an account?' : 'New to QuickMeds?'}
+							<button type="button" onClick={() => changeMode(isSignup ? 'login' : 'signup')}>
+								{isSignup ? 'Login' : 'Create an account'}
+							</button>
+						</p>
+					</div>
+
+					<aside className="join-page__visual" aria-label="QuickMeds pharmacy discovery">
+						<img src="/img/homepage/pharmacy-hero.webp" alt="A modern pharmacy interior" />
+						<div>
+							<p>One account, useful pharmacy access</p>
+							<h2>Find trusted pharmacies and stay connected to local care.</h2>
+							<ul>
+								<li><CheckCircleOutlineRoundedIcon /> Save pharmacies for later</li>
+								<li><CheckCircleOutlineRoundedIcon /> Follow real operating hours and services</li>
+								<li><CheckCircleOutlineRoundedIcon /> Participate in the QuickMeds community</li>
+							</ul>
+						</div>
+					</aside>
+				</section>
+			</div>
+		</main>
+	);
 };
 
 export default withLayoutBasic(Join);

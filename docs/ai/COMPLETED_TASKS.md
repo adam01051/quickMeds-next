@@ -288,3 +288,23 @@ Remaining verification limitations:
 - Headless Chromium remained on the Apollo loading skeleton during the screenshot window even though direct live GraphQL requests succeeded.
 - Pagination interaction could not be exercised with the current six-owner dataset and page limit of nine.
 - The existing global mobile navbar clipping and Pharmacy Owner detail redesign remain separate phases.
+
+## Login And Registration Warm Civic Redesign
+
+- Rebuilt `/account/join` as one responsive login and registration experience instead of separate desktop behavior and a `LOGIN MOBILE` placeholder.
+- Replaced the inherited real-estate city-tower visual with the existing realistic QuickMeds pharmacy image and truthful pharmacy-discovery guidance.
+- Preserved the existing `LOGIN`, `SIGN_UP`, authentication helpers, access-token storage, automatic login after signup, normalized backend errors, and post-authentication redirect behavior.
+- Added URL-synchronized Login and Register modes through `/account/join` and `/account/join?mode=signup`.
+- Replaced input-level Enter handlers with a semantic form submission flow and prevented repeated submissions while authentication is pending.
+- Removed unsupported Remember me and Lost your password controls.
+- Replaced mutually exclusive role checkboxes with accessible User and Pharmacy Owner radio-card choices.
+- Added inline authentication errors, safe internal-referrer handling, password visibility control, correct autocomplete values, phone input semantics, visible focus states, and complete mobile form presentation.
+- Scoped the account page to the established Geist, Source Serif 4, off-white, emerald, mint, restrained-border, and limited-shadow visual language.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Login, registration, and narrow mobile account layouts were visually checked in headless Chromium.
+- The existing global mobile-navbar clipping remains visible at narrow widths and is deferred to the separate mobile-navigation phase.
