@@ -8,6 +8,7 @@ import NightlightOutlinedIcon from '@mui/icons-material/NightlightOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import LocalPharmacyOutlinedIcon from '@mui/icons-material/LocalPharmacyOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import { useRouter } from 'next/router';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
@@ -112,13 +113,15 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 				<div className="search-box-other">
 					<motion.button
 						type="button"
-						className="advanced-filter"
+						className={`advanced-filter ${openAdvancedFilter ? 'is-active' : ''}`}
+						aria-label="Open advanced pharmacy filters"
+						aria-expanded={openAdvancedFilter}
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
 						onClick={() => setOpenAdvancedFilter(true)}
 					>
-						<img src="/img/icons/tune.svg" alt="" />
-						<span>Advanced</span>
+						<TuneRoundedIcon />
+						<span>Filters</span>
 					</motion.button>
 					<motion.button
 						type="button"
@@ -198,11 +201,21 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 				</AnimatePresence>
 			</motion.div>
 			<div className="home-search-future" aria-label="Pharmacy discovery options">
-				<button type="button" className={searchFilter.search.openNow ? 'is-active' : ''} onClick={() => updateSearch({ openNow: searchFilter.search.openNow ? undefined : true })}>
+				<button
+					type="button"
+					className={searchFilter.search.openNow ? 'is-active' : ''}
+					aria-pressed={searchFilter.search.openNow === true}
+					onClick={() => updateSearch({ openNow: searchFilter.search.openNow ? undefined : true })}
+				>
 					<AccessTimeRoundedIcon />
 					<span><strong>Open now</strong></span>
 				</button>
-				<button type="button" className={searchFilter.search.open24Hours ? 'is-active' : ''} onClick={() => updateSearch({ open24Hours: searchFilter.search.open24Hours ? undefined : true })}>
+				<button
+					type="button"
+					className={searchFilter.search.open24Hours ? 'is-active' : ''}
+					aria-pressed={searchFilter.search.open24Hours === true}
+					onClick={() => updateSearch({ open24Hours: searchFilter.search.open24Hours ? undefined : true })}
+				>
 					<NightlightOutlinedIcon />
 					<span><strong>24/7 pharmacies</strong></span>
 				</button>
@@ -210,7 +223,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					<LocationOnOutlinedIcon />
 					<span><strong>Use current location</strong><small className="future-item-label">Coming soon</small></span>
 				</button>
-				{device !== 'mobile' && <span className="home-search-future__label">Location coming soon</span>}
+				{device !== 'mobile' && <span className="home-search-future__label">Current location coming soon</span>}
 			</div>
 
 			<AnimatePresence>
