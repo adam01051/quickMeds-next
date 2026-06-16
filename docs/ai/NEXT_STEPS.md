@@ -74,7 +74,8 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 ## Admin Users Follow-up
 
 1. Complete an authenticated Admin Users smoke check covering member loading, search, type/status filters, pagination, and member updates.
-2. Continue the approved admin redesign with A2 Users Management before changing Pharmacy, Community, or Support content.
+2. Complete authenticated Admin Pharmacies and Community smoke checks covering filters, pagination, status changes, and removal flows.
+3. Continue the approved admin redesign with honest Support Coming soon pages before adding unsupported support-management behavior.
 
 ## Pharmacy Detail Feedback Follow-up
 

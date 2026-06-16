@@ -182,4 +182,7 @@ Deferred compatibility work:
 
 - The shared admin shell now uses the QuickMeds Warm Civic Pharmacy visual language with a tablet drawer, clear administrator identity, accessible navigation, and honest Support Coming soon labeling.
 - `/_admin` no longer redirects to Users; it displays real overview totals from existing admin queries and links into each management module.
-- Users, Pharmacies, Community, and Support page-content redesigns remain separate incremental phases.
+- `/_admin/users` now has a Warm Civic management table with real result count, status tabs, nickname search, member-type filter, explicit role/status action menus, loading/error/empty states, and visible `Pharmacy Owner` terminology for internal `AGENT` records.
+- `/_admin/properties` now shares the same management-table foundation, using pharmacy-specific labels, delivery/hours data, region labels, status chips, and explicit status actions while preserving the legacy route and admin pharmacy contracts.
+- `/_admin/community` now shares the same management-table foundation, using public Community category labels, article metadata, status chips, and explicit status actions while preserving existing board-article contracts.
+- Support page-content redesign remains a separate incremental phase.

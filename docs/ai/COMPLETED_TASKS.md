@@ -158,6 +158,8 @@ Validation completed:
 - `yarn typecheck --pretty false` passed.
 - `yarn build` passed and generated all 73 pages.
 - `git diff --check` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
 - Homepage, catalog, pharmacy detail, Pharmacy Owners, community, account, My Page, CS, member, and About route checks returned HTTP 200.
 - Referenced Next.js development assets returned HTTP 200 after the runtime cleanup.
 - Catalog cards were visually checked at `1440px` and `1024px`.
@@ -342,6 +344,60 @@ Validation completed:
 Validation limitations:
 
 - The in-app browser tool was unavailable, so authenticated desktop and tablet visual checks remain pending.
+
+## Admin Redesign A2 — Users Management
+
+- Rebuilt `/_admin/users` as a Warm Civic admin table with a `USER MANAGEMENT` header, real result count, clear status tabs, nickname search, visible Search/Clear controls, and a member-type filter.
+- Preserved `GET_ALL_MEMBERS_BY_ADMIN`, `UPDATE_MEMBER_BY_ADMIN`, `MembersInquiry` pagination/filter shape, profile links, admin authorization, and the shared admin shell.
+- Replaced visible legacy labels such as `MB ID`, `NICK NAME`, `PHONE NUM`, `BLOCK CRIMES`, and `STATE` with User, Phone, Role, Warnings, Blocks, Status, Joined, and Actions.
+- Displayed internal `AGENT` accounts as `Pharmacy Owner` while keeping the backend enum unchanged.
+- Replaced ambiguous badge buttons with explicit Change role and Change status menus, mutation loading labels, and active-query refetch after updates.
+- Added skeleton rows, retryable query-error state, no-results state, focus-visible controls, semantic status tabs, default avatar fallback, and tablet-friendly toolbar wrapping.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated browser smoke checks for live role/status mutations, pagination, and filters remain pending because no authenticated admin browser session was available during this phase.
+
+## Admin Redesign A3/A4 — Pharmacies And Community Styling Alignment
+
+- Restyled `/_admin/properties` and `/_admin/community` to use the same Warm Civic management structure introduced on Users.
+- Added matching page headers, real result counts, status tabs, restrained toolbar filters, bordered table panels, status chips, action menus, skeleton rows, retryable error states, and empty states.
+- Replaced visible pharmacy table terminology with Pharmacy, Delivery & Hours, Pharmacy Owner, Region, Type, Status, and Actions while preserving the legacy `/_admin/properties` route and pharmacy GraphQL operations.
+- Replaced visible Community table terminology with Article, Category, Author, Views, Likes, Published, Status, and Actions.
+- Mapped Community categories without changing backend enums: `FREE` as Discussions, `RECOMMEND` as Recommendations, `NEWS` as News, and `HUMOR` as Community Corner.
+- Removed local debug logging from the Community admin page and preserved existing pagination, filters, status updates, removal flows, and detail/profile links.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+
+## Community Useful Content Seed
+
+- Created eight active Community articles through Adam's normal authenticated `CREATE_BOARD_ARTICLE` workflow.
+- Added exactly two useful public articles to each existing category: Discussions, Recommendations, News, and Community Corner.
+- News posts describe live QuickMeds region-search and operating-hours capabilities rather than publishing unverified external health claims.
+- Retired Adam's previous `asdasdasd` placeholder article through the normal article update mutation.
+- No fake images, medical diagnoses, treatment instructions, direct database inserts, or source-code content records were added.
+
+Created article IDs:
+
+- Discussions: `6a2fef8b3929a3871d1ce3ac`, `6a2fef8b3929a3871d1ce3af`
+- Recommendations: `6a2fef8b3929a3871d1ce3b2`, `6a2fef8b3929a3871d1ce3b5`
+- News: `6a2fef8b3929a3871d1ce3b8`, `6a2fef8b3929a3871d1ce3bb`
+- Community Corner: `6a2fef8b3929a3871d1ce3be`, `6a2fef8c3929a3871d1ce3c1`
+
+Validation completed:
+
+- Public GraphQL queries return exactly two active Adam-authored articles in every category.
+- All eight article-detail queries return active records authored by `adam`.
+- Every title and content body remains within the backend validation limits.
+- Adam's `memberArticles` counter remains `9`; the existing article-retirement path does not decrement this counter correctly and requires separate backend correction.
 
 ## My Profile Avatar Sizing
 

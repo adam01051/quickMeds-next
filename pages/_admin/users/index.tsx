@@ -1,37 +1,45 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
 import { MemberPanelList } from '../../../libs/components/admin/users/MemberList';
-import { Box, InputAdornment, List, ListItem, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { TabContext } from '@mui/lab';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import TablePagination from '@mui/material/TablePagination';
-import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import { Button, MenuItem, OutlinedInput, Select, TablePagination, Typography } from '@mui/material';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { MembersInquiry } from '../../../libs/types/member/member.input';
-import { Member } from '../../../libs/types/member/member';
 import { MemberStatus, MemberType } from '../../../libs/enums/member.enum';
 import { sweetErrorHandling } from '../../../libs/sweetAlert';
 import { MemberUpdate } from '../../../libs/types/member/member.update';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_MEMBER_BY_ADMIN } from '../../../apollo/admin/mutation';
 import { GET_ALL_MEMBERS_BY_ADMIN } from '../../../apollo/admin/query';
-import { T } from '../../../libs/types/common';
 
-const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
-	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
+type AdminUserActionKind = 'role' | 'status';
+
+interface AdminUserMenuState {
+	key: string;
+	kind: AdminUserActionKind;
+	anchor: HTMLElement;
+}
+
+const statusTabs = [
+	{ label: 'All', value: 'ALL' },
+	{ label: 'Active', value: MemberStatus.ACTIVE },
+	{ label: 'Blocked', value: MemberStatus.BLOCK },
+	{ label: 'Deleted', value: MemberStatus.DELETE },
+];
+
+const roleLabels: Record<'ALL' | MemberType, string> = {
+	ALL: 'All roles',
+	[MemberType.USER]: 'User',
+	[MemberType.AGENT]: 'Pharmacy Owner',
+	[MemberType.ADMIN]: 'Admin',
+};
+
+const AdminUsers: NextPage = ({ initialInquiry }: any) => {
 	const [membersInquiry, setMembersInquiry] = useState<MembersInquiry>(initialInquiry);
-	const [members, setMembers] = useState<Member[]>([]);
-	const [membersTotal, setMembersTotal] = useState<number>(0);
-	const [value, setValue] = useState(
-		membersInquiry?.search?.memberStatus ? membersInquiry?.search?.memberStatus : 'ALL',
-	);
-	const [searchText, setSearchText] = useState('');
-	const [searchType, setSearchType] = useState('ALL');
-
+	const [searchText, setSearchText] = useState(initialInquiry.search?.text ?? '');
+	const [menuState, setMenuState] = useState<AdminUserMenuState | null>(null);
+	const [updatingMemberKey, setUpdatingMemberKey] = useState<string | null>(null);
 
 	/** APOLLO REQUESTS **/
 	const [updateMemberByAdmin] = useMutation(UPDATE_MEMBER_BY_ADMIN);
@@ -45,229 +53,178 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 		fetchPolicy: 'network-only',
 		variables: { input: membersInquiry },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setMembers(data?.getAllMembersByAdmin?.list);
-			setMembersTotal(data?.getAllMembersByAdmin?.metaCounter[0]?.total ?? 0);
-		},
 	});
-	/** LIFECYCLES **/
-	useEffect(() => {
-		getAllMembersRefetch({ input: membersInquiry });
-	}, [membersInquiry]);
+
+	const members = getAllMembersByAdminData?.getAllMembersByAdmin?.list ?? [];
+	const membersTotal = getAllMembersByAdminData?.getAllMembersByAdmin?.metaCounter?.[0]?.total ?? 0;
+	const activeStatus = membersInquiry.search.memberStatus ?? 'ALL';
+	const activeRole = membersInquiry.search.memberType ?? 'ALL';
 
 	/** HANDLERS **/
 	const changePageHandler = async (event: unknown, newPage: number) => {
-		membersInquiry.page = newPage + 1;
-		await getAllMembersRefetch({ input: membersInquiry });
-		setMembersInquiry({ ...membersInquiry });
+		setMembersInquiry((current) => ({ ...current, page: newPage + 1 }));
 	};
 
 	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		membersInquiry.limit = parseInt(event.target.value, 10);
-		membersInquiry.page = 1;
-		await getAllMembersRefetch({ input: membersInquiry });
-		setMembersInquiry({ ...membersInquiry });
+		setMembersInquiry((current) => ({ ...current, limit: parseInt(event.target.value, 10), page: 1 }));
 	};
 
-	const menuIconClickHandler = (e: any, index: number) => {
-		const tempAnchor = anchorEl.slice();
-		tempAnchor[index] = e.currentTarget;
-		setAnchorEl(tempAnchor);
+	const menuIconClickHandler = (event: React.MouseEvent<HTMLElement>, key: string, kind: AdminUserActionKind) => {
+		setMenuState({ key, kind, anchor: event.currentTarget });
 	};
 
 	const menuIconCloseHandler = () => {
-		setAnchorEl([]);
+		setMenuState(null);
 	};
 
-	const tabChangeHandler = async (event: any, newValue: string) => {
-		setValue(newValue);
+	const statusChangeHandler = (nextStatus: string) => {
 		setSearchText('');
+		setMembersInquiry((current) => {
+			const nextSearch = { ...current.search };
+			delete nextSearch.text;
+			if (nextStatus === 'ALL') delete nextSearch.memberStatus;
+			else nextSearch.memberStatus = nextStatus as MemberStatus;
+			return { ...current, page: 1, sort: 'createdAt', search: nextSearch };
+		});
+	};
 
-		setMembersInquiry({ ...membersInquiry, page: 1, sort: 'createdAt' });
+	const roleChangeHandler = (nextRole: string) => {
+		setMembersInquiry((current) => {
+			const nextSearch = { ...current.search };
+			if (nextRole === 'ALL') delete nextSearch.memberType;
+			else nextSearch.memberType = nextRole as MemberType;
+			return { ...current, page: 1, sort: 'createdAt', search: nextSearch };
+		});
+	};
 
-		switch (newValue) {
-			case 'ACTIVE':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.ACTIVE } });
-				break;
-			case 'BLOCK':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.BLOCK } });
-				break;
-			case 'DELETE':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.DELETE } });
-				break;
-			default:
-				delete membersInquiry?.search?.memberStatus;
-				setMembersInquiry({ ...membersInquiry });
-				break;
-		}
+	const searchTextHandler = () => {
+		setMembersInquiry((current) => {
+			const nextSearch = { ...current.search };
+			const nextText = searchText.trim();
+			if (nextText) nextSearch.text = nextText;
+			else delete nextSearch.text;
+			return { ...current, page: 1, search: nextSearch };
+		});
+	};
+
+	const clearSearchHandler = () => {
+		setSearchText('');
+		setMembersInquiry((current) => {
+			const nextSearch = { ...current.search };
+			delete nextSearch.text;
+			return { ...current, page: 1, search: nextSearch };
+		});
 	};
 
 	const updateMemberHandler = async (updateData: MemberUpdate) => {
+		const key = updateData.memberType ? `${updateData._id}-role` : `${updateData._id}-status`;
 		try {
+			setUpdatingMemberKey(key);
 			await updateMemberByAdmin({ variables: { input: updateData } });
 			menuIconCloseHandler();
-			await getAllMembersRefetch({input:membersInquiry})
+			await getAllMembersRefetch({ input: membersInquiry });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
-		}
-	};
-
-	const textHandler = useCallback((value: string) => {
-		try {
-			setSearchText(value);
-		} catch (err: any) {
-			console.log('textHandler: ', err.message);
-		}
-	}, []);
-
-	const searchTextHandler = () => {
-		try {
-			setMembersInquiry({
-				...membersInquiry,
-				search: {
-					...membersInquiry.search,
-					text: searchText,
-				},
-			});
-		} catch (err: any) {
-			console.log('searchTextHandler: ', err.message);
-		}
-	};
-
-	const searchTypeHandler = async (newValue: string) => {
-		try {
-			setSearchType(newValue);
-
-			if (newValue !== 'ALL') {
-				setMembersInquiry({
-					...membersInquiry,
-					page: 1,
-					sort: 'createdAt',
-					search: {
-						...membersInquiry.search,
-						memberType: newValue as MemberType,
-					},
-				});
-			} else {
-				delete membersInquiry?.search?.memberType;
-				setMembersInquiry({ ...membersInquiry });
-			}
-		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
+		} finally {
+			setUpdatingMemberKey(null);
 		}
 	};
 
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Member List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'BLOCK')}
-									value="BLOCK"
-									className={value === 'BLOCK' ? 'li on' : 'li'}
-								>
-									Blocked
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Deleted
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<OutlinedInput
-									value={searchText}
-									onChange={(e: any) => textHandler(e.target.value)}
-									sx={{ width: '100%' }}
-									className={'search'}
-									placeholder="Search user name"
-									onKeyDown={(event) => {
-										if (event.key == 'Enter') searchTextHandler();
-									}}
-									endAdornment={
-										<>
-											{searchText && (
-												<CancelRoundedIcon
-													style={{ cursor: 'pointer' }}
-													onClick={async () => {
-														setSearchText('');
-														setMembersInquiry({
-															...membersInquiry,
-															search: {
-																...membersInquiry.search,
-																text: '',
-															},
-														});
-													}}
-												/>
-											)}
-											<InputAdornment position="end" onClick={() => searchTextHandler()}>
-												<img src="/img/icons/search_icon.png" alt={'searchIcon'} />
-											</InputAdornment>
-										</>
-									}
-								/>
-								<Select sx={{ width: '160px', ml: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										All
-									</MenuItem>
-									<MenuItem value={'USER'} onClick={() => searchTypeHandler('USER')}>
-										User
-									</MenuItem>
-									<MenuItem value={'AGENT'} onClick={() => searchTypeHandler('AGENT')}>
-										Agent
-									</MenuItem>
-									<MenuItem value={'ADMIN'} onClick={() => searchTypeHandler('ADMIN')}>
-										Admin
-									</MenuItem>
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<MemberPanelList
-							members={members}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateMemberHandler={updateMemberHandler}
-						/>
+		<div className="content admin-users-page">
+			<div className="admin-page-header admin-page-header--with-count">
+				<div>
+					<Typography component="span">USER MANAGEMENT</Typography>
+					<Typography component="h1">Users</Typography>
+					<Typography component="p">Manage QuickMeds accounts, roles, and account status.</Typography>
+				</div>
+				<div className="admin-result-count" aria-live="polite">
+					<strong>{membersTotal.toLocaleString()}</strong>
+					<span>{membersTotal === 1 ? 'user' : 'users'}</span>
+				</div>
+			</div>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={membersTotal}
-							rowsPerPage={membersInquiry?.limit}
-							page={membersInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
+			<div className="table-wrap admin-management-panel">
+				<div className="admin-filter-tabs" role="tablist" aria-label="Filter users by status">
+					{statusTabs.map((tab) => (
+						<button
+							type="button"
+							role="tab"
+							aria-selected={activeStatus === tab.value}
+							aria-current={activeStatus === tab.value ? 'page' : undefined}
+							className={activeStatus === tab.value ? 'is-active' : ''}
+							onClick={() => statusChangeHandler(tab.value)}
+							key={tab.value}
+						>
+							{tab.label}
+						</button>
+					))}
+				</div>
+
+				<div className="admin-toolbar">
+					<div className="admin-search-control">
+						<OutlinedInput
+							value={searchText}
+							onChange={(event) => setSearchText(event.target.value)}
+							className="admin-search-control__input"
+							placeholder="Search by nickname"
+							inputProps={{ 'aria-label': 'Search users by nickname' }}
+							onKeyDown={(event) => {
+								if (event.key === 'Enter') searchTextHandler();
+							}}
+							startAdornment={<SearchRoundedIcon fontSize="small" />}
 						/>
-					</TabContext>
-				</Box>
-			</Box>
-		</Box>
+						<Button onClick={searchTextHandler} variant="contained" className="admin-primary-action">
+							Search
+						</Button>
+						<Button
+							onClick={clearSearchHandler}
+							variant="outlined"
+							className="admin-secondary-action"
+							startIcon={<ClearRoundedIcon />}
+							disabled={!searchText && !membersInquiry.search.text}
+						>
+							Clear
+						</Button>
+					</div>
+					<Select
+						className="admin-select-control"
+						value={activeRole}
+						onChange={(event) => roleChangeHandler(event.target.value)}
+						displayEmpty
+						inputProps={{ 'aria-label': 'Filter users by role' }}
+					>
+						{Object.entries(roleLabels).map(([value, label]) => (
+							<MenuItem value={value} key={value}>
+								{label}
+							</MenuItem>
+						))}
+					</Select>
+				</div>
+
+				<MemberPanelList
+					members={members}
+					loading={getAllMembersByAdminLoading}
+					error={getAllMembersByAdminError}
+					updatingMemberKey={updatingMemberKey}
+					menuState={menuState}
+					menuIconClickHandler={menuIconClickHandler}
+					menuIconCloseHandler={menuIconCloseHandler}
+					updateMemberHandler={updateMemberHandler}
+					retryHandler={() => getAllMembersRefetch({ input: membersInquiry })}
+				/>
+
+				<TablePagination
+					rowsPerPageOptions={[10, 20, 40, 60]}
+					component="div"
+					count={membersTotal}
+					rowsPerPage={membersInquiry.limit}
+					page={membersInquiry.page - 1}
+					onPageChange={changePageHandler}
+					onRowsPerPageChange={changeRowsPerPageHandler}
+				/>
+			</div>
+		</div>
 	);
 };
 
@@ -276,6 +233,7 @@ AdminUsers.defaultProps = {
 		page: 1,
 		limit: 10,
 		sort: 'createdAt',
+		direction: 'DESC',
 		search: {},
 	},
 };

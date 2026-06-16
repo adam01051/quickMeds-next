@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
-import { Box, Stack, MenuItem } from '@mui/material';
-import { List, ListItem } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import { TabContext } from '@mui/lab';
-import TablePagination from '@mui/material/TablePagination';
+import { MenuItem, Select, TablePagination, Typography } from '@mui/material';
 import CommunityArticleList from '../../../libs/components/admin/community/CommunityArticleList';
 import { AllBoardArticlesInquiry } from '../../../libs/types/board-article/board-article.input';
 import { BoardArticle } from '../../../libs/types/board-article/board-article';
@@ -19,38 +13,52 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_BOARD_ARTICLES_BY_ADMIN } from '../../../apollo/admin/query';
 import { T } from '../../../libs/types/common';
 
+const statusTabs = [
+	{ label: 'All', value: 'ALL' },
+	{ label: 'Active', value: BoardArticleStatus.ACTIVE },
+	{ label: 'Deleted', value: BoardArticleStatus.DELETE },
+];
+
+const categoryLabels: Record<'ALL' | BoardArticleCategory, string> = {
+	ALL: 'All categories',
+	[BoardArticleCategory.FREE]: 'Discussions',
+	[BoardArticleCategory.RECOMMEND]: 'Recommendations',
+	[BoardArticleCategory.NEWS]: 'News',
+	[BoardArticleCategory.HUMOR]: 'Community Corner',
+};
+
 const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
-	const [anchorEl, setAnchorEl] = useState<any>([]);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement[]>([]);
 	const [communityInquiry, setCommunityInquiry] = useState<AllBoardArticlesInquiry>(initialInquiry);
 	const [articles, setArticles] = useState<BoardArticle[]>([]);
 	const [articleTotal, setArticleTotal] = useState<number>(0);
-	const [value, setValue] = useState(
+	const [value, setValue] = useState<string>(
 		communityInquiry?.search?.articleStatus ? communityInquiry?.search?.articleStatus : 'ALL',
 	);
 	const [searchType, setSearchType] = useState('ALL');
 
 	/** APOLLO REQUESTS **/
 
-const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
-const [removeBoardArticleByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
+	const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
+	const [removeBoardArticleByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
 
-const {
-  loading: getAllBoardArticlesByAdminLoading,
-  data: getAllBoardArticlesByAdminData,
-  error: getAllBoardArticleByAdminError,
-  refetch: getAllBoardArticlesByAdminRefetch,
-} = useQuery(GET_ALL_BOARD_ARTICLES_BY_ADMIN, {
-  fetchPolicy: 'network-only',
-  variables: { input: communityInquiry },
-  notifyOnNetworkStatusChange: true,
-  onCompleted: (data: T) => {
-    setArticles(data?.getAllBoardArticlesByAdmin?.list);
-    setArticleTotal(data?.getAllBoardArticlesByAdmin?.metaCounter[0]?.total ?? 0);
-  },
-});
+	const {
+		loading: getAllBoardArticlesByAdminLoading,
+		data: getAllBoardArticlesByAdminData,
+		error: getAllBoardArticleByAdminError,
+		refetch: getAllBoardArticlesByAdminRefetch,
+	} = useQuery(GET_ALL_BOARD_ARTICLES_BY_ADMIN, {
+		fetchPolicy: 'network-only',
+		variables: { input: communityInquiry },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setArticles(data?.getAllBoardArticlesByAdmin?.list);
+			setArticleTotal(data?.getAllBoardArticlesByAdmin?.metaCounter[0]?.total ?? 0);
+		},
+	});
 	/** LIFECYCLES **/
 	useEffect(() => {
-		getAllBoardArticlesByAdminRefetch({input:communityInquiry}).then();
+		getAllBoardArticlesByAdminRefetch({ input: communityInquiry }).then();
 	}, [communityInquiry]);
 
 	/** HANDLERS **/
@@ -80,53 +88,44 @@ const {
 	const tabChangeHandler = async (event: any, newValue: string) => {
 		setValue(newValue);
 
-		setCommunityInquiry({ ...communityInquiry, page: 1, sort: 'createdAt' });
-
-		switch (newValue) {
-			case 'ACTIVE':
-				setCommunityInquiry({ ...communityInquiry, search: { articleStatus: BoardArticleStatus.ACTIVE } });
-				break;
-			case 'DELETE':
-				setCommunityInquiry({ ...communityInquiry, search: { articleStatus: BoardArticleStatus.DELETE } });
-				break;
-			default:
-				delete communityInquiry?.search?.articleStatus;
-				setCommunityInquiry({ ...communityInquiry });
-				break;
-		}
+		setCommunityInquiry((current) => {
+			const nextSearch = { ...current.search };
+			if (newValue === 'ALL') delete nextSearch.articleStatus;
+			else nextSearch.articleStatus = newValue as BoardArticleStatus;
+			return { ...current, page: 1, sort: 'createdAt', search: nextSearch };
+		});
 	};
 
 	const searchTypeHandler = async (newValue: string) => {
-		try {
-			setSearchType(newValue);
+		setSearchType(newValue);
 
-			if (newValue !== 'ALL') {
-				setCommunityInquiry({
-					...communityInquiry,
-					page: 1,
-					sort: 'createdAt',
-					search: {
-						...communityInquiry.search,
-						articleCategory: newValue as BoardArticleCategory,
-					},
-				});
-			} else {
-				delete communityInquiry?.search?.articleCategory;
-				setCommunityInquiry({ ...communityInquiry });
-			}
-		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
+		if (newValue !== 'ALL') {
+			setCommunityInquiry((current) => ({
+				...current,
+				page: 1,
+				sort: 'createdAt',
+				search: {
+					...current.search,
+					articleCategory: newValue as BoardArticleCategory,
+				},
+			}));
+		} else {
+			setCommunityInquiry((current) => {
+				const nextSearch = { ...current.search };
+				delete nextSearch.articleCategory;
+				return { ...current, page: 1, search: nextSearch };
+			});
 		}
 	};
 
 	const updateArticleHandler = async (updateData: BoardArticleUpdate) => {
 		try {
-			console.log('+updateData: ', updateData);
 			await updateBoardArticleByAdmin({
 				variables:{
 					input:updateData,
 				}});
 			menuIconCloseHandler();
+			await getAllBoardArticlesByAdminRefetch({ input: communityInquiry });
 		} catch (err: any) {
 			menuIconCloseHandler();
 			sweetErrorHandling(err).then();
@@ -147,78 +146,79 @@ const {
 		}
 	};
 
-	console.log('+communityInquiry', communityInquiry);
-	console.log('+articles', articles);
-
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Arricle List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Delete
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										ALL
-									</MenuItem>
-									{Object.values(BoardArticleCategory).map((category: string) => (
-										<MenuItem value={category} onClick={() => searchTypeHandler(category)} key={category}>
-											{category}
-										</MenuItem>
-									))}
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<CommunityArticleList
-							articles={articles}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateArticleHandler={updateArticleHandler}
-							removeArticleHandler={removeArticleHandler}
-						/>
+		<div className="content admin-users-page">
+			<div className="admin-page-header admin-page-header--with-count">
+				<div>
+					<Typography component="span">COMMUNITY MANAGEMENT</Typography>
+					<Typography component="h1">Community</Typography>
+					<Typography component="p">Moderate QuickMeds articles while preserving the public Community taxonomy.</Typography>
+				</div>
+				<div className="admin-result-count" aria-live="polite">
+					<strong>{articleTotal.toLocaleString()}</strong>
+					<span>{articleTotal === 1 ? 'article' : 'articles'}</span>
+				</div>
+			</div>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={articleTotal}
-							rowsPerPage={communityInquiry?.limit}
-							page={communityInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
-		</Box>
+			<div className="table-wrap admin-management-panel">
+				<div className="admin-filter-tabs" role="tablist" aria-label="Filter Community articles by status">
+					{statusTabs.map((tab) => (
+						<button
+							type="button"
+							role="tab"
+							aria-selected={value === tab.value}
+							aria-current={value === tab.value ? 'page' : undefined}
+							className={value === tab.value ? 'is-active' : ''}
+							onClick={(event) => tabChangeHandler(event, tab.value)}
+							key={tab.value}
+						>
+							{tab.label}
+						</button>
+					))}
+				</div>
+
+				<div className="admin-toolbar">
+					<div className="admin-toolbar__context">
+						<strong>Category filter</strong>
+						<span>Uses existing backend article category values.</span>
+					</div>
+					<Select
+						className="admin-select-control"
+						value={searchType}
+						onChange={(event) => searchTypeHandler(event.target.value)}
+						inputProps={{ 'aria-label': 'Filter articles by category' }}
+					>
+						{Object.entries(categoryLabels).map(([value, label]) => (
+							<MenuItem value={value} key={value}>
+								{label}
+							</MenuItem>
+						))}
+					</Select>
+				</div>
+
+				<CommunityArticleList
+					articles={articles}
+					loading={getAllBoardArticlesByAdminLoading}
+					error={getAllBoardArticleByAdminError}
+					anchorEl={anchorEl}
+					menuIconClickHandler={menuIconClickHandler}
+					menuIconCloseHandler={menuIconCloseHandler}
+					updateArticleHandler={updateArticleHandler}
+					removeArticleHandler={removeArticleHandler}
+					retryHandler={() => getAllBoardArticlesByAdminRefetch({ input: communityInquiry })}
+				/>
+
+				<TablePagination
+					rowsPerPageOptions={[10, 20, 40, 60]}
+					component="div"
+					count={articleTotal}
+					rowsPerPage={communityInquiry?.limit}
+					page={communityInquiry?.page - 1}
+					onPageChange={changePageHandler}
+					onRowsPerPageChange={changeRowsPerPageHandler}
+				/>
+			</div>
+		</div>
 	);
 };
 
