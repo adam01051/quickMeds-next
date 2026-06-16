@@ -160,7 +160,7 @@ export const MemberPanelList = (props: MemberPanelListType) => {
 									<TableCell>
 										<Button
 											className="admin-action-button"
-											onClick={(event) => menuIconClickHandler(event, roleKey, 'role')}
+											onClick={(event:any) => menuIconClickHandler(event, roleKey, 'role')}
 											disabled={Boolean(updatingMemberKey)}
 											aria-label={`Change role for ${member.memberNick}`}
 											endIcon={<CaretDown size={14} />}
@@ -197,7 +197,7 @@ export const MemberPanelList = (props: MemberPanelListType) => {
 									<TableCell align="right">
 										<Button
 											className="admin-action-button"
-											onClick={(event) => menuIconClickHandler(event, statusKey, 'status')}
+											onClick={(event:any) => menuIconClickHandler(event, statusKey, 'status')}
 											disabled={Boolean(updatingMemberKey)}
 											aria-label={`Change status for ${member.memberNick}`}
 											endIcon={<CaretDown size={14} />}

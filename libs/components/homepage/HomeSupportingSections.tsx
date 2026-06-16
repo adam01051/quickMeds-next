@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
@@ -16,18 +17,27 @@ import { PharmacyLocation } from '../../enums/property.enum';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 const serviceItems = [
-	{ icon: <VerifiedUserOutlinedIcon />, title: 'Verified status', copy: 'See verification when it is provided by the pharmacy.' },
-	{ icon: <LocalShippingOutlinedIcon />, title: 'Delivery support', copy: 'Compare delivery availability and fees before choosing.' },
-	{ icon: <HealthAndSafetyOutlinedIcon />, title: 'Insurance clarity', copy: 'Quickly identify pharmacies that accept insurance.' },
+	{ icon: <VerifiedUserOutlinedIcon />, title: 'Real pharmacy signals', copy: 'Verified status appears only when a pharmacy has provided verification.' },
+	{ icon: <LocalShippingOutlinedIcon />, title: 'Delivery and fee clarity', copy: 'Check delivery availability and UZS fees before you decide.' },
+	{ icon: <AccessTimeOutlinedIcon />, title: 'Operating-hours status', copy: 'See 24/7, open or closed, and hours-not-provided states from real pharmacy data.' },
+	{ icon: <HealthAndSafetyOutlinedIcon />, title: 'Regional discovery', copy: 'Search across supported Uzbekistan regions instead of vague location buckets.' },
 ];
 
 const locations = [
 	PharmacyLocation.TASHKENT_CITY,
 	PharmacyLocation.TASHKENT_REGION,
+	PharmacyLocation.ANDIJAN,
 	PharmacyLocation.SAMARKAND,
 	PharmacyLocation.BUKHARA,
 	PharmacyLocation.FERGANA,
-	PharmacyLocation.ANDIJAN,
+	PharmacyLocation.JIZZAKH,
+	PharmacyLocation.KARAKALPAKSTAN,
+	PharmacyLocation.KASHKADARYA,
+	PharmacyLocation.KHOREZM,
+	PharmacyLocation.NAMANGAN,
+	PharmacyLocation.NAVOI,
+	PharmacyLocation.SIRDARYA,
+	PharmacyLocation.SURKHANDARYA,
 ];
 
 const HomeSupportingSections = () => {
@@ -35,13 +45,20 @@ const HomeSupportingSections = () => {
 	const { loading } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'cache-and-network',
 		variables: {
-			input: { page: 1, limit: 3, sort: 'articleViews', direction: 'DESC', search: { articleCategory: BoardArticleCategory.NEWS } },
+			input: { page: 1, limit: 3, sort: 'articleViews', direction: 'DESC', search: {} },
 		},
 		onCompleted: (data: T) => setArticles(data?.getBoardArticles?.list ?? []),
 	});
-	const useFallbackImage = (event: React.SyntheticEvent<HTMLImageElement>) => {
-		event.currentTarget.onerror = null;
-		event.currentTarget.src = '/img/community/articleImg.png';
+	const getArticleExcerpt = (content: string) => {
+		const text = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+		if (!text) return 'Read a practical update from the QuickMeds Community.';
+		return text.length > 130 ? `${text.slice(0, 127)}...` : text;
+	};
+	const getArticleLabel = (category: BoardArticleCategory) => {
+		if (category === BoardArticleCategory.NEWS) return 'News';
+		if (category === BoardArticleCategory.RECOMMEND) return 'Recommendations';
+		if (category === BoardArticleCategory.HUMOR) return 'Community Corner';
+		return 'Discussions';
 	};
 
 	return (
@@ -50,8 +67,8 @@ const HomeSupportingSections = () => {
 				<div className="home-shell home-why-layout">
 					<div className="home-why-intro">
 						<span>Why QuickMeds</span>
-						<h2>A clearer way to choose local pharmacy care.</h2>
-						<p>QuickMeds puts location and practical services first, so you can make a confident choice without digging through unnecessary details.</p>
+						<h2>Know the essentials before you choose a pharmacy.</h2>
+						<p>QuickMeds brings pharmacy location, delivery, insurance, verified status, and operating-hours information into one calm search experience.</p>
 					</div>
 					<div className="home-service-list">
 						{serviceItems.map((item) => (
@@ -63,6 +80,10 @@ const HomeSupportingSections = () => {
 								</span>
 							</div>
 						))}
+						<div className="home-service-note">
+							<strong>Coming soon</strong>
+							<span>Current-location distance search, verified-only filtering, notifications, and chat will be added when their backend behavior is ready.</span>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -70,11 +91,11 @@ const HomeSupportingSections = () => {
 				<div className="home-shell home-location-layout">
 					<div>
 						<h2>Explore supported areas</h2>
-						<p>Start with the areas currently available in pharmacy search.</p>
+						<p>Select a region to open pharmacy search with that Uzbekistan region already applied.</p>
 					</div>
 					<div className="home-location-links">
 						{locations.map((location) => (
-							<Link href={`/pharmacies?input=${encodeURIComponent(JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { locationList: [location] } }))}`} key={location}>
+							<Link href={`/pharmacies?input=${encodeURIComponent(JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { pharmacyLocationList: [location] } }))}`} key={location}>
 								<PlaceOutlinedIcon />
 								{getPharmacyLocationLabel(location)}
 							</Link>
@@ -86,10 +107,10 @@ const HomeSupportingSections = () => {
 				<div className="home-shell">
 					<header className="home-section-heading">
 						<div>
-							<h2>Health-related reading</h2>
-							<p>Popular community news and practical updates.</p>
+							<h2>Community health reading</h2>
+							<p>Useful updates and pharmacy-discovery notes from QuickMeds Community.</p>
 						</div>
-						<Link href="/community?articleCategory=NEWS">View all articles <ArrowForwardRoundedIcon /></Link>
+						<Link href="/community">View all articles <ArrowForwardRoundedIcon /></Link>
 					</header>
 					<div className="home-article-grid">
 						{loading && articles.length === 0 ? (
@@ -100,13 +121,17 @@ const HomeSupportingSections = () => {
 								<p>Health-related community articles will appear here as they are published.</p>
 							</div>
 						) : articles.map((article) => {
-							const image = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/community/articleImg.png';
+							const image = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '';
 							return (
-								<Link href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`} className="home-article-card" key={article._id}>
-									<img src={image} alt="" onError={useFallbackImage} />
-									<span>Community news</span>
+								<Link href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`} className={`home-article-card ${image ? '' : 'home-article-card--text'}`} key={article._id}>
+									{image && <img src={image} alt="" />}
+									<span>{getArticleLabel(article.articleCategory)}</span>
 									<h3>{article.articleTitle}</h3>
-									<p>{article.articleViews} views</p>
+									<strong>{getArticleExcerpt(article.articleContent)}</strong>
+									<p>
+										{article.articleViews} views
+										<em>Read article <ArrowForwardRoundedIcon /></em>
+									</p>
 								</Link>
 							);
 						})}
@@ -117,8 +142,13 @@ const HomeSupportingSections = () => {
 				<div className="home-shell home-owner-cta__inner">
 					<div className="home-owner-cta__icon"><StorefrontOutlinedIcon /></div>
 					<div>
+						<span>For Pharmacy Owners</span>
 						<h2>Help people discover your pharmacy.</h2>
 						<p>Join QuickMeds as a Pharmacy Owner and keep your services and location easy to find.</p>
+						<ul>
+							<li>Manage services</li>
+							<li>Keep location visible</li>
+						</ul>
 					</div>
 					<Link href="/agent">Explore Pharmacy Owners <ArrowForwardRoundedIcon /></Link>
 				</div>
