@@ -80,3 +80,20 @@
 - `/_admin` is a real overview using existing member, pharmacy, pending-pharmacy, and Community article meta counters.
 - Support remains visible but is marked Coming soon until real backend contracts replace the current prototype screens.
 - Phone-sized admin access presents a desktop-required message while preserving administrator logout.
+
+# One-To-One Messaging Decisions
+
+- Pharmacy messaging is pharmacy-context customer-to-Pharmacy-Owner messaging, not generic member-to-member chat.
+- The existing raw WebSocket connection is reused for message update events; the current global chat component remains available for future chatbot/global-chat work.
+- GraphQL remains the source of truth for thread creation, message persistence, unread counts, read state, and image paths.
+- Message image uploads use the existing GraphQL upload flow with `target: messages`; the backend stores paths under `uploads/messages`.
+- Header messaging appears only for authenticated users and links to `/mypage?category=messages`.
+- My Page owns the first inbox UI; `?threadId=...` opens a specific conversation.
+- Pharmacy detail now offers real messaging for logged-in non-owner users, login guidance for guests, and a non-sendable owner notice for owners viewing their own pharmacy.
+- Delete, archive, blocking, typing indicators, moderation, chatbot integration, and non-image attachments remain deferred.
+
+# Homepage Trending Decision
+
+- The active homepage `Popular choices` surface now represents `Trending pharmacies` and sorts by `pharmacyLikes DESC`.
+- Trending cards may show community-like counts as a discovery signal, but must not introduce unsupported ratings, medicine inventory, prescriptions, or product pricing.
+- The large-left/compact-right interaction is a frontend presentation change only; it does not require backend contract changes.

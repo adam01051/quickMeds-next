@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Top from '../Top';
 import Footer from '../Footer';
 import { Stack } from '@mui/material';
@@ -16,6 +17,9 @@ import 'swiper/css/navigation';
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
+		const router = useRouter();
+		const isMyPage = router.pathname === '/mypage';
+		const isMessagesPage = router.pathname === '/mypage' && router.query.category === 'messages';
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -41,9 +45,11 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+						{!isMyPage && (
+							<Stack id={'footer'}>
+								<Footer />
+							</Stack>
+						)}
 					</Stack>
 				</>
 			);
@@ -63,11 +69,13 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						<Chat />
+						{!isMessagesPage && <Chat />}
 
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+						{!isMyPage && (
+							<Stack id={'footer'}>
+								<Footer />
+							</Stack>
+						)}
 					</Stack>
 				</>
 			);

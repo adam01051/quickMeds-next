@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@apollo/client';
+import { motion, useReducedMotion } from 'framer-motion';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
@@ -40,7 +41,26 @@ const locations = [
 	PharmacyLocation.SURKHANDARYA,
 ];
 
+const sectionMotion = {
+	hidden: { opacity: 0, y: 18 },
+	visible: { opacity: 1, y: 0 },
+};
+
+const listMotion = {
+	hidden: { opacity: 1 },
+	visible: {
+		opacity: 1,
+		transition: { staggerChildren: 0.07, delayChildren: 0.08 },
+	},
+};
+
+const itemMotion = {
+	hidden: { opacity: 0, y: 12 },
+	visible: { opacity: 1, y: 0 },
+};
+
 const HomeSupportingSections = () => {
+	const reduceMotion = useReducedMotion();
 	const [articles, setArticles] = useState<BoardArticle[]>([]);
 	const { loading } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'cache-and-network',
@@ -63,46 +83,73 @@ const HomeSupportingSections = () => {
 
 	return (
 		<>
-			<section className="home-why-section">
+			<motion.section
+				className="home-why-section"
+				initial={false}
+				whileInView="visible"
+				viewport={{ once: true, amount: 0.26 }}
+			>
 				<div className="home-shell home-why-layout">
-					<div className="home-why-intro">
+					<motion.div className="home-why-intro" variants={sectionMotion} transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}>
 						<span>Why QuickMeds</span>
 						<h2>Know the essentials before you choose a pharmacy.</h2>
 						<p>QuickMeds brings pharmacy location, delivery, insurance, verified status, and operating-hours information into one calm search experience.</p>
-					</div>
-					<div className="home-service-list">
+					</motion.div>
+					<motion.div className="home-service-list" variants={reduceMotion ? undefined : listMotion}>
 						{serviceItems.map((item) => (
-							<div className="home-service-item" key={item.title}>
+							<motion.div
+								className="home-service-item"
+								key={item.title}
+								variants={reduceMotion ? undefined : itemMotion}
+								transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+								whileHover={reduceMotion ? undefined : { x: 5 }}
+							>
 								<div>{item.icon}</div>
 								<span>
 									<strong>{item.title}</strong>
 									<p>{item.copy}</p>
 								</span>
-							</div>
+							</motion.div>
 						))}
-						<div className="home-service-note">
+						<motion.div
+							className="home-service-note"
+							variants={reduceMotion ? undefined : itemMotion}
+							transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+						>
 							<strong>Coming soon</strong>
 							<span>Current-location distance search, verified-only filtering, notifications, and chat will be added when their backend behavior is ready.</span>
-						</div>
-					</div>
+						</motion.div>
+					</motion.div>
 				</div>
-			</section>
-			<section className="home-location-section">
+			</motion.section>
+			<motion.section
+				className="home-location-section"
+				initial={false}
+				whileInView="visible"
+				viewport={{ once: true, amount: 0.24 }}
+			>
 				<div className="home-shell home-location-layout">
-					<div>
+					<motion.div variants={sectionMotion} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
 						<h2>Explore supported areas</h2>
 						<p>Select a region to open pharmacy search with that Uzbekistan region already applied.</p>
-					</div>
-					<div className="home-location-links">
+					</motion.div>
+					<motion.div className="home-location-links" variants={reduceMotion ? undefined : listMotion}>
 						{locations.map((location) => (
-							<Link href={`/pharmacies?input=${encodeURIComponent(JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { pharmacyLocationList: [location] } }))}`} key={location}>
-								<PlaceOutlinedIcon />
-								{getPharmacyLocationLabel(location)}
-							</Link>
+							<motion.div
+								key={location}
+								variants={reduceMotion ? undefined : itemMotion}
+								transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+								whileHover={reduceMotion ? undefined : { y: -3 }}
+							>
+								<Link href={`/pharmacies?input=${encodeURIComponent(JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { pharmacyLocationList: [location] } }))}`}>
+									<PlaceOutlinedIcon />
+									{getPharmacyLocationLabel(location)}
+								</Link>
+							</motion.div>
 						))}
-					</div>
+					</motion.div>
 				</div>
-			</section>
+			</motion.section>
 			<section className="home-articles-section">
 				<div className="home-shell">
 					<header className="home-section-heading">
@@ -140,17 +187,75 @@ const HomeSupportingSections = () => {
 			</section>
 			<section className="home-owner-cta">
 				<div className="home-shell home-owner-cta__inner">
-					<div className="home-owner-cta__icon"><StorefrontOutlinedIcon /></div>
-					<div>
+					<motion.div
+						className="home-owner-cta__media"
+						initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true, amount: 0.35 }}
+						transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+						whileHover={reduceMotion ? undefined : { y: -4 }}
+					>
+						<motion.img
+							src="/img/homepage/owner-pharmacy-spotlight.webp"
+							alt="Modern pharmacy counter and shelves"
+							whileHover={reduceMotion ? undefined : { scale: 1.025 }}
+							transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+						/>
+						<div className="home-owner-cta__overlay">
+							<h2>Your pharmacy, easier to find</h2>
+							<p>QuickMeds helps nearby customers compare services before they visit.</p>
+						</div>
+						<motion.div
+							className="home-owner-cta__stat"
+							initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12, scale: 0.98 }}
+							whileInView={{ opacity: 1, y: 0, scale: 1 }}
+							viewport={{ once: true, amount: 0.35 }}
+							transition={{ duration: 0.45, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+							whileHover={reduceMotion ? undefined : { y: -3 }}
+						>
+							<StorefrontOutlinedIcon />
+							<strong>Visible services</strong>
+							<span>Hours, delivery, insurance</span>
+						</motion.div>
+					</motion.div>
+
+					<motion.div
+						className="home-owner-cta__content"
+						initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true, amount: 0.3 }}
+						transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+					>
 						<span>For Pharmacy Owners</span>
-						<h2>Help people discover your pharmacy.</h2>
-						<p>Join QuickMeds as a Pharmacy Owner and keep your services and location easy to find.</p>
-						<ul>
-							<li>Manage services</li>
-							<li>Keep location visible</li>
-						</ul>
-					</div>
-					<Link href="/agent">Explore Pharmacy Owners <ArrowForwardRoundedIcon /></Link>
+						<h2>Join the QuickMeds pharmacy network.</h2>
+						<p>Make your pharmacy easier to find, keep services visible, and connect with people searching nearby.</p>
+						<div className="home-owner-cta__benefits">
+							<motion.div whileHover={reduceMotion ? undefined : { x: 4 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
+								<PlaceOutlinedIcon />
+								<span>
+									<strong>Boost local discovery</strong>
+									Show location, delivery, hours, and services in one searchable profile.
+								</span>
+							</motion.div>
+							<motion.div whileHover={reduceMotion ? undefined : { x: 4 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
+								<VerifiedUserOutlinedIcon />
+								<span>
+									<strong>Build patient trust</strong>
+									Create a clear pharmacy presence with availability and contact paths.
+								</span>
+							</motion.div>
+						</div>
+						<div className="home-owner-cta__actions">
+							<Link className="home-owner-cta__action home-owner-cta__action--primary" href="/account/join?mode=signup">
+								Become a Pharmacy Owner
+								<ArrowForwardRoundedIcon />
+							</Link>
+							<Link className="home-owner-cta__action" href="/agent">
+								Explore Pharmacy Owners
+								<ArrowForwardRoundedIcon />
+							</Link>
+						</div>
+					</motion.div>
 				</div>
 			</section>
 		</>

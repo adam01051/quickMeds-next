@@ -63,3 +63,11 @@ The pharmacy schema follows the ER model fields:
 - Pharmacy images use the backend-hosted `uploads/pharmacy/default-pharmacy.webp` fallback.
 - Stable owner nicknames and pharmacy name/address pairs prevent duplicate seed records.
 - Replace or remove all demo records before production.
+## One-To-One Messaging Backend Dependency
+
+- The frontend messaging UI depends on the additive backend `message` module and a regenerated GraphQL schema.
+- Required live backend restart target: `http://localhost:3007/graphql`.
+- Required collections: `message_threads` and `messages`.
+- Required upload target: `uploads/messages` via the existing GraphQL upload flow.
+- Existing global raw chat events remain separate; message events use the `message:*` namespace.
+- After restart, verify `getMyMessageThreads`, `getMessages`, `getUnreadMessageCount`, `startPharmacyConversation`, `sendMessage`, and `markMessageThreadRead` are available in the live schema.

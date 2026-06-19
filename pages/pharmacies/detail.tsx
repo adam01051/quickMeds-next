@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import axios from 'axios';
 import { Button, Stack } from '@mui/material';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import { NextPage } from 'next';
@@ -14,6 +15,8 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { useLazyQuery, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
@@ -22,6 +25,7 @@ import { formatDeliveryFeeUZS } from '../../libs/utils';
 import { getPharmacyLocationLabel } from '../../libs/utils/pharmacy-location';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
+import { getJwtToken } from '../../libs/auth';
 import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.input';
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
@@ -30,7 +34,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GET_COMMENTS, GET_PHARMACIES, GET_PHARMACY } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { CREATE_COMMENT, LIKE_TARGET_PHARMACY } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_PHARMACY, START_PHARMACY_CONVERSATION } from '../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
@@ -62,6 +66,11 @@ const PharmacyDetail: NextPage = () => {
 	const [loadedCommentPage, setLoadedCommentPage] = useState(1);
 	const [isLoadingMoreComments, setIsLoadingMoreComments] = useState(false);
 	const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
+	const messageFileRef = useRef<HTMLInputElement>(null);
+	const [messageText, setMessageText] = useState('');
+	const [messageImages, setMessageImages] = useState<string[]>([]);
+	const [isUploadingMessageImage, setIsUploadingMessageImage] = useState(false);
+	const [isStartingConversation, setIsStartingConversation] = useState(false);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.PHARMACY,
 		commentContent: '',
@@ -69,6 +78,7 @@ const PharmacyDetail: NextPage = () => {
 	});
 
 	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
+	const [startPharmacyConversation] = useMutation(START_PHARMACY_CONVERSATION);
 	const [createComment, { loading: isCreatingComment }] = useMutation(CREATE_COMMENT);
 	const [getComments, { loading: commentsLoading, error: commentsError }] = useLazyQuery(GET_COMMENTS, {
 		fetchPolicy: 'network-only',
@@ -134,6 +144,7 @@ const PharmacyDetail: NextPage = () => {
 
 	const relatedPharmacies = nearbyPharmacies.filter((item) => item._id !== pharmacyId).slice(0, 4);
 	const isFavorite = pharmacy?.meLiked?.[0]?.myFavorite === true;
+	const isOwnPharmacy = !!pharmacy?.memberId && pharmacy.memberId === user?._id;
 	const services = [
 		pharmacy?.hasDelivery ? 'Delivery available' : null,
 		pharmacy?.acceptsInsurance ? 'Insurance accepted' : null,
@@ -217,6 +228,65 @@ const PharmacyDetail: NextPage = () => {
 			setLoadedCommentPage(1);
 		} catch (error: unknown) {
 			sweetErrorHandling(error);
+		}
+	};
+
+	const uploadMessageImages = async (event: ChangeEvent<HTMLInputElement>) => {
+		try {
+			const files = Array.from(event.target.files ?? []);
+			if (!files.length) return;
+			if (messageImages.length + files.length > 4) throw new Error('You can attach up to 4 images.');
+			setIsUploadingMessageImage(true);
+
+			const body = new FormData();
+			body.append(
+				'operations',
+				JSON.stringify({
+					query: 'mutation ImagesUploader($files: [Upload!]!, $target: String!) { imagesUploader(files: $files, target: $target) }',
+					variables: { files: files.map(() => null), target: 'messages' },
+				}),
+			);
+			body.append('map', JSON.stringify(Object.fromEntries(files.map((_, index) => [index, [`variables.files.${index}`]]))));
+			files.forEach((file, index) => body.append(String(index), file));
+
+			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, body, {
+				headers: { Authorization: `Bearer ${getJwtToken()}`, 'apollo-require-preflight': true },
+			});
+			setMessageImages((current) => [...current, ...(response.data?.data?.imagesUploader ?? [])]);
+			if (messageFileRef.current) messageFileRef.current.value = '';
+		} catch (error: unknown) {
+			sweetErrorHandling(error);
+		} finally {
+			setIsUploadingMessageImage(false);
+		}
+	};
+
+	const handleStartConversation = async () => {
+		try {
+			if (!pharmacy?._id) return;
+			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
+			if (isOwnPharmacy) throw new Error('Owners cannot message their own pharmacy from this page.');
+			if (!messageText.trim() && !messageImages.length) throw new Error('Write a message or attach an image first.');
+			setIsStartingConversation(true);
+
+			const response = await startPharmacyConversation({
+				variables: {
+					input: {
+						pharmacyId: pharmacy._id,
+						messageText: messageText.trim(),
+						messageImages,
+					},
+				},
+			});
+			const threadId = response.data?.startPharmacyConversation?._id;
+			if (!threadId) throw new Error(Message.SOMETHING_WENT_WRONG);
+			setMessageText('');
+			setMessageImages([]);
+			await router.push({ pathname: '/mypage', query: { category: 'messages', threadId } });
+		} catch (error: unknown) {
+			sweetErrorHandling(error);
+		} finally {
+			setIsStartingConversation(false);
 		}
 	};
 
@@ -410,12 +480,53 @@ const PharmacyDetail: NextPage = () => {
 						<div className="pharmacy-detail__message-card">
 							<div className="pharmacy-detail__message-heading">
 								<div><span>Contact</span><h2>Message the pharmacy</h2></div>
-								<em>Coming soon</em>
+								<em>Secure inbox</em>
 							</div>
-							<label>Name<input type="text" placeholder="Your name" disabled /></label>
-							<label>Phone<input type="tel" placeholder="Your phone number" disabled /></label>
-							<label>Message<textarea placeholder={`Hello, I have a question about ${pharmacy.pharmacyName}.`} disabled /></label>
-							<Button disabled>Send message</Button>
+							{!user?._id ? (
+								<div className="pharmacy-detail__message-state">
+									<p>Log in to ask this Pharmacy Owner about availability, delivery, or services.</p>
+									<Link href="/account/join">Login to message <ArrowForwardRoundedIcon /></Link>
+								</div>
+							) : isOwnPharmacy ? (
+								<div className="pharmacy-detail__message-state">
+									<p>You own this pharmacy. Customers can message you from this card when they view the listing.</p>
+								</div>
+							) : (
+								<div className="pharmacy-detail__message-form">
+									<label htmlFor="pharmacy-owner-message">Message</label>
+									<textarea
+										id="pharmacy-owner-message"
+										placeholder={`Hello, I have a question about ${pharmacy.pharmacyName}.`}
+										value={messageText}
+										onChange={(event) => setMessageText(event.target.value)}
+										maxLength={1200}
+										disabled={isStartingConversation}
+									/>
+									{!!messageImages.length && (
+										<div className="pharmacy-detail__message-preview">
+											{messageImages.map((image) => (
+												<button type="button" key={image} onClick={() => setMessageImages((current) => current.filter((item) => item !== image))}>
+													<img src={`${REACT_APP_API_URL}/${image}`} alt="Remove message attachment" />
+													<span>Remove</span>
+												</button>
+											))}
+										</div>
+									)}
+									<div className="pharmacy-detail__message-actions">
+										<input ref={messageFileRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadMessageImages} />
+										<Button type="button" onClick={() => messageFileRef.current?.click()} disabled={isUploadingMessageImage || isStartingConversation}>
+											<AttachFileRoundedIcon /> {isUploadingMessageImage ? 'Uploading…' : 'Attach images'}
+										</Button>
+										<Button
+											type="button"
+											onClick={handleStartConversation}
+											disabled={isStartingConversation || (!messageText.trim() && !messageImages.length)}
+										>
+											{isStartingConversation ? 'Sending…' : 'Send message'} <SendRoundedIcon />
+										</Button>
+									</div>
+								</div>
+							)}
 						</div>
 					</aside>
 				</div>

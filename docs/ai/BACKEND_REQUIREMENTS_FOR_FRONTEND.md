@@ -326,3 +326,27 @@ Still required for future approved frontend capabilities:
 - coordinate-radius/current-location search and distance;
 - structured city/district/address search beyond current text and region behavior;
 - production verification of demo pharmacy facts and replacement/removal of demo accounts before launch.
+
+## One-To-One Messaging Contract
+
+Frontend now consumes additive pharmacy-context messaging support:
+
+```graphql
+getMyMessageThreads(input: MessageThreadsInquiry!): MessageThreads!
+getMessages(input: MessagesInquiry!): Messages!
+getUnreadMessageCount: Int!
+startPharmacyConversation(input: StartPharmacyConversationInput!): MessageThread
+sendMessage(input: SendMessageInput!): Message
+markMessageThreadRead(threadId: String!): MessageThread
+```
+
+Message threads are unique per `customerId + ownerId + pharmacyId`. A logged-in non-owner can start a conversation from `/pharmacies/detail?id=...`; the backend derives the Pharmacy Owner from the pharmacy record. Message images are uploaded through the existing GraphQL upload flow with `target: messages` and stored as paths under `uploads/messages`.
+
+Raw WebSocket events used by the frontend:
+
+- `message:new`
+- `message:threadUpdated`
+- `message:unreadCount`
+- `message:read`
+
+The existing global chat events remain separate and must not be repurposed. Delete/archive, blocking, typing indicators, chatbot integration, moderation tooling, and non-image attachments remain deferred.

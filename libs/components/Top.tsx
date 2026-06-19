@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack, Box } from '@mui/material';
+import { Badge, Stack, Box } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import { alpha, styled } from '@mui/material/styles';
@@ -13,18 +13,22 @@ import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../apollo/store';
+import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { socketVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 import BrandLogo from './common/BrandLogo';
 import { motion } from 'framer-motion';
+import { GET_UNREAD_MESSAGE_COUNT } from '../../apollo/user/query';
 
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
+	const socket = useReactiveVar(socketVar);
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
+	const [unreadMessages, setUnreadMessages] = useState(0);
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string | null>('en');
 	const drop = Boolean(anchorEl2);
@@ -36,6 +40,12 @@ const Top = () => {
 	const isHome = router.pathname === '/';
 	const isActiveRoute = (pathname: string) =>
 		pathname === '/' ? router.pathname === pathname : router.pathname === pathname || router.pathname.startsWith(`${pathname}/`);
+
+	useQuery(GET_UNREAD_MESSAGE_COUNT, {
+		skip: !user?._id,
+		fetchPolicy: 'network-only',
+		onCompleted: (data) => setUnreadMessages(data?.getUnreadMessageCount ?? 0),
+	});
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -59,6 +69,22 @@ const Top = () => {
 		window.addEventListener('scroll', changeNavbarColor, { passive: true });
 		return () => window.removeEventListener('scroll', changeNavbarColor);
 	}, []);
+
+	useEffect(() => {
+		if (!socket || !user?._id) return;
+
+		const handleMessageEvent = (event: MessageEvent) => {
+			try {
+				const data = JSON.parse(event.data);
+				if (data.event === 'message:unreadCount') setUnreadMessages(data.count ?? 0);
+			} catch {
+				// Ignore unrelated socket payloads.
+			}
+		};
+
+		socket.addEventListener('message', handleMessageEvent);
+		return () => socket.removeEventListener('message', handleMessageEvent);
+	}, [socket, user?._id]);
 
 	/** HANDLERS **/
 	const langClick = (e: any) => {
@@ -243,6 +269,13 @@ const Top = () => {
 							)}
 
 							<div className={'lan-box'}>
+								{user?._id && (
+									<Link href="/mypage?category=messages" className="message-icon-link" aria-label="Messages">
+										<Badge badgeContent={unreadMessages} color="error" max={99} overlap="circular">
+											<MailOutlineRoundedIcon className="message-icon" />
+										</Badge>
+									</Link>
+								)}
 								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label="Notifications" />}
 								<Button
 									disableRipple

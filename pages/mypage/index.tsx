@@ -16,6 +16,7 @@ import WriteArticle from '../../libs/components/mypage/WriteArticle';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
+import MyMessages from '../../libs/components/mypage/MyMessages';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { Messages } from '../../libs/config';
@@ -55,6 +56,11 @@ const MyPage: NextPage = () => {
 			eyebrow: 'Connections',
 			title: 'Followings',
 			description: 'Manage the QuickMeds members you follow.',
+		},
+		messages: {
+			eyebrow: 'Connections',
+			title: 'Messages',
+			description: 'Continue conversations with Pharmacy Owners.',
 		},
 		myArticles: {
 			eyebrow: 'Community',
@@ -163,12 +169,14 @@ const MyPage: NextPage = () => {
 		<div id="my-page">
 			<div className="my-page-shell">
 				<MyMenu />
-				<main className="my-page-workspace" id="my-page-content">
-					<header className="my-page-header">
-						<span>{pageDetail.eyebrow}</span>
-						<h1>{pageDetail.title}</h1>
-						<p>{pageDetail.description}</p>
-					</header>
+				<main className={`my-page-workspace ${category === 'messages' ? 'my-page-workspace--messages' : ''}`} id="my-page-content">
+					{category !== 'messages' && (
+						<header className="my-page-header">
+							<span>{pageDetail.eyebrow}</span>
+							<h1>{pageDetail.title}</h1>
+							<p>{pageDetail.description}</p>
+						</header>
+					)}
 					<Stack className="main-config">
 						<Stack className="list-config">
 									{category === 'addPharmacy' && <AddProperty />}
@@ -178,6 +186,7 @@ const MyPage: NextPage = () => {
 									{category === 'myArticles' && <MyArticles />}
 									{category === 'writeArticle' && <WriteArticle />}
 									{category === 'myProfile' && <MyProfile />}
+									{category === 'messages' && <MyMessages />}
 									{category === 'followers' && (
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}

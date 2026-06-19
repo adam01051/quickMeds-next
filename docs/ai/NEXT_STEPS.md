@@ -93,3 +93,18 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 - Visually audit public routes for imagery or icon assets that contain baked-in legacy colors.
 - Continue replacing remaining property-era layout patterns incrementally without introducing new accent colors.
+
+## Messaging Follow-up
+
+1. Restart the backend on port `3007` and verify the live GraphQL schema exposes the new message queries and mutations.
+2. Smoke test an authenticated customer sending a text message, image message, and text-plus-image message from `/pharmacies/detail`.
+3. Smoke test a Pharmacy Owner receiving the thread in `/mypage?category=messages`, unread badge updates, mark-read behavior, and a reply.
+4. Verify WebSocket updates reach only the sender and receiver.
+5. Design the dedicated mobile Messages flow as thread-list first, then conversation detail with a clear back path.
+6. Add focused backend service tests for message authorization, thread reuse, unread counters, image-path validation, and self-message rejection.
+7. Keep delete/archive, blocking, typing indicators, chatbot integration, moderation, and non-image attachments deferred.
+
+## Homepage Trending Follow-up
+
+1. Re-run visual screenshot QA for the interactive Trending pharmacies section in a browser session that does not retain the local Next.js FOUC-hiding style in screenshots.
+2. Manually exercise compact-card swap, keyboard selection, and favorite click behavior in an authenticated browser session.

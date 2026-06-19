@@ -676,3 +676,86 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 		}
 	}
 `;
+
+/**************************
+ *        MESSAGE         *
+ *************************/
+
+export const GET_MY_MESSAGE_THREADS = gql`
+	query GetMyMessageThreads($input: MessageThreadsInquiry!) {
+		getMyMessageThreads(input: $input) {
+			list {
+				_id
+				customerId
+				ownerId
+				pharmacyId
+				lastMessageText
+				lastMessageAt
+				customerUnreadCount
+				ownerUnreadCount
+				myUnreadCount
+				createdAt
+				updatedAt
+				customerData {
+					_id
+					memberPhone
+					memberNick
+					memberFullName
+					memberImage
+				}
+				ownerData {
+					_id
+					memberPhone
+					memberNick
+					memberFullName
+					memberImage
+				}
+				pharmacyData {
+					_id
+					pharmacyName
+					pharmacyAddress
+					pharmacyImages
+					memberId
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_MESSAGES = gql`
+	query GetMessages($input: MessagesInquiry!) {
+		getMessages(input: $input) {
+			list {
+				_id
+				messageStatus
+				threadId
+				senderId
+				receiverId
+				pharmacyId
+				messageText
+				messageImages
+				readAt
+				createdAt
+				updatedAt
+				senderData {
+					_id
+					memberNick
+					memberFullName
+					memberImage
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_UNREAD_MESSAGE_COUNT = gql`
+	query GetUnreadMessageCount {
+		getUnreadMessageCount
+	}
+`;

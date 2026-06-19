@@ -65,7 +65,7 @@ const Chat = () => {
 	useEffect(() => {
 		if (!socket) return;
 
-		socket.onmessage = (msg) => {
+		const handleMessage = (msg: MessageEvent) => {
 			const data = JSON.parse(msg.data);
 			console.log('WebSocket message:', data);
 
@@ -82,11 +82,13 @@ const Chat = () => {
 
 				case 'message':
 					const newMessage: MessagePayload = data;
-					messagesList.push(newMessage);
-					setMessagesList([...messagesList]);
+					setMessagesList((current) => [...current, newMessage]);
 					break;
 			}
 		};
+
+		socket.addEventListener('message', handleMessage);
+		return () => socket.removeEventListener('message', handleMessage);
 	}, [socket]);
 	/** LIFECYCLES **/
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { IconButton } from '@mui/material';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
@@ -18,18 +18,27 @@ interface PharmacyOwnerCardProps {
 
 const PharmacyOwnerCard = ({ owner, onLike, liking }: PharmacyOwnerCardProps) => {
 	const ownerName = owner.memberFullName || owner.memberNick;
-	const image = owner.memberImage ? `${REACT_APP_API_URL}/${owner.memberImage}` : '/img/profile/defaultUser.svg';
+	const [hasImage, setHasImage] = useState(Boolean(owner.memberImage));
+	const image = owner.memberImage ? `${REACT_APP_API_URL}/${owner.memberImage}` : '';
 	const isLiked = owner.meLiked?.[0]?.myFavorite === true;
 
 	const useFallbackImage = (event: React.SyntheticEvent<HTMLImageElement>) => {
 		event.currentTarget.onerror = null;
-		event.currentTarget.src = '/img/profile/defaultUser.svg';
+		setHasImage(false);
 	};
 
 	return (
 		<article className="pharmacy-owner-card">
-			<div className="pharmacy-owner-card__media">
-				<img src={image} alt={`${ownerName} profile`} onError={useFallbackImage} />
+			<div className={`pharmacy-owner-card__media ${hasImage ? '' : 'is-fallback'}`}>
+				{hasImage ? (
+					<img src={image} alt={`${ownerName} profile`} onError={useFallbackImage} />
+				) : (
+					<div className="pharmacy-owner-card__identity" aria-label={`${ownerName} profile placeholder`}>
+						<img src="/img/profile/defaultUser.svg" alt="" aria-hidden="true" />
+						<span>{ownerName}</span>
+						<small>Pharmacy Owner</small>
+					</div>
+				)}
 				<span>
 					<StorefrontOutlinedIcon />
 					{owner.memberPharmacies ?? 0} {owner.memberPharmacies === 1 ? 'pharmacy' : 'pharmacies'}

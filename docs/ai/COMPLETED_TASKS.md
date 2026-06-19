@@ -413,3 +413,81 @@ Validation completed:
 Validation limitations:
 
 - Authenticated profile-page visual verification was unavailable because the isolated headless session redirected to the signed-out homepage.
+
+## Pharmacy Owner Card Fallback Polish
+
+- Replaced the stretched full-card default owner image on `/agent` with a compact centered default profile avatar inside a restrained mint identity panel.
+- Preserved real owner photos, owner likes, pharmacy-count badges, profile links, search, sorting, pagination, and all existing `GET_AGENTS` / `LIKE_TARGET_MEMBER` behavior.
+- Kept the fallback truthful and avoided fake verification, ratings, specialties, or stock imagery.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages on retry after an initial stale `.next` page-module collection error.
+- `git diff --check` passed.
+
+## One-To-One Pharmacy Messaging Frontend
+
+- Added Apollo operations and TypeScript models for message threads, message history, unread counts, sending messages, starting pharmacy conversations, and marking threads read.
+- Added an authenticated header Messages icon with unread badge before the account avatar.
+- Added My Page `Messages` under Connections and implemented a responsive inbox with thread list, selected history, text composer, image attachments, read-state clearing, `?threadId=...` support, and loading/error/empty states.
+- Refined the desktop inbox to match the approved integrated workspace direction: no separate chat bubble, searchable thread list, unread summary, selected conversation header, optional call action, View pharmacy action, and contained composer.
+- Replaced the pharmacy-detail disabled contact card with a real customer-to-owner message form for logged-in non-owner users, including image upload through the existing GraphQL upload endpoint with `target: messages`.
+- Preserved unauthenticated login guidance and owner self-message protection on pharmacy detail.
+- Updated the existing global raw chat to use event listeners so future chatbot/global-chat behavior can coexist with message WebSocket events.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- Backend `npm run build`, API TypeScript, batch TypeScript, and Jest service tests passed.
+
+## Homepage Interactive Trending Pharmacies
+
+- Replaced the active homepage `Popular choices` section with a Framer Motion-powered `Trending pharmacies` section sorted by pharmacy likes.
+- Added a large selected pharmacy card with a compact right-side selection grid; selecting a compact card swaps it into the featured position while the previous feature returns to the compact set.
+- Preserved the existing `GET_PHARMACIES`, `LIKE_TARGET_PHARMACY`, favorite refetch, SweetAlert error/success handling, and `/pharmacies/detail?id=...` navigation behavior.
+- Used only supported pharmacy-discovery fields: name, address, image, type, delivery fee, delivery, insurance, verified status, open status, and likes.
+- Added desktop, tablet, mobile, loading, error, empty, focus, and reduced-motion styles in the existing homepage SCSS.
+- Refined the interaction after visual QA: UI copy now uses likes instead of saves, card dimensions are fixed across swaps, the desktop section height is reduced to fit the viewport better, and Framer Motion animates the selected-card change without morphing the compact grid container size.
+- Upgraded the interaction to a shared-layout pharmacy handoff: card and image `layoutId`s now move the selected compact pharmacy into the featured container, feature details fade in after the movement begins, hover states lift/zoom cards calmly, and every compact card includes a real `View pharmacy` detail link.
+- Removed the featured signal boxes and changed compact-card rendering to a direct Framer layout list so the right grid packs without leaving an empty slot during selection.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Hydrated local homepage DOM confirmed `Trending pharmacies`, `home-trending-feature`, and compact card markup while `Popular choices` was absent.
+- Raw headless Chrome screenshot capture was attempted, but the local Next dev FOUC-hiding style produced blank screenshots; DOM validation and production build passed.
+
+## Homepage Pharmacy Owner CTA Spotlight
+
+- Replaced the thin homepage `For Pharmacy Owners` row with a two-column image-led owner acquisition CTA.
+- Added a new generated pharmacy interior asset at `public/img/homepage/owner-pharmacy-spotlight.webp`.
+- Updated CTA copy around joining the QuickMeds pharmacy network, boosting local discovery, and building patient trust without product, inventory, rating, prescription, price-comparison, or guaranteed-sales claims.
+- Preserved route behavior with `Become a Pharmacy Owner` linking to `/account/join?mode=signup` and `Explore Pharmacy Owners` linking to `/agent`.
+- Added desktop, tablet, and mobile responsive styles in the existing homepage SCSS.
+- Added restrained Framer Motion entrance, hover, and tap interactions for the image card, stat badge, benefit rows, and CTA buttons, with reduced-motion fallbacks.
+- Removed the `Owner spotlight` overlay label from the image card.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages after clearing the stale generated `.next` cache from the earlier page-module error.
+- `git diff --check` passed.
+- Local served homepage HTML confirmed the owner CTA copy, `Become a Pharmacy Owner` route, and `owner-pharmacy-spotlight.webp` image reference; `Owner spotlight` text is absent.
+
+## Homepage Supporting Motion And My Page Footer Cleanup
+
+- Added restrained Framer Motion scroll-in and hover interactions to the homepage `Why QuickMeds` and `Explore supported areas` sections.
+- Kept supported-area links as real pharmacy-search links while adding motion wrappers and focus-visible styling that preserve the existing grid layout.
+- Removed the shared footer from `/mypage` on both desktop and mobile layouts while keeping the footer on other `LayoutBasic` routes.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Served homepage HTML confirmed `Why QuickMeds`, `Know the essentials before you choose a pharmacy`, and `Explore supported areas` remain present.
+- Served `/mypage` HTML confirmed the route rendered while shared footer markers were absent.

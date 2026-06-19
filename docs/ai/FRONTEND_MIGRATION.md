@@ -152,7 +152,7 @@ Intentionally deferred Nestar surfaces:
 - Owner profile navigation now uses the real member ID.
 - Search and supported sorting persist through the serialized `input` query and reset pagination to page one when changed.
 - Like reconciliation refetches the active inquiry so current search, sorting, and pagination state are retained.
-- Missing owner images use the existing default-user asset; no fake roles, verification, ratings, reviews, specialties, or professional claims were added.
+- Missing owner images use the existing default-user asset as a compact centered fallback inside the owner-card media area; no fake roles, verification, ratings, reviews, specialties, or professional claims were added.
 
 Deferred compatibility work:
 
@@ -186,3 +186,41 @@ Deferred compatibility work:
 - `/_admin/properties` now shares the same management-table foundation, using pharmacy-specific labels, delivery/hours data, region labels, status chips, and explicit status actions while preserving the legacy route and admin pharmacy contracts.
 - `/_admin/community` now shares the same management-table foundation, using public Community category labels, article metadata, status chips, and explicit status actions while preserving existing board-article contracts.
 - Support page-content redesign remains a separate incremental phase.
+
+## One-To-One Messaging Migration
+
+- Added frontend GraphQL operations for message threads, message history, unread count, start conversation, send message, and mark thread read.
+- Added `libs/types/message` models matching the additive backend message contract.
+- Added an authenticated header Messages icon with unread badge before the account avatar; guests do not see the badge.
+- Added My Page `Messages` under Connections after Followers and Followings.
+- Added the first responsive `MyMessages` panel with thread list, selected conversation, text composer, image attachments, unread clearing, empty/loading/error states, and `?threadId=...` support.
+- Refined desktop Messages into an integrated two-pane workspace with a searchable conversation list, unread summary, active-thread state, participant/pharmacy header, optional call action, View pharmacy action, conversation history, and contained composer.
+- Hid the old floating global chat while viewing `/mypage?category=messages` so one-to-one messaging is not confused with the future chatbot/global-chat surface.
+- Replaced the disabled pharmacy-detail contact card with a real logged-in customer message form using text and image attachments.
+- Preserved current global raw chat behavior while changing it to `addEventListener` so it no longer overrides other WebSocket consumers.
+- Preserved existing Apollo setup, routes, authentication, pharmacy detail behavior, global chat, footer, and unrelated panels.
+
+## Homepage Interactive Trending Migration
+
+- The currently rendered homepage `Popular choices` section has been replaced by `Trending pharmacies`.
+- Trending uses the existing `getPharmacies` query with `pharmacyLikes DESC` and no backend contract changes.
+- The section uses Framer Motion layout transitions: the selected pharmacy appears as the large feature card, and compact cards swap into that featured position when selected.
+- Existing favorite mutation/refetch behavior, detail-route navigation, homepage hero, Featured pharmacies section, supporting sections, and Apollo setup remain unchanged.
+- The design uses QuickMeds Warm Civic pharmacy styling and avoids unsupported product, prescription, inventory, rating, or price-comparison claims.
+- Trending copy uses like terminology, and the Framer Motion implementation keeps card containers at stable sizes while animating the selected feature-card change.
+- The latest interaction uses shared card/media `layoutId`s for the compact-to-feature pharmacy transition, content-only `AnimatePresence` for detail reveals, reduced-motion opacity fallback, and real `View pharmacy` links on all cards.
+- Compact cards now render as a direct Framer layout list, avoiding exit placeholders that left empty grid slots, and the previous featured signal-box detail row was removed.
+
+## Homepage Pharmacy Owner CTA Migration
+
+- The homepage `For Pharmacy Owners` strip now uses an image-led spotlight layout with a generated pharmacy interior asset.
+- CTA copy invites pharmacy owners to join QuickMeds, boost local discovery, and maintain a trusted searchable pharmacy profile.
+- Existing `/agent` directory behavior is unchanged; the new primary owner signup CTA links to `/account/join?mode=signup`.
+- The section avoids unsupported product, medicine inventory, prescription, rating, price-comparison, and guaranteed-sales claims.
+- The CTA now includes restrained Framer Motion entrance, hover, and tap interactions, and the image overlay keeps only the pharmacy-focused headline and supporting copy.
+
+## Homepage Supporting Motion And My Page Footer Migration
+
+- The homepage `Why QuickMeds` and `Explore supported areas` sections now use restrained Framer Motion entrance and hover interactions with reduced-motion fallbacks.
+- Supported-area links keep their existing `/pharmacies?input=...` filter behavior and accessible link semantics.
+- `LayoutBasic` now omits the shared footer only on `/mypage`, preserving it on the rest of the public/basic layout routes.

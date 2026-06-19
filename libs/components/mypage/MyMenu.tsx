@@ -9,6 +9,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import AddBusinessOutlinedIcon from '@mui/icons-material/AddBusinessOutlined';
@@ -24,6 +25,7 @@ type MenuCategory =
 	| 'recentlyVisited'
 	| 'followers'
 	| 'followings'
+	| 'messages'
 	| 'myArticles'
 	| 'writeArticle'
 	| 'addPharmacy'
@@ -50,6 +52,7 @@ const menuGroups: Array<{ label: string; items: MenuItem[] }> = [
 		items: [
 			{ category: 'followers', label: 'Followers', icon: <GroupOutlinedIcon /> },
 			{ category: 'followings', label: 'Followings', icon: <PersonAddAltOutlinedIcon /> },
+			{ category: 'messages', label: 'Messages', icon: <MailOutlineRoundedIcon /> },
 		],
 	},
 	{

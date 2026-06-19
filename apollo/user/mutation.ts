@@ -364,3 +364,54 @@ export const UNSUBSCRIBE = gql`
 		}
 	}
 `;
+
+/**************************
+ *        MESSAGE         *
+ *************************/
+
+export const START_PHARMACY_CONVERSATION = gql`
+	mutation StartPharmacyConversation($input: StartPharmacyConversationInput!) {
+		startPharmacyConversation(input: $input) {
+			_id
+			customerId
+			ownerId
+			pharmacyId
+			lastMessageText
+			lastMessageAt
+			customerUnreadCount
+			ownerUnreadCount
+			myUnreadCount
+			createdAt
+			updatedAt
+		}
+	}
+`;
+
+export const SEND_MESSAGE = gql`
+	mutation SendMessage($input: SendMessageInput!) {
+		sendMessage(input: $input) {
+			_id
+			threadId
+			senderId
+			receiverId
+			pharmacyId
+			messageText
+			messageImages
+			readAt
+			createdAt
+			updatedAt
+		}
+	}
+`;
+
+export const MARK_MESSAGE_THREAD_READ = gql`
+	mutation MarkMessageThreadRead($threadId: String!) {
+		markMessageThreadRead(threadId: $threadId) {
+			_id
+			customerUnreadCount
+			ownerUnreadCount
+			myUnreadCount
+			updatedAt
+		}
+	}
+`;

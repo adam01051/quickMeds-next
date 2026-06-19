@@ -149,6 +149,32 @@ body::-webkit-scrollbar {
 						margin-left: 28px;
 						display: flex;
 						align-items: center;
+						gap: 12px;
+						.message-icon-link {
+							display: inline-flex;
+							width: 36px;
+							height: 36px;
+							align-items: center;
+							justify-content: center;
+							border-radius: 999px;
+							color: #0b3b2f;
+							text-decoration: none;
+
+							.message-icon {
+								width: 21px;
+								height: 21px;
+							}
+
+							&:hover {
+								background: rgba(6, 78, 59, 0.08);
+								color: #064e3b;
+							}
+
+							&:focus-visible {
+								outline: 2px solid #064e3b;
+								outline-offset: 2px;
+							}
+						}
 						.notification-icon {
 							color: white;
 						}
