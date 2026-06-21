@@ -224,3 +224,48 @@ Deferred compatibility work:
 - The homepage `Why QuickMeds` and `Explore supported areas` sections now use restrained Framer Motion entrance and hover interactions with reduced-motion fallbacks.
 - Supported-area links keep their existing `/pharmacies?input=...` filter behavior and accessible link semantics.
 - `LayoutBasic` now omits the shared footer only on `/mypage`, preserving it on the rest of the public/basic layout routes.
+
+## Homepage Owner CTA Visibility Fix
+
+- The homepage owner-acquisition primary CTA now explicitly applies its white text color at the button-link specificity level so `Become a Pharmacy Owner` remains visible on the emerald background.
+- No route, GraphQL, copy, or layout behavior changed.
+
+## Mobile Homepage Refinement
+
+- The homepage mobile branch now uses the same vertical pharmacy-card presentation for `Featured pharmacies` and `Trending pharmacies`; the desktop trending shared-layout interaction remains unchanged.
+- Mobile homepage sections use restrained Framer Motion reveal/tap motion with reduced-motion fallbacks.
+- The mobile homepage footer is now a compact homepage-only footer with QuickMeds brand, supported links, language text, and bottom-tab-safe spacing; shared desktop and non-home mobile footers remain unchanged.
+- `Community health reading` is visible again on the mobile homepage as compact article cards using the existing Community article query and real detail links.
+
+## Mobile Pharmacy Directory Migration
+
+- The `/pharmacies` mobile placeholder has been replaced with a mobile directory using the existing pharmacy query, favorite mutation, serialized inquiry routing, and real detail links.
+- The mobile directory uses a page-scoped `quickmeds-catalog` shell with compact top bar, search, filter chips, stacked pharmacy cards, filter bottom sheet, bottom tabs, and logged-in messaging entry points.
+- The mobile catalog initial render is forced into the mobile shell on `/pharmacies` so phone-width users do not see the desktop sidebar/filter layout while hydration catches up.
+- Desktop `/pharmacies` remains on the existing catalog layout after client device detection confirms desktop.
+
+## Navigation And Pharmacy Owner Placement Migration
+
+- Removed the public `Pharmacy Owners` navigation entry from the desktop navbar and generic mobile public nav.
+- Added a `/pharmacies` mobile header menu sheet for primary navigation across Home, Pharmacies, Community, CS, and My Page/Login while preserving logged-in messages, notifications, avatar, and logout actions.
+- Removed the homepage mobile Owners bottom-tab/footer shortcuts; bottom tabs now stay focused on Explore, Search, Messages, and Profile.
+- Moved owner-oriented account actions into the final My Page navigation group, `For Pharmacy Owners`.
+- Normal users now see `Become a Pharmacy Owner` and `Explore Pharmacy Owners` from My Page; pharmacy-owner accounts see `My Pharmacies`, `Add Pharmacy`, and `Explore Pharmacy Owners`.
+- `/agent` remains a valid route but is no longer promoted through public top navigation.
+
+## Community Mobile Error And Layout Migration
+
+- `/community` and `/community/detail` now opt into the shared mobile public top-navbar shell so phone-width users do not receive the desktop navbar during the initial route render.
+- Community category routing still uses the existing `articleCategory` query values, but invalid or missing values now normalize to `FREE` without changing the GraphQL contract.
+- Community article list errors now surface a clear retryable API/backend-unreachable message while preserving the existing `GET_BOARD_ARTICLES` query.
+- Community list and detail presentation now tolerate incomplete article/member/date data instead of crashing on missing labels, invalid dates, or absent member IDs.
+- Mobile Community layout keeps the editorial desktop direction but uses tighter phone typography, scrollable tabs, full-width sorting, compact rows, and mobile-aligned empty/error states.
+- Device detection now starts from the same desktop-safe value on server and first client render, then updates after mount; this avoids React hydration mismatches while preserving mobile-specific layouts after hydration.
+
+## My Page Mobile Menu Migration
+
+- Mobile `/mypage` now uses a left-side modal section menu instead of the previous native select control.
+- The menu keeps the existing query-driven `category` contract and still defaults to `myProfile` when the query is missing, invalid, or uses an older alias.
+- Existing My Page sections, owner-only items, non-owner owner-signup item, admin shortcut, logout flow, and desktop sidebar remain unchanged.
+- The mobile sheet closes on backdrop, close button, or route change and locks background scrolling while open.
+- The mobile sheet now visually follows the desktop sidebar with grouped labels, icons, emerald active row styling, a left-slide motion transition, and Escape-key close.

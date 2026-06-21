@@ -19,7 +19,10 @@ const withLayoutBasic = (Component: any) => {
 		const device = useDeviceDetect();
 		const router = useRouter();
 		const isMyPage = router.pathname === '/mypage';
+		const isCatalog = router.pathname === '/pharmacies';
+		const isCommunity = router.pathname === '/community' || router.pathname === '/community/detail';
 		const isMessagesPage = router.pathname === '/mypage' && router.query.category === 'messages';
+		const shouldRenderMobile = device === 'mobile';
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -29,14 +32,19 @@ const withLayoutBasic = (Component: any) => {
 
 		/** HANDLERS **/
 
-		if (device == 'mobile') {
+		if (shouldRenderMobile) {
 			return (
 				<>
 					<Head>
 						<title>quickMeds</title>
 						<meta name={'title'} content={`quickMeds`} />
 					</Head>
-					<Stack id="mobile-wrap">
+					<Stack
+						id="mobile-wrap"
+						className={[isCatalog ? 'quickmeds-catalog' : '', isCommunity ? 'quickmeds-community' : '']
+							.filter(Boolean)
+							.join(' ')}
+					>
 						<Stack id={'top'}>
 							<Top />
 						</Stack>
@@ -45,7 +53,7 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						{!isMyPage && (
+						{!isMyPage && !isCatalog && (
 							<Stack id={'footer'}>
 								<Footer />
 							</Stack>

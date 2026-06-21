@@ -97,3 +97,18 @@
 - The active homepage `Popular choices` surface now represents `Trending pharmacies` and sorts by `pharmacyLikes DESC`.
 - Trending cards may show community-like counts as a discovery signal, but must not introduce unsupported ratings, medicine inventory, prescriptions, or product pricing.
 - The large-left/compact-right interaction is a frontend presentation change only; it does not require backend contract changes.
+
+# Community Mobile Navigation And Resilience Decision
+
+- Community list and detail routes use the shared mobile top-navbar shell on initial render, matching the public mobile navigation direction and avoiding desktop-navbar flashes on phone routes.
+- Community route category compatibility remains `FREE`, `RECOMMEND`, `NEWS`, and `HUMOR`; invalid or missing category query values resolve back to `FREE`.
+- Community UI should present backend/network failures as retryable API availability issues instead of hiding them behind generic copy.
+- Community list and detail surfaces must tolerate missing article/member/date data because older or migrated board records may be incomplete.
+- Responsive route shells must render the same tree on the server and first client pass; device-specific mobile shells activate after hydration to avoid React hydration failures.
+
+# My Page Mobile Menu Decision
+
+- Mobile My Page section navigation uses a left-side modal sheet, not a native select.
+- `myProfile` remains the default My Page section for missing, invalid, or legacy category queries.
+- The mobile sheet reuses the same route categories and visibility rules as the desktop sidebar so mobile and desktop stay contract-compatible.
+- Mobile My Page drawer styling follows the desktop sidebar palette and active-row language, while using a left-slide modal interaction on phone widths.

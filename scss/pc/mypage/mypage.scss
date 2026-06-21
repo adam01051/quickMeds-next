@@ -435,8 +435,9 @@
 			}
 		}
 
-		&__mobile-label,
-		&__mobile-select {
+		&__mobile-trigger,
+		&__mobile-backdrop,
+		&__mobile-sheet {
 			display: none;
 		}
 
@@ -659,24 +660,38 @@
 				padding: 0 0 16px;
 			}
 
-			&__mobile-label {
-				display: block;
-				margin: 14px 0 6px;
-				color: var(--mypage-muted);
-				font-size: 12px;
-				font-weight: 650;
-			}
-
-			&__mobile-select {
-				display: block;
+			&__mobile-trigger {
 				width: 100%;
 				min-height: 46px;
-				padding: 0 40px 0 12px;
+				margin-top: 14px;
+				padding: 0 13px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
 				border: 1px solid var(--mypage-border);
 				border-radius: 8px;
 				background: #fff;
 				color: var(--mypage-ink);
-				font: 600 15px $font;
+				font-family: $font;
+				font-size: 14px;
+				font-weight: 700;
+				text-align: left;
+
+				svg {
+					width: 19px;
+					height: 19px;
+					flex: 0 0 auto;
+					color: var(--mypage-emerald);
+				}
+
+				span {
+					min-width: 0;
+					flex: 1;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
 
 				&:focus-visible {
 					outline: 3px solid rgba(6, 78, 59, 0.24);
@@ -686,6 +701,164 @@
 
 			&__nav {
 				display: none;
+			}
+
+			&__mobile-backdrop {
+				position: fixed;
+				z-index: 118;
+				inset: 0;
+				display: block;
+				border: 0;
+				background: rgba(16, 35, 28, 0.32);
+			}
+
+			&__mobile-sheet {
+				position: fixed;
+				z-index: 119;
+				top: 60px;
+				left: 12px;
+				width: min(292px, calc(100vw - 24px));
+				max-height: calc(100dvh - 76px);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				border: 1px solid var(--mypage-border);
+				border-radius: 10px;
+				background: var(--mypage-sidebar);
+				box-shadow: 0 18px 34px rgba(10, 24, 18, 0.24);
+				color: var(--mypage-ink);
+				transform-origin: left top;
+
+				nav {
+					overflow-y: auto;
+					padding: 10px 10px 12px;
+					-webkit-overflow-scrolling: touch;
+				}
+
+				.my-page-menu__group {
+					margin: 0 0 12px;
+
+					> p {
+						display: block;
+						margin: 0 8px 6px;
+						color: #70817a;
+						font-size: 10px;
+						font-weight: 800;
+						letter-spacing: 0.1em;
+						text-transform: uppercase;
+					}
+
+					a {
+						min-height: 42px;
+						padding: 8px 10px;
+						border: 1px solid transparent;
+						border-radius: 9px;
+						background: transparent;
+						color: #31453e;
+						font-size: 13px;
+						font-weight: 650;
+						letter-spacing: 0;
+
+						> svg:not(.my-page-menu__check) {
+							display: block;
+							width: 19px;
+							height: 19px;
+							color: #50645d;
+						}
+
+						.my-page-menu__check {
+							width: 18px;
+							height: 18px;
+							margin-left: auto;
+							order: 3;
+							opacity: 0;
+							color: var(--mypage-emerald);
+						}
+
+						&.active {
+							background: var(--mypage-mint);
+							border-color: #a9d9c4;
+							color: var(--mypage-emerald);
+							font-weight: 800;
+
+							> svg:not(.my-page-menu__check) {
+								color: var(--mypage-emerald);
+							}
+
+							.my-page-menu__check {
+								opacity: 1;
+							}
+						}
+
+						&:focus-visible {
+							outline: 3px solid rgba(6, 78, 59, 0.24);
+							outline-offset: 2px;
+						}
+
+						&:active {
+							background: rgba(204, 235, 221, 0.72);
+						}
+					}
+				}
+
+				.my-page-menu__admin,
+				.my-page-menu__logout {
+					min-height: 42px;
+					padding: 8px 10px;
+					border: 1px solid transparent;
+					border-radius: 9px;
+					color: #31453e;
+					font-size: 13px;
+					font-weight: 700;
+
+					svg {
+						display: block;
+						width: 19px;
+						height: 19px;
+					}
+				}
+
+				.my-page-menu__admin {
+					margin-top: 4px;
+					color: var(--mypage-emerald);
+				}
+
+				.my-page-menu__logout {
+					margin-top: 4px;
+					color: #a92323;
+				}
+			}
+
+			&__mobile-head {
+				min-height: 48px;
+				padding: 0 10px 0 16px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-bottom: 1px solid var(--mypage-border);
+				background: rgba(255, 255, 255, 0.6);
+
+				strong {
+					color: var(--mypage-ink);
+					font-size: 13px;
+					font-weight: 800;
+				}
+
+				button {
+					width: 34px;
+					height: 34px;
+					display: grid;
+					place-items: center;
+					border: 0;
+					border-radius: 999px;
+					background: transparent;
+					color: var(--mypage-emerald);
+
+					svg {
+						width: 18px;
+						height: 18px;
+					}
+				}
 			}
 		}
 

@@ -52,7 +52,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 1. Redesign the catalog filter shell while preserving the current `PharmaciesInquiry` behavior.
 2. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
 3. Redesign Pharmacy Owner detail at `/agent/detail`; the public directory is complete and compatibility internals remain intentionally unchanged.
-4. Redesign mobile navigation and mobile catalog in separate approved phases.
+4. Continue authenticated browser smoke checks for the shared mobile top navbar, catalog, Community, and account states.
 5. Replace Korean footer regions/phone content later; preserve it until that phase.
 6. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
 
@@ -108,3 +108,14 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. Re-run visual screenshot QA for the interactive Trending pharmacies section in a browser session that does not retain the local Next.js FOUC-hiding style in screenshots.
 2. Manually exercise compact-card swap, keyboard selection, and favorite click behavior in an authenticated browser session.
+
+## Community Follow-up
+
+1. Re-run 390px and 430px mobile screenshot QA for Community list/detail after the local headless Chrome crash is resolved.
+2. Manually exercise Community category tabs, sort changes, article likes, and comment submission in an authenticated browser session.
+3. Keep the existing board-article categories and routes until a backend health-article migration is approved.
+
+## My Page Mobile Follow-up
+
+1. Complete authenticated 390px and 430px visual QA for the new left-side My Page mobile menu.
+2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, and logout from a signed-in browser session.

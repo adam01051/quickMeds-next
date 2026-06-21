@@ -37,10 +37,23 @@ const SORTS = [
 	{ value: 'articleLikes', label: 'Most liked' },
 ];
 
+const getRouteCategory = (articleCategory: string | string[] | undefined): BoardArticleCategory | null => {
+	const value = Array.isArray(articleCategory) ? articleCategory[0] : articleCategory;
+	return CATEGORIES.some((category) => category.value === value) ? (value as BoardArticleCategory) : null;
+};
+
+const getCommunityErrorMessage = (message?: string) => {
+	if (!message) return 'The Community service did not return a response.';
+	if (/failed to fetch|network|econnrefused|socket|connect/i.test(message)) {
+		return 'The Community API is unreachable. Please confirm the backend is running on port 3007 and retry.';
+	}
+	return message;
+};
+
 const Community: NextPage = ({ initialInput }: T) => {
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
-	const routeCategory = router.query.articleCategory as BoardArticleCategory | undefined;
+	const routeCategory = getRouteCategory(router.query.articleCategory);
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
 	const [likeLoadingId, setLikeLoadingId] = useState<string | null>(null);
 	const [likeTargetBoardArticle] = useMutation(LIKE_TARGET_BOARD_ARTICLE);
@@ -55,23 +68,26 @@ const Community: NextPage = ({ initialInput }: T) => {
 	const totalCount = data?.getBoardArticles?.metaCounter?.[0]?.total ?? 0;
 	const activeCategory = searchCommunity.search.articleCategory;
 	const activeCategoryLabel = CATEGORIES.find(({ value }) => value === activeCategory)?.label ?? 'Articles';
+	const errorMessage = getCommunityErrorMessage(error?.message);
 
 	useEffect(() => {
-		const validCategory = CATEGORIES.some(({ value }) => value === routeCategory);
-		const nextCategory: BoardArticleCategory = validCategory ? routeCategory! : BoardArticleCategory.FREE;
+		if (!router.isReady) return;
 
-		if (nextCategory !== searchCommunity.search.articleCategory) {
-			setSearchCommunity((current) => ({ ...current, page: 1, search: { articleCategory: nextCategory } }));
-		}
+		const nextCategory = routeCategory ?? BoardArticleCategory.FREE;
+		setSearchCommunity((current) =>
+			current.search.articleCategory === nextCategory
+				? current
+				: { ...current, page: 1, search: { articleCategory: nextCategory } },
+		);
 
-		if (!validCategory && router.isReady) {
+		if (!routeCategory) {
 			void router.replace(
 				{ pathname: '/community', query: { articleCategory: BoardArticleCategory.FREE } },
 				undefined,
 				{ shallow: true },
 			);
 		}
-	}, [routeCategory, router.isReady]);
+	}, [routeCategory, router]);
 
 	const changeCategory = async (category: BoardArticleCategory) => {
 		setSearchCommunity((current) => ({ ...current, page: 1, search: { articleCategory: category } }));
@@ -162,7 +178,7 @@ const Community: NextPage = ({ initialInput }: T) => {
 						{!loading && error && (
 							<div className="community-state" role="alert">
 								<h3>We could not load the community articles.</h3>
-								<p>Please check your connection and try again.</p>
+								<p>{errorMessage}</p>
 								<button type="button" onClick={() => refetch({ input: searchCommunity })}>
 									Try again
 								</button>

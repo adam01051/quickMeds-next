@@ -416,56 +416,91 @@
 	#mobile-wrap #community-list-page,
 	#pc-wrap #community-list-page {
 		min-height: 640px;
+		background: #f8faf8;
 
 		.community-shell {
 			width: 100%;
-			padding: 34px 16px 64px;
+			padding: 24px 16px 58px;
 		}
 
 		.community-intro {
-			padding-bottom: 32px;
+			padding-bottom: 26px;
 			align-items: flex-start;
+			flex-direction: column;
+			gap: 14px;
+
+			&__eyebrow {
+				margin-bottom: 10px;
+				font-size: 16px;
+				line-height: 1.2;
+			}
 
 			h1 {
-				font-size: 34px;
+				max-width: 340px;
+				font-size: 30px;
+				line-height: 1.08;
+				letter-spacing: -0.025em;
+				text-wrap: balance;
 			}
 
 			p:last-child {
-				font-size: 15px;
-			}
-
-			.community-write-action {
-				display: none;
+				max-width: 340px;
+				margin-top: 13px;
+				font-size: 14px;
+				line-height: 1.58;
+				text-wrap: pretty;
 			}
 		}
 
 		.community-tabs {
 			margin: 0 -16px;
-			padding: 0 8px;
+			padding: 0 16px;
 			overflow-x: auto;
 			scrollbar-width: none;
+			gap: 2px;
 
 			&::-webkit-scrollbar {
 				display: none;
 			}
 
 			button {
+				min-height: 46px;
 				flex: 0 0 auto;
-				padding: 0 12px;
-				font-size: 14px;
+				padding: 0 13px;
+				color: #344c43;
+				font-size: 13px;
+				font-weight: 650;
+				white-space: nowrap;
 			}
 		}
 
 		.community-feed {
-			padding-top: 30px;
+			padding-top: 26px;
 
 			&__toolbar {
 				align-items: flex-start;
 				flex-direction: column;
-				gap: 14px;
+				gap: 13px;
+				padding-bottom: 18px;
+
+				h2 {
+					font-size: 21px;
+					line-height: 1.2;
+
+					span {
+						font-size: 13px;
+					}
+				}
+
+				label {
+					width: 100%;
+				}
 
 				select {
 					width: 100%;
+					height: 44px;
+					border-color: #b7cbc2;
+					border-radius: 10px;
 					font-size: 16px;
 				}
 			}
@@ -473,47 +508,96 @@
 
 		.community-article-row,
 		.community-article-row--with-image {
-			padding: 28px 0;
+			min-height: 0;
+			padding: 24px 0;
 			display: flex;
 			flex-direction: column;
-			gap: 18px;
+			gap: 15px;
 
 			&__image {
 				order: -1;
 				width: 100%;
-				aspect-ratio: 1.75;
+				aspect-ratio: 1.82;
+				border-radius: 10px;
+			}
+
+			&__eyebrow {
+				gap: 8px;
+				flex-wrap: wrap;
+				font-size: 12px;
 			}
 
 			&__title {
-				font-size: 21px;
+				margin-top: 10px;
+				font-size: 20px;
+				line-height: 1.25;
+				text-wrap: pretty;
 			}
 
 			&__excerpt {
-				margin-bottom: 14px;
-				font-size: 14px;
+				margin: 8px 0 13px;
+				font-size: 13px;
+				line-height: 1.58;
 			}
 
 			&__footer {
 				flex-wrap: wrap;
-				gap: 8px 14px;
+				gap: 6px 12px;
 			}
 
 			&__author {
 				width: 100%;
+				min-height: 34px;
 			}
 
 			&__read {
 				margin-left: auto;
+				min-height: 40px;
+			}
+
+			&__metrics {
+				span,
+				button {
+					min-height: 40px;
+					font-size: 12px;
+				}
 			}
 		}
 
 		.community-article-skeleton {
-			padding: 28px 0;
+			min-height: 210px;
+			padding: 24px 0;
 			display: block;
 
 			> span {
 				display: none;
 			}
+		}
+
+		.community-state {
+			min-height: 250px;
+			margin-top: 18px;
+			padding: 34px 18px;
+			border: 1px solid var(--community-border);
+			border-radius: 12px;
+			background: var(--community-surface);
+
+			h3 {
+				font-size: 22px;
+				line-height: 1.18;
+			}
+
+			p {
+				max-width: 300px;
+				font-size: 13px;
+				line-height: 1.55;
+			}
+		}
+	}
+
+	#mobile-wrap.quickmeds-community #community-list-page {
+		.community-shell {
+			padding-top: 22px;
 		}
 	}
 }

@@ -23,6 +23,8 @@ import { REACT_APP_API_URL } from '../../config';
 import { formatterStr } from '../../utils';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
+import HomePharmacyCard from './HomePharmacyCard';
 
 interface HomeTrendingSectionProps {
 	initialInput: PharmaciesInquiry;
@@ -67,6 +69,7 @@ const getTrendingSummary = (pharmacy: Property) => {
 };
 
 const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
+	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const reduceMotion = useReducedMotion();
 	const [pharmacies, setPharmacies] = useState<Property[]>([]);
@@ -134,6 +137,79 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 			</IconButton>
 		);
 	};
+
+	const isMobile = device === 'mobile';
+	const mobileListVariants = {
+		hidden: { opacity: 1 },
+		visible: {
+			opacity: 1,
+			transition: { staggerChildren: reduceMotion ? 0 : 0.06 },
+		},
+	};
+	const mobileCardVariants = {
+		hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 },
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: { duration: reduceMotion ? 0.01 : 0.42, ease: [0.22, 1, 0.36, 1] },
+		},
+	};
+
+	if (isMobile) {
+		return (
+			<section className="home-trending-section home-trending-section--mobile-list">
+				<div className="home-shell">
+					<header className="home-section-heading home-trending-heading">
+						<div>
+							<span className="home-trending-kicker">Liked by the community</span>
+							<h2>Trending pharmacies</h2>
+							<p>Trend is based on pharmacy likes and community interactions.</p>
+						</div>
+						<Link href="/pharmacies">
+							View all
+							<ArrowForwardRoundedIcon />
+						</Link>
+					</header>
+
+					{loading && pharmacies.length === 0 ? (
+						<div className="home-pharmacy-grid" aria-label="Loading trending pharmacies">
+							{[0, 1, 2].map((item) => <div className="home-pharmacy-skeleton" key={item} />)}
+						</div>
+					) : error ? (
+						<div className="home-section-state">
+							<strong>Trending pharmacies could not be loaded.</strong>
+							<button type="button" onClick={() => refetch({ input: initialInput })}>Try again</button>
+						</div>
+					) : pharmacies.length === 0 ? (
+						<div className="home-section-state">
+							<strong>No trending pharmacies are available yet.</strong>
+							<span>Browse all pharmacies while community activity builds.</span>
+							<Link href="/pharmacies">Browse pharmacies</Link>
+						</div>
+					) : (
+						<motion.div
+							className="home-pharmacy-grid"
+							variants={mobileListVariants}
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true, margin: '-40px' }}
+						>
+							{pharmacies.slice(0, 3).map((pharmacy) => (
+								<motion.div
+									className="home-pharmacy-card-motion"
+									variants={mobileCardVariants}
+									whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+									key={pharmacy._id}
+								>
+									<HomePharmacyCard pharmacy={pharmacy} onFavorite={favoritePharmacy} />
+								</motion.div>
+							))}
+						</motion.div>
+					)}
+				</div>
+			</section>
+		);
+	}
 
 	return (
 		<section className="home-trending-section">

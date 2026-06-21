@@ -150,7 +150,12 @@ const HomeSupportingSections = () => {
 					</motion.div>
 				</div>
 			</motion.section>
-			<section className="home-articles-section">
+			<motion.section
+				className="home-articles-section"
+				initial={false}
+				whileInView="visible"
+				viewport={{ once: true, amount: 0.22 }}
+			>
 				<div className="home-shell">
 					<header className="home-section-heading">
 						<div>
@@ -159,7 +164,7 @@ const HomeSupportingSections = () => {
 						</div>
 						<Link href="/community">View all articles <ArrowForwardRoundedIcon /></Link>
 					</header>
-					<div className="home-article-grid">
+					<motion.div className="home-article-grid" variants={reduceMotion ? undefined : listMotion}>
 						{loading && articles.length === 0 ? (
 							[0, 1, 2].map((item) => <div className="home-article-skeleton" key={item} />)
 						) : articles.length === 0 ? (
@@ -170,21 +175,29 @@ const HomeSupportingSections = () => {
 						) : articles.map((article) => {
 							const image = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '';
 							return (
-								<Link href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`} className={`home-article-card ${image ? '' : 'home-article-card--text'}`} key={article._id}>
-									{image && <img src={image} alt="" />}
-									<span>{getArticleLabel(article.articleCategory)}</span>
-									<h3>{article.articleTitle}</h3>
-									<strong>{getArticleExcerpt(article.articleContent)}</strong>
-									<p>
-										{article.articleViews} views
-										<em>Read article <ArrowForwardRoundedIcon /></em>
-									</p>
-								</Link>
+								<motion.div
+									key={article._id}
+									variants={reduceMotion ? undefined : itemMotion}
+									transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+									whileHover={reduceMotion ? undefined : { y: -3 }}
+									whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+								>
+									<Link href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`} className={`home-article-card ${image ? '' : 'home-article-card--text'}`}>
+										{image && <img src={image} alt="" />}
+										<span>{getArticleLabel(article.articleCategory)}</span>
+										<h3>{article.articleTitle}</h3>
+										<strong>{getArticleExcerpt(article.articleContent)}</strong>
+										<p>
+											{article.articleViews} views
+											<em>Read article <ArrowForwardRoundedIcon /></em>
+										</p>
+									</Link>
+								</motion.div>
 							);
 						})}
-					</div>
+					</motion.div>
 				</div>
-			</section>
+			</motion.section>
 			<section className="home-owner-cta">
 				<div className="home-shell home-owner-cta__inner">
 					<motion.div
@@ -204,6 +217,9 @@ const HomeSupportingSections = () => {
 						<div className="home-owner-cta__overlay">
 							<h2>Your pharmacy, easier to find</h2>
 							<p>QuickMeds helps nearby customers compare services before they visit.</p>
+							<Link className="home-owner-cta__mobile-link" href="/account/join?mode=signup">
+								Join as a pharmacy owner
+							</Link>
 						</div>
 						<motion.div
 							className="home-owner-cta__stat"

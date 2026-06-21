@@ -158,8 +158,6 @@ Validation completed:
 - `yarn typecheck --pretty false` passed.
 - `yarn build` passed and generated all 73 pages.
 - `git diff --check` passed.
-- `yarn build` passed and generated all 73 pages.
-- `git diff --check` passed.
 - Homepage, catalog, pharmacy detail, Pharmacy Owners, community, account, My Page, CS, member, and About route checks returned HTTP 200.
 - Referenced Next.js development assets returned HTTP 200 after the runtime cleanup.
 - Catalog cards were visually checked at `1440px` and `1024px`.
@@ -491,3 +489,111 @@ Validation completed:
 - `git diff --check` passed.
 - Served homepage HTML confirmed `Why QuickMeds`, `Know the essentials before you choose a pharmacy`, and `Explore supported areas` remain present.
 - Served `/mypage` HTML confirmed the route rendered while shared footer markers were absent.
+
+## Homepage Owner CTA Button Visibility Fix
+
+- Corrected the `Become a Pharmacy Owner` primary CTA styling in the homepage owner section so its text remains white on the emerald button.
+- Increased selector specificity for the primary CTA state without changing the route, copy, layout, or secondary `Explore Pharmacy Owners` button.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `git diff --check` passed.
+
+## Mobile Homepage Trending, Community, And Footer Refinement
+
+- Updated the mobile homepage so `Trending pharmacies` uses the same vertical pharmacy-card treatment as `Featured pharmacies`.
+- Preserved the desktop trending large-feature/shared-layout interaction and existing pharmacy query, favorite, refetch, and detail-link behavior.
+- Added mobile-only Framer Motion reveal/tap polish to homepage pharmacy cards and the compact homepage footer with reduced-motion fallbacks.
+- Replaced the bulky shared mobile footer on the homepage with a compact homepage-only footer that clears the fixed bottom tab bar.
+- Restored `Community health reading` on mobile as compact article cards backed by the existing `GET_BOARD_ARTICLES` query and `/community/detail` routes.
+- Kept the mobile Pharmacy Owner CTA as the image-led card with a visible `Join as a pharmacy owner` button, avoiding loose desktop action links in the mobile layout.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Mobile screenshots at 390px and 430px confirmed Featured and Trending share the same mobile card style.
+- A tall 390px mobile screenshot confirmed `Community health reading` appears after `Why QuickMeds`, the owner CTA renders as the mobile image card, and the compact footer stays above the fixed bottom tab bar.
+
+## Mobile Pharmacy Directory Redesign
+
+- Replaced the `/pharmacies` mobile placeholder with a real mobile pharmacy directory using the existing `GET_PHARMACIES` query, `LIKE_TARGET_PHARMACY` mutation, serialized inquiry routing, and `/pharmacies/detail?id=...` links.
+- Added the mobile catalog structure from the approved reference: compact catalog top bar, directory heading, search row, active filter chips, stacked pharmacy cards, filter bottom sheet, bottom tabs, and logged-in messaging entry points.
+- Added mobile-only Framer Motion interactions for card reveal, tap feedback, bottom tabs, and filter sheet/backdrop transitions with reduced-motion fallbacks.
+- Added a `/pharmacies` mobile top-bar branch that shows guest login/profile access for guests and messages, notifications, avatar, and logout menu for logged-in users.
+- Added a catalog-specific initial mobile render path so phone-width users do not see the desktop catalog sidebar/filter layout while hydration catches up.
+- Kept the desktop `/pharmacies` catalog route and shared desktop navbar behavior unchanged after desktop device detection.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Production `/pharmacies` HTML contains `quickmeds-catalog` and `catalog-mobile-page`, and no longer contains the desktop `property-list-page` or `filter-main` markers on the initial route markup.
+- Production 390px mobile screenshot confirmed the app-style catalog, search, chips, stacked pharmacy cards, and bottom tabs render without the desktop sidebar/filter block.
+
+Validation limitations:
+
+- Automated click validation for the filter bottom sheet was not run because Playwright is not installed in this workspace; the sheet is wired through the mobile filter button and covered by typecheck/build validation.
+
+## Navigation And Pharmacy Owner Placement Fix
+
+- Removed `Pharmacy Owners` from the public desktop navbar and generic mobile public nav.
+- Added a mobile `/pharmacies` header menu sheet so users can navigate to Home, Pharmacies, Community, CS, and My Page/Login from the catalog header.
+- Preserved logged-in catalog header actions for Messages, Notifications, avatar, and logout.
+- Removed the homepage mobile Owners bottom tab and footer shortcut, replacing the bottom tab with Messages and the footer link with Community.
+- Moved owner actions into My Page as the final `For Pharmacy Owners` group.
+- Normal users now get `Become a Pharmacy Owner` and `Explore Pharmacy Owners`; pharmacy-owner accounts get `My Pharmacies`, `Add Pharmacy`, and `Explore Pharmacy Owners`.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Source scan confirmed public `Top.tsx` and homepage mobile tabs/footer no longer expose `/agent`; `/agent` remains only in the My Page `For Pharmacy Owners` action group.
+
+## Community Mobile Error And Layout Fix
+
+- Added safer Community category routing so invalid or missing `articleCategory` values normalize back to `FREE` without stale state.
+- Improved Community article-list error copy so API/network failures tell maintainers to verify the backend on port `3007` and remain retryable.
+- Hardened Community list and detail rendering for missing article titles, content, member links, dates, category labels, and metric counts.
+- Routed Community list and detail through the shared mobile top-navbar shell so phone users get the same compact top navigation as the rest of the mobile public app.
+- Tightened the Community mobile layout with fixed-top spacing, smaller balanced intro typography, scrollable category tabs, full-width sort control, compact article rows, and stronger mobile empty/error states.
+- Corrected the device-detection first render so server and client HTML match during hydration, then switch to the actual mobile shell after mount.
+
+Validation completed:
+
+- Local GraphQL health check on `http://127.0.0.1:3007/graphql` returned `{"data":{"__typename":"Query"}}`.
+- Local Community article query returned two `FREE` records, including `6a2fef8b3929a3871d1ce3af`.
+- Local Next dev route checks returned `200` for `/community?articleCategory=FREE`, `/community?articleCategory=NEWS`, and `/community/detail?id=6a2fef8b3929a3871d1ce3af&articleCategory=FREE`.
+- Served HTML confirmed Community list and detail render under `mobile-wrap quickmeds-community` with the shared `catalog-mobile-top` navbar.
+- After the hydration correction, the served Community HTML no longer contains the Next.js hydration error overlay markers.
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Headless Chrome screenshot and DOM-dump capture crashed locally with `Trace/BPT trap`; validation used direct backend probes, served HTML markers, typecheck, and production build instead.
+
+## My Page Mobile Left Menu Redesign
+
+- Replaced the mobile My Page section `<select>` with a left-side modal sheet opened from a compact My Page menu trigger.
+- Kept `myProfile` as the default section when no valid `category` query is present.
+- Reused the existing My Page navigation groups, links, owner/admin visibility rules, logout behavior, route aliases, and query-driven section rendering.
+- Added active-section checkmark treatment, backdrop close, close button, route-change close behavior, and body-scroll locking while the mobile sheet is open.
+- Preserved the desktop My Page sidebar and existing section routes.
+- Refined the mobile sheet into a desktop-aligned light sidebar drawer with grouped labels, visible icons, emerald active rows, Framer Motion left-slide animation, dim backdrop, and Escape-key close.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Source scan confirmed the old `my-page-menu__mobile-select` and `my-page-section` select control are removed from `MyMenu`.
+
+Validation limitations:
+
+- Authenticated mobile visual QA was not completed in-browser during this pass; `/mypage` redirects without a signed-in session.

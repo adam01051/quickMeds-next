@@ -221,7 +221,10 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 				</button>
 				<button type="button" disabled>
 					<LocationOnOutlinedIcon />
-					<span><strong>Use current location</strong><small className="future-item-label">Coming soon</small></span>
+					<span>
+						<strong>{device === 'mobile' ? 'Near me' : 'Use current location'}</strong>
+						<small className="future-item-label">Coming soon</small>
+					</span>
 				</button>
 				{device !== 'mobile' && <span className="home-search-future__label">Current location coming soon</span>}
 			</div>

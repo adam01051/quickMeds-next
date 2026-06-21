@@ -40,11 +40,22 @@ const CATEGORY_LABELS = {
 	HUMOR: 'Community Corner',
 };
 
-const formatDate = (date: Date | string) =>
-	new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(date));
+const getValidDate = (date?: Date | string) => {
+	if (!date) return null;
+	const nextDate = new Date(date);
+	return Number.isNaN(nextDate.getTime()) ? null : nextDate;
+};
+
+const formatDate = (date: Date | string) => {
+	const nextDate = getValidDate(date);
+	if (!nextDate) return 'date unavailable';
+	return new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric' }).format(nextDate);
+};
 
 const formatRelativeDate = (date: Date | string) => {
-	const elapsed = Date.now() - new Date(date).getTime();
+	const nextDate = getValidDate(date);
+	if (!nextDate) return 'date unavailable';
+	const elapsed = Date.now() - nextDate.getTime();
 	const minutes = Math.max(1, Math.floor(elapsed / 60000));
 	if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
 	const hours = Math.floor(minutes / 60);
@@ -189,10 +200,14 @@ const CommunityDetail: NextPage = ({ initialInput }: T) => {
 		);
 	}
 
-	const categoryLabel = CATEGORY_LABELS[boardArticle.articleCategory];
+	const categoryLabel = CATEGORY_LABELS[boardArticle.articleCategory] ?? 'Community';
+	const categoryClass = String(boardArticle.articleCategory || 'community').toLowerCase();
+	const articleTitle = boardArticle.articleTitle?.trim() || 'Untitled community article';
 	const memberImage = boardArticle.memberData?.memberImage
 		? `${REACT_APP_API_URL}/${boardArticle.memberData.memberImage}`
 		: '/img/profile/defaultUser.svg';
+	const memberId = boardArticle.memberData?._id;
+	const memberName = boardArticle.memberData?.memberNick ?? 'QuickMeds member';
 	const articleImage = boardArticle.articleImage ? `${REACT_APP_API_URL}/${boardArticle.articleImage}` : null;
 	const isLiked = Boolean(boardArticle.meLiked?.[0]?.myFavorite);
 
@@ -208,26 +223,36 @@ const CommunityDetail: NextPage = ({ initialInput }: T) => {
 
 				<article className="community-detail-shell">
 					<header className="community-detail-header">
-						<span className={`community-detail-category community-detail-category--${boardArticle.articleCategory.toLowerCase()}`}>
+						<span className={`community-detail-category community-detail-category--${categoryClass}`}>
 							{categoryLabel}
 						</span>
-						<h1>{boardArticle.articleTitle}</h1>
+						<h1>{articleTitle}</h1>
 						<div className="community-detail-byline">
 							<div className="community-detail-byline__author">
-								<Link href={`/member?memberId=${boardArticle.memberData?._id}`} className="community-detail-author">
-									<img src={memberImage} alt="" />
-									<span>
-										<strong>{boardArticle.memberData?.memberNick ?? 'QuickMeds member'}</strong>
-										<small>Published {formatDate(boardArticle.createdAt)}</small>
-									</span>
-								</Link>
+								{memberId ? (
+									<Link href={`/member?memberId=${memberId}`} className="community-detail-author">
+										<img src={memberImage} alt="" />
+										<span>
+											<strong>{memberName}</strong>
+											<small>Published {formatDate(boardArticle.createdAt)}</small>
+										</span>
+									</Link>
+								) : (
+									<div className="community-detail-author" aria-label="Article author">
+										<img src={memberImage} alt="" />
+										<span>
+											<strong>{memberName}</strong>
+											<small>Published {formatDate(boardArticle.createdAt)}</small>
+										</span>
+									</div>
+								)}
 							</div>
 							<div className="community-detail-byline__metrics" aria-label="Article engagement">
-								<span><VisibilityOutlinedIcon aria-hidden="true" /> {boardArticle.articleViews}</span>
-								<span><ChatBubbleOutlineRoundedIcon aria-hidden="true" /> {boardArticle.articleComments}</span>
+								<span><VisibilityOutlinedIcon aria-hidden="true" /> {boardArticle.articleViews ?? 0}</span>
+								<span><ChatBubbleOutlineRoundedIcon aria-hidden="true" /> {boardArticle.articleComments ?? 0}</span>
 								<span>
 									{isLiked ? <FavoriteRoundedIcon aria-hidden="true" /> : <FavoriteBorderRoundedIcon aria-hidden="true" />}
-									{boardArticle.articleLikes} Likes
+									{boardArticle.articleLikes ?? 0} Likes
 								</span>
 							</div>
 						</div>
@@ -237,18 +262,18 @@ const CommunityDetail: NextPage = ({ initialInput }: T) => {
 						<img
 							className="community-detail-image"
 							src={articleImage}
-							alt={`Article image for ${boardArticle.articleTitle}`}
+							alt={`Article image for ${articleTitle}`}
 						/>
 					)}
 
 					<div className="community-detail-content">
-						<ArticleViewer markdown={boardArticle.articleContent} />
+						<ArticleViewer markdown={boardArticle.articleContent ?? ''} />
 					</div>
 
 					<div className="community-detail-engagement">
 						<button type="button" onClick={likeArticle} disabled={likeLoading} aria-pressed={isLiked}>
 							{isLiked ? <FavoriteRoundedIcon aria-hidden="true" /> : <FavoriteBorderRoundedIcon aria-hidden="true" />}
-							{isLiked ? 'Liked' : 'Like this article'} <span>{boardArticle.articleLikes}</span>
+							{isLiked ? 'Liked' : 'Like this article'} <span>{boardArticle.articleLikes ?? 0}</span>
 						</button>
 					</div>
 				</article>

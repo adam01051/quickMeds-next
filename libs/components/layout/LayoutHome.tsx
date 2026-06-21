@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
+import Link from 'next/link';
 import Top from '../Top';
 import Footer from '../Footer';
 import { Stack } from '@mui/material';
 import HeaderFilter from '../homepage/HeaderFilter';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import BrandLogo from '../common/BrandLogo';
 //@ts-ignore
 import 'swiper/css';
 //@ts-ignore
@@ -18,6 +20,7 @@ import 'swiper/css/navigation';
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
+		const reduceMotion = useReducedMotion();
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -56,6 +59,29 @@ const withLayoutMain = (Component: any) => {
 			</Stack>
 		);
 
+		const mobileFooter = (
+			<motion.footer
+				className="home-mobile-footer"
+				initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+				whileInView={{ opacity: 1, y: 0 }}
+				viewport={{ once: true, margin: '-20px' }}
+				transition={{ duration: reduceMotion ? 0.01 : 0.38, ease: [0.22, 1, 0.36, 1] }}
+			>
+				<Link href="/" aria-label="quickMeds home" className="home-mobile-footer__brand">
+					<BrandLogo />
+				</Link>
+				<nav className="home-mobile-footer__links" aria-label="Homepage footer links">
+					<Link href="/pharmacies">Pharmacies</Link>
+					<Link href="/community?articleCategory=FREE">Community</Link>
+					<Link href="/cs">Support</Link>
+				</nav>
+				<div className="home-mobile-footer__meta">
+					<span>English</span>
+					<span>© {new Date().getFullYear()} QuickMeds Uzbekistan</span>
+				</div>
+			</motion.footer>
+		);
+
 		if (device == 'mobile') {
 			return (
 				<>
@@ -72,7 +98,7 @@ const withLayoutMain = (Component: any) => {
 						</Stack>
 
 						<Stack id={'footer'}>
-							<Footer />
+							{mobileFooter}
 						</Stack>
 					</Stack>
 				</>

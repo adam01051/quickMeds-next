@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -9,6 +9,12 @@ import Button from '@mui/material/Button';
 import { alpha, styled } from '@mui/material/styles';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
@@ -19,27 +25,38 @@ import { socketVar, userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 import BrandLogo from './common/BrandLogo';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { GET_UNREAD_MESSAGE_COUNT } from '../../apollo/user/query';
 
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const socket = useReactiveVar(socketVar);
-	const { t, i18n } = useTranslation('common');
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [unreadMessages, setUnreadMessages] = useState(0);
 	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
 	const [lang, setLang] = useState<string | null>('en');
 	const drop = Boolean(anchorEl2);
 	const [colorChange, setColorChange] = useState(false);
-	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
-	let open = Boolean(anchorEl);
 	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
 	const logoutOpen = Boolean(logoutAnchor);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const isHome = router.pathname === '/';
 	const isActiveRoute = (pathname: string) =>
 		pathname === '/' ? router.pathname === pathname : router.pathname === pathname || router.pathname.startsWith(`${pathname}/`);
+	const mobileNavLinks = [
+		{ href: '/', label: t('Home'), icon: <HomeRoundedIcon /> },
+		{ href: '/pharmacies', label: t('Pharmacies'), icon: <SearchRoundedIcon /> },
+		{ href: '/community?articleCategory=FREE', label: t('Community'), icon: <ForumOutlinedIcon /> },
+		...(user?._id
+			? [{ href: '/mypage', label: t('My Page'), icon: <AccountCircleOutlinedIcon /> }]
+			: [
+					{ href: '/account/join', label: t('Login'), icon: <AccountCircleOutlinedIcon /> },
+					{ href: '/account/join?mode=signup', label: t('Register'), icon: <AccountCircleOutlinedIcon /> },
+			  ]),
+		{ href: '/cs', label: t('CS'), icon: <SupportAgentOutlinedIcon /> },
+	];
 
 	useQuery(GET_UNREAD_MESSAGE_COUNT, {
 		skip: !user?._id,
@@ -86,6 +103,19 @@ const Top = () => {
 		return () => socket.removeEventListener('message', handleMessageEvent);
 	}, [socket, user?._id]);
 
+	useEffect(() => {
+		setMobileMenuOpen(false);
+	}, [router.asPath]);
+
+	useEffect(() => {
+		if (!mobileMenuOpen) return;
+		const originalOverflow = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = originalOverflow;
+		};
+	}, [mobileMenuOpen]);
+
 	/** HANDLERS **/
 	const langClick = (e: any) => {
 		setAnchorEl2(e.currentTarget);
@@ -97,25 +127,14 @@ const Top = () => {
 
 	const langChoice = useCallback(
 		async (e: any) => {
-			setLang(e.target.id);
-			localStorage.setItem('locale', e.target.id);
+			const nextLang = e.currentTarget.id || e.target.id;
+			setLang(nextLang);
+			localStorage.setItem('locale', nextLang);
 			setAnchorEl2(null);
-			await router.push(router.asPath, router.asPath, { locale: e.target.id });
+			await router.push(router.asPath, router.asPath, { locale: nextLang });
 		},
 		[router],
 	);
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const handleHover = (event: any) => {
-		if (anchorEl !== event.currentTarget) {
-			setAnchorEl(event.currentTarget);
-		} else {
-			setAnchorEl(null);
-		}
-	};
 
 	const StyledMenu = styled((props: MenuProps) => (
 		<Menu
@@ -156,43 +175,116 @@ const Top = () => {
 	}));
 
 	if (device == 'mobile') {
-		if (isHome) {
-			return (
-				<Stack className="top home-mobile-top">
-					<div className="home-mobile-top__bar">
-						<Link href="/" aria-label="quickMeds home"><BrandLogo /></Link>
-						<Link href="/account/join" className="home-mobile-top__account" aria-label="Login or register">
-							<AccountCircleOutlinedIcon />
-						</Link>
-					</div>
-					<nav className="home-mobile-top__nav" aria-label="Primary navigation">
-						<Link href="/" aria-current="page">{t('Home')}</Link>
-						<Link href="/pharmacies">{t('Pharmacies')}</Link>
-						<Link href="/agent">{t('Pharmacy Owners')}</Link>
-						<Link href="/community?articleCategory=FREE">{t('Community')}</Link>
-						<Link href="/cs">{t('CS')}</Link>
-					</nav>
-				</Stack>
-			);
-		}
-
 		return (
-			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('Home')}</div>
-				</Link>
-				<Link href={'/pharmacies'}>
-					<div>{t('Pharmacies')}</div>
-				</Link>
-				<Link href={'/agent'}>
-					<div> {t('Pharmacy Owners')} </div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div> {t('Community')} </div>
-				</Link>
-				<Link href={'/cs'}>
-					<div> {t('CS')} </div>
-				</Link>
+			<Stack className="top catalog-mobile-top">
+				<div className="catalog-mobile-top__bar">
+					<Link href="/" aria-label="quickMeds home"><BrandLogo /></Link>
+					<div className="catalog-mobile-top__actions">
+						<button
+							type="button"
+							className="catalog-mobile-top__menu"
+							aria-label="Open navigation menu"
+							aria-expanded={mobileMenuOpen}
+							onClick={() => setMobileMenuOpen(true)}
+						>
+							<MenuRoundedIcon />
+						</button>
+						{user?._id ? (
+							<>
+								<Link href="/mypage?category=messages" className="catalog-mobile-top__icon" aria-label="Messages">
+									<Badge badgeContent={unreadMessages} color="error" max={99} overlap="circular">
+										<MailOutlineRoundedIcon />
+									</Badge>
+								</Link>
+								<button type="button" className="catalog-mobile-top__icon" aria-label="Notifications">
+									<NotificationsOutlinedIcon />
+								</button>
+								<button
+									type="button"
+									className="catalog-mobile-top__avatar"
+									aria-label="Account menu"
+									aria-haspopup="menu"
+									aria-expanded={logoutOpen}
+									onClick={(event) => setLogoutAnchor(event.currentTarget)}
+								>
+									<img src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'} alt="" />
+								</button>
+								<Menu
+									anchorEl={logoutAnchor}
+									open={logoutOpen}
+									onClose={() => setLogoutAnchor(null)}
+									sx={{ mt: '5px' }}
+								>
+									<MenuItem onClick={() => logOut()}>
+										<Logout fontSize="small" style={{ color: '#064e3b', marginRight: '10px' }} />
+										Logout
+									</MenuItem>
+								</Menu>
+							</>
+						) : (
+							<Link href="/account/join" className="catalog-mobile-top__login" aria-label="Login or create account">
+								<AccountCircleOutlinedIcon />
+							</Link>
+						)}
+					</div>
+				</div>
+				<AnimatePresence>
+					{mobileMenuOpen && (
+						<>
+							<motion.button
+								type="button"
+								className="catalog-mobile-nav-backdrop"
+								aria-label="Close navigation menu"
+								onClick={() => setMobileMenuOpen(false)}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+							/>
+							<motion.nav
+								className="catalog-mobile-nav-sheet"
+								aria-label="Mobile navigation"
+								initial={{ opacity: 0, y: -10, scale: 0.98 }}
+								animate={{ opacity: 1, y: 0, scale: 1 }}
+								exit={{ opacity: 0, y: -8, scale: 0.98 }}
+								transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+							>
+								<div className="catalog-mobile-nav-sheet__head">
+									<span>Navigate QuickMeds</span>
+									<button type="button" aria-label="Close navigation menu" onClick={() => setMobileMenuOpen(false)}>
+										<CloseRoundedIcon />
+									</button>
+								</div>
+								<div className="catalog-mobile-nav-sheet__links">
+									{mobileNavLinks.map((item) => (
+										<Link
+											key={item.href}
+											href={item.href}
+											aria-current={isActiveRoute(item.href.split('?')[0]) ? 'page' : undefined}
+										>
+											{item.icon}
+											<span>{item.label}</span>
+										</Link>
+									))}
+								</div>
+								<div className="catalog-mobile-nav-sheet__language" aria-label="Language">
+									<button type="button" id="en" className={lang === 'en' ? 'is-active' : ''} onClick={langChoice}>
+										<img src="/img/flag/langen.png" alt="" />
+										English
+									</button>
+									<button type="button" id="kr" className={lang === 'kr' ? 'is-active' : ''} onClick={langChoice}>
+										<img src="/img/flag/langkr.png" alt="" />
+										Korean
+									</button>
+									<button type="button" id="ru" className={lang === 'ru' ? 'is-active' : ''} onClick={langChoice}>
+										<img src="/img/flag/langru.png" alt="" />
+										Russian
+									</button>
+								</div>
+							</motion.nav>
+						</>
+					)}
+				</AnimatePresence>
 			</Stack>
 		);
 	} else {
@@ -218,9 +310,6 @@ const Top = () => {
 							</Link>
 							<Link href={'/pharmacies'} aria-current={isActiveRoute('/pharmacies') ? 'page' : undefined}>
 								<div>{t('Pharmacies')}</div>
-							</Link>
-							<Link href={'/agent'} aria-current={isActiveRoute('/agent') ? 'page' : undefined}>
-								<div> {t('Pharmacy Owners')} </div>
 							</Link>
 							<Link href={'/community?articleCategory=FREE'} aria-current={isActiveRoute('/community') ? 'page' : undefined}>
 								<div> {t('Community')} </div>

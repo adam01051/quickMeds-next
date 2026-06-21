@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import { motion, useReducedMotion } from 'framer-motion';
 import { GET_PHARMACIES } from '../../../apollo/user/query';
 import { LIKE_TARGET_PHARMACY } from '../../../apollo/user/mutation';
 import { userVar } from '../../../apollo/store';
@@ -10,6 +11,7 @@ import { Property } from '../../types/property/property';
 import { T } from '../../types/common';
 import { Message } from '../../enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 import HomePharmacyCard from './HomePharmacyCard';
 
 interface HomePharmacySectionProps {
@@ -20,7 +22,9 @@ interface HomePharmacySectionProps {
 }
 
 const HomePharmacySection = ({ title, description, initialInput, tone = 'default' }: HomePharmacySectionProps) => {
+	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
+	const reduceMotion = useReducedMotion();
 	const [pharmacies, setPharmacies] = useState<Property[]>([]);
 	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
 	const { loading, error, refetch } = useQuery(GET_PHARMACIES, {
@@ -40,6 +44,23 @@ const HomePharmacySection = ({ title, description, initialInput, tone = 'default
 			const message = caughtError instanceof Error ? caughtError.message : Message.SOMETHING_WENT_WRONG;
 			await sweetMixinErrorAlert(message);
 		}
+	};
+
+	const isMobile = device === 'mobile';
+	const mobileListVariants = {
+		hidden: { opacity: 1 },
+		visible: {
+			opacity: 1,
+			transition: { staggerChildren: reduceMotion ? 0 : 0.06 },
+		},
+	};
+	const mobileCardVariants = {
+		hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 14 },
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: { duration: reduceMotion ? 0.01 : 0.42, ease: [0.22, 1, 0.36, 1] },
+		},
 	};
 
 	return (
@@ -69,6 +90,25 @@ const HomePharmacySection = ({ title, description, initialInput, tone = 'default
 						<strong>No pharmacies are available yet.</strong>
 						<span>Try browsing all pharmacies or searching another area.</span>
 					</div>
+				) : isMobile ? (
+					<motion.div
+						className="home-pharmacy-grid"
+						variants={mobileListVariants}
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true, margin: '-40px' }}
+					>
+						{pharmacies.slice(0, 3).map((pharmacy) => (
+							<motion.div
+								className="home-pharmacy-card-motion"
+								variants={mobileCardVariants}
+								whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+								key={pharmacy._id}
+							>
+								<HomePharmacyCard pharmacy={pharmacy} onFavorite={favoritePharmacy} />
+							</motion.div>
+						))}
+					</motion.div>
 				) : (
 					<div className="home-pharmacy-grid">
 						{pharmacies.slice(0, 3).map((pharmacy) => (

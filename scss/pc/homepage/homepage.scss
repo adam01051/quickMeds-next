@@ -2219,6 +2219,10 @@
 		}
 	}
 
+	&__mobile-link {
+		display: none;
+	}
+
 	&__stat {
 		position: absolute;
 		z-index: 2;
@@ -2348,7 +2352,6 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-	
 	}
 
 	&__action {
@@ -2389,7 +2392,7 @@
 		}
 	}
 
-	&__action--primary {
+	&__actions a.home-owner-cta__action--primary {
 		background: #126b50;
 		color: #fff;
 		box-shadow: 0 8px 16px rgba(18, 107, 80, 0.16);
@@ -2397,6 +2400,10 @@
 		&:hover {
 			background: #0f5f47;
 			color: #fff;
+		}
+
+		&:focus-visible {
+			outline-color: #0f5f47;
 		}
 	}
 }
