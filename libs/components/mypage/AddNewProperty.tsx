@@ -12,11 +12,13 @@ import { PharmacyInput } from '../../types/property/property.input';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { REACT_APP_API_URL } from '../../config';
 import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
+	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [form, setForm] = useState<PharmacyInput>(initialValues);
@@ -89,6 +91,161 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const removeImage = (image: string) => update({ pharmacyImages: form.pharmacyImages.filter((item) => item !== image) });
 
 	if (user.memberType !== 'AGENT') return null;
+
+	const isEditMode = Boolean(router.query.pharmacyId || router.query.propertyId);
+	const canSave = Boolean(form.pharmacyName && form.pharmacyAddress && form.pharmacyImages.length);
+
+	if (device === 'mobile') {
+		return (
+			<div id="add-property-page" className="add-pharmacy-mobile">
+				<section className="add-pharmacy-mobile__summary">
+					<span>{isEditMode ? 'Edit Pharmacy' : 'Add Pharmacy'}</span>
+					<h2>{isEditMode ? 'Update pharmacy details' : 'Register a pharmacy'}</h2>
+					<p>Keep your public pharmacy profile accurate for customers browsing QuickMeds.</p>
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Basics</span>
+						<strong>Name, type, region, and address</strong>
+					</div>
+					<label className="add-pharmacy-mobile__field">
+						<span>Pharmacy name</span>
+						<input placeholder="Pharmacy name" value={form.pharmacyName} onChange={(e) => update({ pharmacyName: e.target.value })} />
+					</label>
+					<div className="add-pharmacy-mobile__grid">
+						<label className="add-pharmacy-mobile__field">
+							<span>Pharmacy type</span>
+							<select value={form.pharmacyType} onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}>
+								{Object.values(PharmacyType).map((value) => <option key={value} value={value}>{value}</option>)}
+							</select>
+						</label>
+						<label className="add-pharmacy-mobile__field">
+							<span>Region</span>
+							<select value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
+								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{getPharmacyLocationLabel(value)}</option>)}
+							</select>
+						</label>
+					</div>
+					<label className="add-pharmacy-mobile__field">
+						<span>Address</span>
+						<input placeholder="Full pharmacy address" value={form.pharmacyAddress} onChange={(e) => update({ pharmacyAddress: e.target.value })} />
+					</label>
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Services</span>
+						<strong>Delivery, insurance, and opening date</strong>
+					</div>
+					<div className="add-pharmacy-mobile__toggles">
+						<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
+						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked, pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0 })} />} label="Offers delivery" />
+					</div>
+					<div className="add-pharmacy-mobile__grid">
+						<label className="add-pharmacy-mobile__field">
+							<span>Delivery fee (UZS)</span>
+							<input type="number" min="0" step="1" disabled={!form.hasDelivery} placeholder="0 means free delivery" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
+						</label>
+						<label className="add-pharmacy-mobile__field">
+							<span>Opened date</span>
+							<input type="date" value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''} onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })} />
+						</label>
+					</div>
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Location</span>
+						<strong>Map coordinates</strong>
+					</div>
+					<div className="add-pharmacy-mobile__grid">
+						<label className="add-pharmacy-mobile__field">
+							<span>Latitude</span>
+							<input type="number" step="any" value={form.pharmacyLatitude} onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })} />
+						</label>
+						<label className="add-pharmacy-mobile__field">
+							<span>Longitude</span>
+							<input type="number" step="any" value={form.pharmacyLongitude} onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })} />
+						</label>
+					</div>
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Working hours</span>
+						<strong>Optional public schedule</strong>
+					</div>
+					<div className="add-pharmacy-mobile__toggles">
+						<FormControlLabel control={<Checkbox checked={form.open24Hours ?? false} onChange={(e) => update({ open24Hours: e.target.checked, operatingHours: e.target.checked ? [] : form.operatingHours })} />} label="Open 24/7" />
+					</div>
+					{!form.open24Hours && (
+						<div className="add-pharmacy-mobile__hours">
+							<p>Leave all days unset to display Hours not provided.</p>
+							{WEEKDAYS.map((label, index) => {
+								const dayOfWeek = index + 1;
+								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
+								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
+									const remaining = (form.operatingHours ?? []).filter((item) => item.dayOfWeek !== dayOfWeek);
+									update({ operatingHours: [...remaining, { dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value }].sort((a, b) => a.dayOfWeek - b.dayOfWeek) });
+								};
+								return (
+									<div className="add-pharmacy-mobile__day" key={label}>
+										<strong>{label}</strong>
+										<FormControlLabel control={<Checkbox checked={day?.isClosed ?? false} onChange={(e) => updateDay({ isClosed: e.target.checked, opensAt: e.target.checked ? undefined : day?.opensAt, closesAt: e.target.checked ? undefined : day?.closesAt })} />} label="Closed" />
+										<div>
+											<input type="time" disabled={day?.isClosed} value={day?.opensAt ?? ''} onChange={(e) => updateDay({ opensAt: e.target.value })} />
+											<input type="time" disabled={day?.isClosed} value={day?.closesAt ?? ''} onChange={(e) => updateDay({ closesAt: e.target.value })} />
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					)}
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Photos</span>
+						<strong>Upload up to five images</strong>
+					</div>
+					<button className="add-pharmacy-mobile__upload" type="button" onClick={() => inputRef.current?.click()}>
+						<img src="/img/icons/discovery.svg" alt="" />
+						<span>Add pharmacy photos</span>
+						<small>JPEG or PNG format</small>
+						<input ref={inputRef} type="file" hidden accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadImages} />
+					</button>
+					{form.pharmacyImages.length > 0 && (
+						<div className="add-pharmacy-mobile__gallery">
+							{form.pharmacyImages.map((image) => (
+								<div className="add-pharmacy-mobile__image" key={image}>
+									<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
+									<button type="button" onClick={() => removeImage(image)}>Remove</button>
+								</div>
+							))}
+						</div>
+					)}
+				</section>
+
+				<section className="add-pharmacy-mobile__card">
+					<div className="add-pharmacy-mobile__card-head">
+						<span>Description</span>
+						<strong>Customer-facing pharmacy information</strong>
+					</div>
+					<label className="add-pharmacy-mobile__field">
+						<span>Description</span>
+						<textarea value={form.pharmacyDesc ?? ''} onChange={(e) => update({ pharmacyDesc: e.target.value })} />
+					</label>
+				</section>
+
+				<div className="add-pharmacy-mobile__save">
+					<Button disabled={!canSave} onClick={submit}>
+						Save pharmacy
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div id="add-property-page">

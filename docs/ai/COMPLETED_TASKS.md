@@ -747,12 +747,19 @@ Validation limitations:
 
 ## Messages Navigation And Composer Follow-up
 
-- Added a compact mobile My Page section switcher to the Messages list screen using the same menu metadata as the main My Page sidebar.
+- Added a compact mobile My Page section switcher to the Messages list title row using the same rounded trigger and navigation sheet behavior as the main My Page mobile menu.
 - Removed the extra right-side View pharmacy button from the active chat header.
 - Made the chat header identity area clickable when a pharmacy is available, so the avatar/name area opens `/pharmacies/detail?id=...` and carries the existing `view-pharmacy-action` test hook.
 - Reworked the desktop composer so the textarea comes first and the Attach/Send controls sit directly after the input area.
 - Added desktop Enter-to-send behavior while preserving Shift+Enter line breaks and mobile multiline keyboard behavior.
 - Preserved all existing message queries, mutations, image upload, sockets, unread marking, thread routing, and scroll-to-latest behavior.
+
+## Mobile Messages Menu Trigger Correction
+
+- Replaced the horizontal Messages shortcut chip row with a single rounded mobile menu trigger in the right side of the Messages title row.
+- Extracted the My Page mobile navigation trigger/sheet into a reusable component so the main My Page sidebar and mobile Messages list open the same section menu.
+- Rendered the shared mobile menu sheet/backdrop through a portal to `document.body`, preventing Messages thread button styles from leaking into the sheet.
+- Kept the Messages list-first mobile flow, full-screen chat overlay, clickable pharmacy identity, desktop composer placement, and desktop Enter-to-send behavior unchanged.
 
 Validation completed:
 
@@ -762,4 +769,115 @@ Validation completed:
 
 Validation limitations:
 
-- Authenticated browser QA remains pending for the mobile section switcher, clickable chat identity, desktop Enter-to-send, and attachment/send controls.
+- Authenticated browser QA remains pending for the shared mobile menu trigger/sheet from Messages, clickable chat identity, desktop Enter-to-send, and attachment/send controls.
+
+## My Page Mobile Menu Portal Style Fix
+
+- Fixed the shared mobile My Page menu sheet after its portal move by adding mobile-scoped global styles for the portaled backdrop and sheet under `document.body`.
+- The root cause was that the original sheet styles were nested under `#my-page`; after rendering through a portal, those selectors no longer matched, so the menu appeared as unstyled raw content at the bottom of mobile pages.
+- Kept the shared `MyPageMobileMenu` component, existing menu groups, route categories, active states, logout/admin behavior, Messages trigger placement, and chat behavior unchanged.
+- Added token fallbacks directly on the portaled sheet so it no longer depends on CSS variables inherited from the My Page route wrapper.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+
+## Messages Mobile Entry State Fix
+
+- Fixed the mobile route-entry race where Messages could briefly inherit the desktop device default and auto-select the first conversation when navigating in from another My Page section.
+- Desktop still auto-selects the first thread for the two-pane chat workspace, but only after device detection is ready and the viewport is wider than the mobile breakpoint.
+- Added the shared mobile My Page menu trigger to Messages loading, error, and empty states so mobile users are not trapped on `/mypage?category=messages` while the normal My Page sidebar is intentionally hidden.
+- Kept existing message queries, thread routing, send/upload behavior, socket refresh, unread marking, desktop composer behavior, and the full-screen mobile chat overlay unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+
+## Mobile Followers And Followings Card Redesign
+
+- Redesigned only the mobile `/mypage?category=followers` and `/mypage?category=followings` presentation from the raw table-style layout into compact QuickMeds member cards.
+- Mobile follow cards now hide the desktop `Name / Details / Subscription` header row, constrain avatars to a fixed circular size, present member stats as compact chips, and keep Follow/Unfollow actions aligned inside the card.
+- Preserved existing GraphQL queries, follow/unfollow handlers, member-like handler, profile navigation, empty states, and own-Followings duplicate-follow protection.
+- Restored the desktop Followers/Followings JSX to the previous working structure after the mobile pass; the remaining follow-list redesign is isolated to `max-width: 767px` SCSS.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` initially compiled and generated pages but hit a transient `.next` file-move error; rerunning `yarn build` passed and generated all 70 current pages.
+
+## Desktop Followers And Followings Restore
+
+- Restored `MemberFollowers` and `MemberFollowings` markup to the previous desktop structure, removing mobile-only helper markup that had affected desktop rendering.
+- Kept the mobile-only SCSS card layout below `767px`, now based on the original desktop-compatible markup.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+
+## Desktop Community Layout Overflow Fix
+
+- Fixed desktop-only horizontal overflow in the homepage Community health reading section by allowing article grid tracks and card children to shrink within the homepage shell.
+- Added desktop-only overflow safeguards to the `/community` article list so footer actions and metrics wrap inside their row instead of widening the page.
+- Scoped the changes to `min-width: 768px` desktop selectors so the existing mobile Community and homepage article layouts remain controlled by their mobile rules.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+
+## Desktop Followers And Followings Layout Fix
+
+- Fixed the remaining desktop `/mypage?category=followers` and `/mypage?category=followings` rendering problem after the JSX restore.
+- Root cause: the original-compatible `MemberFollowers` and `MemberFollowings` markup was restored, but the desktop SCSS for the restored classes was missing, so the page rendered as raw stacked content.
+- Added desktop-only `min-width: 768px` styles for the existing follows markup: header row, three-column rows, fixed circular avatars, stat cards, aligned Follow/Unfollow actions, empty state, and centered pagination.
+- Kept the mobile Followers/Followings card presentation isolated to the existing `max-width: 767px` styles and did not change GraphQL, follow/unfollow, like, pagination, or profile-navigation logic.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+
+## My Pharmacies Mobile Section
+
+- Renamed the owner pharmacy section component from `MyProperties` to `MyPharmacies` and the My Page owner card from `PropertyCard` to `MyPharmacyCard`.
+- Kept `/mypage?category=myPharmacies` and the existing desktop `#my-property-page` / `property-card-box` structure intact so the current desktop style remains unchanged.
+- Replaced the mobile placeholders with a real My Pharmacies mobile presentation: status summary, status filters, loading skeletons, retryable error state, empty state, mobile pharmacy cards, pagination, and View/Edit/More actions.
+- Mobile cards now show pharmacy image, status, open/hours state, address, pharmacy type, delivery, insurance, views, published date, and a More menu for close/delete actions.
+- Preserved `GET_AGENT_PHARMACIES`, `UPDATE_PHARMACY`, status filtering, edit navigation to `addPharmacy`, close action, delete-as-`DELETE`, and pagination contracts.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` initially compiled but hit a transient `.next` page-module error for `/about`; rerunning `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+
+## Mobile Add Pharmacy Section
+
+- Added a real mobile render path to `AddNewProperty.tsx` while preserving the existing desktop JSX branch and `scss/pc/mypage/addNewProperty.scss` styling.
+- Mobile Add Pharmacy now uses grouped cards for basics, services, location, working hours, photos, and description, plus a safe-area-aware sticky Save pharmacy bar.
+- Reused the same `form` state, `update`, `uploadImages`, `removeImage`, and `submit` handlers so create, edit, image upload, and return-to-My-Pharmacies behavior stay contract-compatible.
+- Preserved `CREATE_PHARMACY`, `UPDATE_PHARMACY`, `GET_PHARMACY`, `imagesUploader(target: "pharmacy")`, `pharmacyId`/legacy `propertyId` edit hydration, and `/mypage?category=myPharmacies` post-save routing.
+- Mobile controls now keep delivery fee disabled when delivery is off, hide day-by-day hours when Open 24/7 is enabled, preview uploaded images, and keep Save disabled until name, address, and at least one image are present.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+
+## Mobile My Page Typography Normalization
+
+- Tightened mobile-only typography for My Page section headers, Followers, Followings, and Add Pharmacy so the newer mobile sections match the compact QuickMeds account workspace style.
+- Reduced oversized Add Pharmacy mobile summary/card headings, field labels, inputs, toggle labels, upload copy, and sticky Save button text without changing form structure or behavior.
+- Reduced Followers/Followings mobile member names, stat number sizing, stat chip height/padding, and action text while keeping touch targets usable.
+- Kept desktop Followers/Followings and desktop Add Pharmacy styles unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.

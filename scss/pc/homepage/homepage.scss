@@ -2412,6 +2412,31 @@
 	to { opacity: 0.55; }
 }
 
+@media (min-width: 768px) {
+	#pc-wrap {
+		.home-article-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+
+			> * {
+				min-width: 0;
+			}
+		}
+
+		.home-article-card {
+			min-width: 0;
+
+			p {
+				flex-wrap: wrap;
+			}
+
+			em {
+				min-width: 0;
+				white-space: normal;
+			}
+		}
+	}
+}
+
 @media (max-width: 1024px) {
 	.home-pharmacy-grid,
 	.home-article-grid {

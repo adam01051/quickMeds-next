@@ -99,7 +99,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Smoke test an authenticated customer sending a text message, image message, and text-plus-image message from `/pharmacies/detail`.
 3. Smoke test a Pharmacy Owner receiving the thread in `/mypage?category=messages`, unread badge updates, mark-read behavior, and a reply.
 4. Verify WebSocket updates reach only the sender and receiver.
-5. Complete authenticated browser QA for the fixed Messages scroll behavior and mobile overlay navigation: near-bottom auto-scroll, reading-old-messages no-force-scroll, `New messages` button, independent desktop thread/history scrolling, mobile section shortcuts, clickable pharmacy header identity, desktop Enter-to-send, 320px/375px/iPhone 14 Pro Max/tablet/desktop responsive states, and mobile keyboard/safe-area behavior.
+5. Complete authenticated browser QA for the fixed Messages scroll behavior and mobile overlay navigation: entering Messages from other My Page sections, near-bottom auto-scroll, reading-old-messages no-force-scroll, `New messages` button, independent desktop thread/history scrolling, shared mobile menu trigger/sheet, clickable pharmacy header identity, desktop Enter-to-send, 320px/375px/iPhone 14 Pro Max/tablet/desktop responsive states, and mobile keyboard/safe-area behavior.
 6. Add focused backend service tests for message authorization, thread reuse, unread counters, image-path validation, and self-message rejection.
 7. Keep delete/archive, blocking, typing indicators, chatbot integration, moderation, and non-image attachments deferred.
 
@@ -116,5 +116,9 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 ## My Page Mobile Follow-up
 
-1. Complete authenticated 390px and 430px visual QA for the user-row My Page trigger, left-side My Page mobile menu, real mobile My Profile form, Followers, Followings, My Articles, and Write Article.
-2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, profile image upload, profile update, own-Followings unfollow, Followers follow-back/unfollow, member likes, article likes, article detail navigation, write-article submission, external owner-link arrows, and logout from a signed-in browser session.
+1. Complete authenticated 390px and 430px visual QA for the user-row My Page trigger, left-side My Page mobile menu, real mobile My Profile form, Followers, Followings, My Pharmacies, Add Pharmacy, My Articles, and Write Article.
+2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, profile image upload, profile update, My Pharmacies status filters, My Pharmacies View/Edit/Close/Delete actions, Add Pharmacy create/edit/image upload/save behavior, own-Followings unfollow, Followers follow-back/unfollow, member likes, article likes, article detail navigation, write-article submission, external owner-link arrows, and logout from a signed-in browser session.
+
+## My Page Desktop Follow-up
+
+1. Complete authenticated desktop visual QA for `/mypage?category=followers` and `/mypage?category=followings`, including follow/unfollow, member-like, pagination, and profile navigation on restored desktop rows.

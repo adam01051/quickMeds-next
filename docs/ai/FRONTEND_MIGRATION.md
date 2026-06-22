@@ -211,7 +211,7 @@ Deferred compatibility work:
 - The fixed chat layout uses viewport-height and safe-area-aware mobile styles while preserving existing message APIs, uploads, socket refreshes, unread marking, and pharmacy links.
 - Mobile Messages now follows a Telegram-style navigation structure below 767px: the list view is the initial screen, selecting a conversation opens a full-width chat overlay sliding in from the right, and the My Page sidebar is hidden for this mobile Messages flow only.
 - The mobile chat overlay keeps the QuickMeds visual system, fixed header, scroll-owned message history, safe-area-aware composer, compact back/call/View pharmacy actions, and route-backed `threadId` state so browser back can return to the list.
-- The mobile list view now exposes compact My Page section shortcuts from the shared menu metadata, so users can leave Messages without reopening the hidden sidebar.
+- The mobile list view now exposes the shared rounded My Page menu trigger in the Messages title row, opening the same portaled section sheet used by the main My Page mobile menu.
 - The active chat pharmacy detail affordance now lives on the clickable header identity area instead of a separate right-side View pharmacy button.
 - Desktop composer controls now sit after the textarea, and desktop Enter submits while Shift+Enter continues to add a new line; mobile keeps normal multiline keyboard behavior.
 
@@ -284,6 +284,7 @@ Deferred compatibility work:
 - Community list and detail presentation now tolerate incomplete article/member/date data instead of crashing on missing labels, invalid dates, or absent member IDs.
 - Mobile Community layout keeps the editorial desktop direction but uses tighter phone typography, scrollable tabs, full-width sorting, compact rows, and mobile-aligned empty/error states.
 - Device detection now starts from the same desktop-safe value on server and first client render, then updates after mount; this avoids React hydration mismatches while preserving mobile-specific layouts after hydration.
+- Desktop Community/homepage article layouts now include desktop-only shrink and wrapping safeguards to prevent article cards, metrics, or read links from creating right-side page overflow.
 
 ## My Page Mobile Menu Migration
 
@@ -298,3 +299,10 @@ Deferred compatibility work:
 - My Page drawer links that navigate outside the section flow now show an arrow affordance; category links keep the active checkmark behavior.
 - My Page Followings now treats the signed-in user's own followings list as authoritative, so those rows expose Unfollow instead of attempting a duplicate Follow mutation.
 - Followers and other member-profile follow controls still use the backend `meFollowed` relationship state, hardened with order-independent checks.
+- The shared mobile My Page menu sheet/backdrop styles now also target the portaled `document.body` rendering path, so the same menu remains styled when opened from My Profile, Messages, or any future mobile My Page section trigger.
+- Mobile Messages entry now waits for resolved device state before desktop-only first-thread selection, preserving the list-first Messages view when users switch into Messages from another mobile My Page section.
+- Mobile Followers and Followings now use CSS-only card-based member rows with compact avatars, stat chips, and mobile-safe pagination while the desktop Followers/Followings component markup remains restored to the previous working structure.
+- Desktop Followers and Followings now have a dedicated `min-width: 768px` SCSS layer for the restored member-follow markup, keeping the desktop table/card row presentation separate from the mobile `max-width: 767px` card presentation.
+- My Page owner pharmacy management now uses `MyPharmacies` and `MyPharmacyCard` component names while preserving the existing desktop layout classes; the mobile My Pharmacies placeholder has been replaced with real owner pharmacy cards, status filters, pagination, and owner actions using the existing pharmacy contracts.
+- Mobile Add Pharmacy now reuses the existing create/update/upload/edit contracts in a grouped phone layout with safe-area sticky save controls, while the current desktop Add Pharmacy form and stylesheet remain unchanged.
+- Mobile My Page typography has been normalized across section headers, Followers/Followings cards, and Add Pharmacy grouped cards so account sections use the same compact text scale without changing desktop layouts or data contracts.

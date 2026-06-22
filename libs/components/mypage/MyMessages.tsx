@@ -20,7 +20,7 @@ import { getJwtToken } from '../../auth';
 import { REACT_APP_API_URL } from '../../config';
 import { sweetErrorHandling, sweetMixinErrorAlert } from '../../sweetAlert';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { menuGroups, normalizeCategory } from './MyMenu';
+import MyPageMobileMenu from './MyPageMobileMenu';
 
 const threadInquiry: MessageThreadsInquiry = {
 	page: 1,
@@ -56,6 +56,7 @@ const MyMessages = () => {
 	const [isSending, setIsSending] = useState(false);
 	const [threadSearch, setThreadSearch] = useState('');
 	const [showNewMessageButton, setShowNewMessageButton] = useState(false);
+	const [deviceReady, setDeviceReady] = useState(false);
 
 	const {
 		data: threadsData,
@@ -72,15 +73,6 @@ const MyMessages = () => {
 	const selectedThread = useMemo(
 		() => threads.find((thread) => thread._id === activeThreadId) ?? null,
 		[activeThreadId, threads],
-	);
-	const currentCategory = normalizeCategory(router.query.category);
-	const isPharmacyOwner = user.memberType === 'AGENT';
-	const mobileMenuItems = useMemo(
-		() =>
-			menuGroups
-				.flatMap((group) => group.items)
-				.filter((item) => (!item.ownerOnly || isPharmacyOwner) && (!item.nonOwnerOnly || !isPharmacyOwner)),
-		[isPharmacyOwner],
 	);
 	const messageInquiry: MessagesInquiry | null = activeThreadId
 		? { page: 1, limit: 80, sort: 'createdAt', direction: Direction.ASC, threadId: activeThreadId }
@@ -147,13 +139,19 @@ const MyMessages = () => {
 	};
 
 	useEffect(() => {
+		setDeviceReady(true);
+	}, []);
+
+	useEffect(() => {
 		if (requestedThreadId) setActiveThreadId(requestedThreadId);
 		else if (isMobile) setActiveThreadId(null);
 	}, [isMobile, requestedThreadId]);
 
 	useEffect(() => {
-		if (!isMobile && !activeThreadId && filteredThreads.length) setActiveThreadId(filteredThreads[0]._id);
-	}, [activeThreadId, filteredThreads, isMobile]);
+		if (!deviceReady || isMobile || activeThreadId || !filteredThreads.length) return;
+		if (typeof window !== 'undefined' && window.innerWidth <= 767) return;
+		setActiveThreadId(filteredThreads[0]._id);
+	}, [activeThreadId, deviceReady, filteredThreads, isMobile]);
 
 	useEffect(() => {
 		if (!activeThreadId) return;
@@ -297,10 +295,16 @@ const MyMessages = () => {
 	};
 	const otherMember = selectedThread ? (user?._id === selectedThread.ownerId ? selectedThread.customerData : selectedThread.ownerData) : null;
 	const selectedUnreadTotal = threads.reduce((total, thread) => total + (thread.myUnreadCount ?? 0), 0);
+	const stateMobileMenu = (
+		<div className="my-messages__state-menu" aria-label="Messages section menu">
+			<MyPageMobileMenu triggerClassName="my-messages__mobile-menu-trigger" />
+		</div>
+	);
 
 	if (threadsLoading) {
 		return (
-			<section className="my-messages">
+			<section className="my-messages my-messages--loading">
+				{stateMobileMenu}
 				<div className="my-messages__skeleton" />
 				<div className="my-messages__skeleton my-messages__skeleton--large" />
 			</section>
@@ -310,6 +314,7 @@ const MyMessages = () => {
 	if (threadsError) {
 		return (
 			<section className="my-messages my-messages__state">
+				{stateMobileMenu}
 				<h2>Messages could not load</h2>
 				<p>We could not reach your inbox. Please try again.</p>
 				<Button onClick={() => refetchThreads({ input: threadInquiry })}>Retry</Button>
@@ -320,6 +325,7 @@ const MyMessages = () => {
 	if (!threads.length) {
 		return (
 			<section className="my-messages my-messages__state">
+				{stateMobileMenu}
 				<h2>No messages yet</h2>
 				<p>Start from a pharmacy detail page when you have a question for a Pharmacy Owner.</p>
 				<Link href="/pharmacies">Find pharmacies <ArrowForwardRoundedIcon /></Link>
@@ -336,28 +342,8 @@ const MyMessages = () => {
 						<strong>{filteredThreads.length} conversations</strong>
 					</div>
 					{selectedUnreadTotal > 0 && <em>{selectedUnreadTotal} New</em>}
+					<MyPageMobileMenu triggerClassName="my-messages__mobile-menu-trigger" />
 				</div>
-				<nav className="my-messages__mobile-menu" aria-label="My Page sections">
-					{mobileMenuItems.map((item) =>
-						item.href ? (
-							<Link href={item.href} key={item.href}>
-								{item.icon}
-								<span>{item.label}</span>
-							</Link>
-						) : item.category ? (
-							<Link
-								href={{ pathname: '/mypage', query: { category: item.category } }}
-								scroll={false}
-								key={item.category}
-								className={currentCategory === item.category ? 'active' : ''}
-								aria-current={currentCategory === item.category ? 'page' : undefined}
-							>
-								{item.icon}
-								<span>{item.label}</span>
-							</Link>
-						) : null,
-					)}
-				</nav>
 				<label className="my-messages__search" htmlFor="message-thread-search">
 					<SearchRoundedIcon />
 					<input

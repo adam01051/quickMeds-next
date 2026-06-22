@@ -396,6 +396,32 @@
 	}
 }
 
+@media (min-width: 768px) {
+	#pc-wrap #community-list-page {
+		.community-shell,
+		.community-feed,
+		.community-article-row,
+		.community-article-row__content,
+		.community-feed__list {
+			min-width: 0;
+		}
+
+		.community-article-row__footer,
+		.community-article-row__metrics {
+			flex-wrap: wrap;
+		}
+
+		.community-article-row__metrics {
+			min-width: 0;
+		}
+
+		.community-article-row__read {
+			flex: 0 1 auto;
+			white-space: normal;
+		}
+	}
+}
+
 @media (max-width: 1024px) {
 	#pc-wrap #community-list-page {
 		.community-shell {

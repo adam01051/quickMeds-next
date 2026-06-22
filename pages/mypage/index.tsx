@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { Stack } from '@mui/material';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import MyProperties from '../../libs/components/mypage/MyProperties';
+import MyPharmacies from '../../libs/components/mypage/MyPharmacies';
 import MyFavorites from '../../libs/components/mypage/MyFavorites';
 import RecentlyVisited from '../../libs/components/mypage/RecentlyVisited';
 import AddProperty from '../../libs/components/mypage/AddNewProperty';
@@ -180,7 +180,7 @@ const MyPage: NextPage = () => {
 					<Stack className="main-config">
 						<Stack className="list-config">
 									{category === 'addPharmacy' && <AddProperty />}
-									{category === 'myPharmacies' && <MyProperties />}
+									{category === 'myPharmacies' && <MyPharmacies />}
 									{category === 'myFavorites' && <MyFavorites />}
 									{category === 'recentlyVisited' && <RecentlyVisited />}
 									{category === 'myArticles' && <MyArticles />}
