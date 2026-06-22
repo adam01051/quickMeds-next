@@ -72,7 +72,7 @@ const PharmacyOwnerCard = ({ owner, onLike, liking }: PharmacyOwnerCardProps) =>
 					</p>
 				)}
 
-				<Link href={`/agent/detail?agentId=${owner._id}`} className="pharmacy-owner-card__action">
+				<Link href={`/member?memberId=${owner._id}&category=pharmacies`} className="pharmacy-owner-card__action">
 					View owner profile
 					<ArrowForwardRoundedIcon />
 				</Link>

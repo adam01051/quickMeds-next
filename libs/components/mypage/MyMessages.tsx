@@ -1,11 +1,11 @@
-import React, { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button } from '@mui/material';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import LocalPharmacyOutlinedIcon from '@mui/icons-material/LocalPharmacyOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
@@ -19,6 +19,8 @@ import { MessagesInquiry, MessageThreadsInquiry } from '../../types/message/mess
 import { getJwtToken } from '../../auth';
 import { REACT_APP_API_URL } from '../../config';
 import { sweetErrorHandling, sweetMixinErrorAlert } from '../../sweetAlert';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { menuGroups, normalizeCategory } from './MyMenu';
 
 const threadInquiry: MessageThreadsInquiry = {
 	page: 1,
@@ -31,12 +33,21 @@ const messageImageUrl = (image: string) => `${REACT_APP_API_URL}/${image}`;
 const memberImageUrl = (image?: string) => (image ? `${REACT_APP_API_URL}/${image}` : '/img/profile/defaultUser.svg');
 const messageDate = (date?: Date | string) =>
 	date ? new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(date)) : '';
+const NEAR_BOTTOM_THRESHOLD = 96;
 
 const MyMessages = () => {
 	const router = useRouter();
+	const device = useDeviceDetect();
+	const isMobile = device === 'mobile';
 	const user = useReactiveVar(userVar);
 	const socket = useReactiveVar(socketVar);
 	const fileRef = useRef<HTMLInputElement>(null);
+	const historyRef = useRef<HTMLDivElement>(null);
+	const bottomRef = useRef<HTMLDivElement>(null);
+	const wasNearBottomRef = useRef(true);
+	const lastMessageIdRef = useRef<string | null>(null);
+	const pendingBottomScrollRef = useRef<'auto' | 'smooth' | null>(null);
+	const preserveScrollRef = useRef<{ scrollHeight: number; scrollTop: number } | null>(null);
 	const requestedThreadId = Array.isArray(router.query.threadId) ? router.query.threadId[0] : router.query.threadId;
 	const [activeThreadId, setActiveThreadId] = useState<string | null>(requestedThreadId ?? null);
 	const [messageText, setMessageText] = useState('');
@@ -44,6 +55,7 @@ const MyMessages = () => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isSending, setIsSending] = useState(false);
 	const [threadSearch, setThreadSearch] = useState('');
+	const [showNewMessageButton, setShowNewMessageButton] = useState(false);
 
 	const {
 		data: threadsData,
@@ -60,6 +72,15 @@ const MyMessages = () => {
 	const selectedThread = useMemo(
 		() => threads.find((thread) => thread._id === activeThreadId) ?? null,
 		[activeThreadId, threads],
+	);
+	const currentCategory = normalizeCategory(router.query.category);
+	const isPharmacyOwner = user.memberType === 'AGENT';
+	const mobileMenuItems = useMemo(
+		() =>
+			menuGroups
+				.flatMap((group) => group.items)
+				.filter((item) => (!item.ownerOnly || isPharmacyOwner) && (!item.nonOwnerOnly || !isPharmacyOwner)),
+		[isPharmacyOwner],
 	);
 	const messageInquiry: MessagesInquiry | null = activeThreadId
 		? { page: 1, limit: 80, sort: 'createdAt', direction: Direction.ASC, threadId: activeThreadId }
@@ -96,13 +117,52 @@ const MyMessages = () => {
 		});
 	}, [threadSearch, threads, user?._id]);
 
-	useEffect(() => {
-		if (requestedThreadId) setActiveThreadId(requestedThreadId);
-	}, [requestedThreadId]);
+	const prefersReducedMotion = () =>
+		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const isNearHistoryBottom = () => {
+		const history = historyRef.current;
+		if (!history) return true;
+		return history.scrollHeight - history.scrollTop - history.clientHeight <= NEAR_BOTTOM_THRESHOLD;
+	};
+
+	const scrollHistoryToBottom = (behavior: ScrollBehavior = 'smooth') => {
+		const resolvedBehavior = prefersReducedMotion() ? 'auto' : behavior;
+		bottomRef.current?.scrollIntoView({ block: 'end', behavior: resolvedBehavior });
+		wasNearBottomRef.current = true;
+		setShowNewMessageButton(false);
+	};
+
+	const refreshMessagesWithIntent = async (forceBottom = false) => {
+		const shouldScrollToBottom = forceBottom || isNearHistoryBottom();
+		if (shouldScrollToBottom) pendingBottomScrollRef.current = forceBottom ? 'smooth' : 'auto';
+		else setShowNewMessageButton(true);
+		if (messageInquiry) await refetchMessages({ input: messageInquiry });
+	};
+
+	const handleHistoryScroll = () => {
+		const nearBottom = isNearHistoryBottom();
+		wasNearBottomRef.current = nearBottom;
+		if (nearBottom) setShowNewMessageButton(false);
+	};
 
 	useEffect(() => {
-		if (!activeThreadId && filteredThreads.length) setActiveThreadId(filteredThreads[0]._id);
-	}, [activeThreadId, filteredThreads]);
+		if (requestedThreadId) setActiveThreadId(requestedThreadId);
+		else if (isMobile) setActiveThreadId(null);
+	}, [isMobile, requestedThreadId]);
+
+	useEffect(() => {
+		if (!isMobile && !activeThreadId && filteredThreads.length) setActiveThreadId(filteredThreads[0]._id);
+	}, [activeThreadId, filteredThreads, isMobile]);
+
+	useEffect(() => {
+		if (!activeThreadId) return;
+		lastMessageIdRef.current = null;
+		wasNearBottomRef.current = true;
+		pendingBottomScrollRef.current = 'auto';
+		preserveScrollRef.current = null;
+		setShowNewMessageButton(false);
+	}, [activeThreadId]);
 
 	useEffect(() => {
 		if (!activeThreadId) return;
@@ -112,6 +172,28 @@ const MyMessages = () => {
 	}, [activeThreadId, markThreadRead, refetchThreads]);
 
 	useEffect(() => {
+		const history = historyRef.current;
+		if (!history) return;
+		const lastMessageId = messages[messages.length - 1]?._id ?? null;
+		const hasNewLastMessage = lastMessageId !== lastMessageIdRef.current;
+		const pendingPreserve = preserveScrollRef.current;
+		const pendingBottom = pendingBottomScrollRef.current;
+
+		if (pendingPreserve) {
+			const nextScrollTop = history.scrollHeight - pendingPreserve.scrollHeight + pendingPreserve.scrollTop;
+			history.scrollTop = Math.max(0, nextScrollTop);
+			preserveScrollRef.current = null;
+		} else if (pendingBottom || (hasNewLastMessage && wasNearBottomRef.current)) {
+			requestAnimationFrame(() => scrollHistoryToBottom(pendingBottom ?? 'auto'));
+		} else if (hasNewLastMessage) {
+			setShowNewMessageButton(true);
+		}
+
+		lastMessageIdRef.current = lastMessageId;
+		pendingBottomScrollRef.current = null;
+	}, [messages]);
+
+	useEffect(() => {
 		if (!socket) return;
 		const handleSocketMessage = (event: MessageEvent) => {
 			try {
@@ -119,7 +201,7 @@ const MyMessages = () => {
 				if (!String(data.event || '').startsWith('message:')) return;
 				refetchThreads({ input: threadInquiry }).catch(() => undefined);
 				if (data.thread?._id === activeThreadId || data.message?.threadId === activeThreadId) {
-					refetchMessages({ input: messageInquiry }).catch(() => undefined);
+					refreshMessagesWithIntent().catch(() => undefined);
 					if (activeThreadId) markThreadRead({ variables: { threadId: activeThreadId } }).catch(() => undefined);
 				}
 			} catch {
@@ -129,11 +211,16 @@ const MyMessages = () => {
 
 		socket.addEventListener('message', handleSocketMessage);
 		return () => socket.removeEventListener('message', handleSocketMessage);
-	}, [activeThreadId, markThreadRead, messageInquiry, refetchMessages, refetchThreads, socket]);
+	}, [activeThreadId, markThreadRead, messageInquiry, refetchThreads, socket]);
 
 	const selectThread = (threadId: string) => {
 		setActiveThreadId(threadId);
 		router.push({ pathname: '/mypage', query: { category: 'messages', threadId } }, undefined, { scroll: false });
+	};
+
+	const closeMobileThread = () => {
+		setActiveThreadId(null);
+		router.push({ pathname: '/mypage', query: { category: 'messages' } }, undefined, { scroll: false });
 	};
 
 	const uploadMessageImages = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -166,11 +253,11 @@ const MyMessages = () => {
 		}
 	};
 
-	const submitMessage = async (event: FormEvent) => {
-		event.preventDefault();
+	const sendCurrentMessage = async () => {
 		try {
 			if (!activeThreadId) return;
 			if (!messageText.trim() && !messageImages.length) throw new Error('Write a message or attach an image first.');
+			if (isSending) return;
 			setIsSending(true);
 			await sendMessage({
 				variables: {
@@ -183,13 +270,25 @@ const MyMessages = () => {
 			});
 			setMessageText('');
 			setMessageImages([]);
-			await refetchMessages({ input: messageInquiry });
+			await refreshMessagesWithIntent(true);
 			await refetchThreads({ input: threadInquiry });
 		} catch (error) {
 			await sweetErrorHandling(error);
 		} finally {
 			setIsSending(false);
 		}
+	};
+
+	const submitMessage = async (event: FormEvent) => {
+		event.preventDefault();
+		await sendCurrentMessage();
+	};
+
+	const handleComposerKeyDown = async (event: KeyboardEvent<HTMLTextAreaElement>) => {
+		if (isMobile || event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
+		if (isSending || isUploading || (!messageText.trim() && !messageImages.length)) return;
+		event.preventDefault();
+		await sendCurrentMessage();
 	};
 
 	const otherParticipant = (thread: MessageThread) => {
@@ -229,8 +328,8 @@ const MyMessages = () => {
 	}
 
 	return (
-		<section className="my-messages">
-			<aside className="my-messages__threads" aria-label="Message conversations">
+		<section className={`my-messages ${activeThreadId ? 'my-messages--chat-open' : ''}`}>
+			<aside className="my-messages__threads" aria-label="Message conversations" data-testid="messages-conversation-list">
 				<div className="my-messages__thread-header">
 					<div>
 						<span>Messages</span>
@@ -238,6 +337,27 @@ const MyMessages = () => {
 					</div>
 					{selectedUnreadTotal > 0 && <em>{selectedUnreadTotal} New</em>}
 				</div>
+				<nav className="my-messages__mobile-menu" aria-label="My Page sections">
+					{mobileMenuItems.map((item) =>
+						item.href ? (
+							<Link href={item.href} key={item.href}>
+								{item.icon}
+								<span>{item.label}</span>
+							</Link>
+						) : item.category ? (
+							<Link
+								href={{ pathname: '/mypage', query: { category: item.category } }}
+								scroll={false}
+								key={item.category}
+								className={currentCategory === item.category ? 'active' : ''}
+								aria-current={currentCategory === item.category ? 'page' : undefined}
+							>
+								{item.icon}
+								<span>{item.label}</span>
+							</Link>
+						) : null,
+					)}
+				</nav>
 				<label className="my-messages__search" htmlFor="message-thread-search">
 					<SearchRoundedIcon />
 					<input
@@ -255,6 +375,7 @@ const MyMessages = () => {
 						key={thread._id}
 						className={thread._id === activeThreadId ? 'active' : ''}
 						onClick={() => selectThread(thread._id)}
+						data-testid={`messages-conversation-row-${thread._id}`}
 					>
 						<img src={memberImageUrl(user?._id === thread.ownerId ? thread.customerData?.memberImage : thread.ownerData?.memberImage)} alt="" />
 						<span>
@@ -262,24 +383,56 @@ const MyMessages = () => {
 							<em>{thread.pharmacyData?.pharmacyName ?? 'Pharmacy conversation'}</em>
 							<small>{thread.lastMessageText || 'Image message'}</small>
 						</span>
-						{thread.myUnreadCount > 0 && <b>{thread.myUnreadCount}</b>}
+						<div className="my-messages__thread-meta">
+							{thread.lastMessageAt && <time>{messageDate(thread.lastMessageAt)}</time>}
+							{thread.myUnreadCount > 0 && <b>{thread.myUnreadCount}</b>}
+						</div>
 					</button>
 				))}
 				{!filteredThreads.length && <p className="my-messages__no-thread">No conversations match this search.</p>}
 				</div>
 			</aside>
 
-			<div className="my-messages__conversation">
+			<div className="my-messages__conversation" data-testid={isMobile ? 'mobile-chat-overlay' : undefined} aria-hidden={isMobile && !activeThreadId}>
 				<header>
 					<div>
-						<div className="my-messages__member-avatar">
-							<img src={memberImageUrl(otherMember?.memberImage)} alt="" />
-						</div>
-						<div>
-							<span>{selectedThread?.pharmacyData?.pharmacyName ?? 'Pharmacy conversation'}</span>
-							<h2>{otherMember?.memberFullName ?? otherMember?.memberNick ?? 'Conversation'}</h2>
-							<p>Active conversation about {selectedThread?.pharmacyData?.pharmacyName ?? 'this pharmacy'}</p>
-						</div>
+						<button
+							type="button"
+							className="my-messages__back"
+							onClick={closeMobileThread}
+							aria-label="Back to conversations"
+							data-testid="mobile-chat-back-button"
+						>
+							<ArrowBackRoundedIcon />
+						</button>
+						{selectedThread?.pharmacyId ? (
+							<Link
+								href={`/pharmacies/detail?id=${selectedThread.pharmacyId}`}
+								className="my-messages__conversation-identity"
+								aria-label={`View ${selectedThread.pharmacyData?.pharmacyName ?? 'pharmacy'}`}
+								data-testid="view-pharmacy-action"
+							>
+								<div className="my-messages__member-avatar">
+									<img src={memberImageUrl(otherMember?.memberImage)} alt="" />
+								</div>
+								<div>
+									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? 'QuickMeds member'}</span>
+									<h2>{selectedThread.pharmacyData?.pharmacyName ?? 'Pharmacy conversation'}</h2>
+									<p>Open pharmacy details</p>
+								</div>
+							</Link>
+						) : (
+							<div className="my-messages__conversation-identity">
+								<div className="my-messages__member-avatar">
+									<img src={memberImageUrl(otherMember?.memberImage)} alt="" />
+								</div>
+								<div>
+									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? 'QuickMeds member'}</span>
+									<h2>{selectedThread?.pharmacyData?.pharmacyName ?? 'Conversation'}</h2>
+									<p>Pharmacy conversation</p>
+								</div>
+							</div>
+						)}
 					</div>
 					<div className="my-messages__conversation-actions">
 						{otherMember?.memberPhone && (
@@ -287,15 +440,16 @@ const MyMessages = () => {
 								<PhoneOutlinedIcon />
 							</a>
 						)}
-						{selectedThread?.pharmacyId && (
-							<Link href={`/pharmacies/detail?id=${selectedThread.pharmacyId}`}>
-								<LocalPharmacyOutlinedIcon /> View pharmacy
-							</Link>
-						)}
 					</div>
 				</header>
 
-				<div className="my-messages__history" aria-live="polite">
+				<div
+					className="my-messages__history"
+					aria-live="polite"
+					data-testid="message-history"
+					ref={historyRef}
+					onScroll={handleHistoryScroll}
+				>
 					{!!messages.length && <div className="my-messages__day-divider">Conversation history</div>}
 					{messagesLoading && <p className="my-messages__hint">Loading conversation…</p>}
 					{messagesError && <p className="my-messages__hint">Messages could not load. Please try again.</p>}
@@ -321,18 +475,41 @@ const MyMessages = () => {
 							</article>
 						);
 					})}
+					{showNewMessageButton && (
+						<button
+							type="button"
+							className="my-messages__scroll-bottom"
+							data-testid="scroll-to-latest-messages"
+							onClick={() => scrollHistoryToBottom('smooth')}
+						>
+							New messages
+						</button>
+					)}
+					<div ref={bottomRef} className="my-messages__bottom-sentinel" aria-hidden="true" />
 				</div>
 
-				<form className="my-messages__composer" onSubmit={submitMessage}>
+				<form className="my-messages__composer" onSubmit={submitMessage} data-testid="message-composer">
 					<label htmlFor="message-composer">Message</label>
-					<textarea
-						id="message-composer"
-						value={messageText}
-						placeholder="Ask about availability, delivery, or pharmacy services."
-						onChange={(event) => setMessageText(event.target.value)}
-						disabled={isSending}
-						maxLength={1200}
-					/>
+					<div className="my-messages__composer-row">
+						<textarea
+							id="message-composer"
+							value={messageText}
+							placeholder="Ask about availability, delivery, or pharmacy services."
+							onChange={(event) => setMessageText(event.target.value)}
+							onKeyDown={handleComposerKeyDown}
+							disabled={isSending}
+							maxLength={1200}
+						/>
+						<div className="my-messages__composer-actions">
+							<input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadMessageImages} />
+							<Button type="button" onClick={() => fileRef.current?.click()} disabled={isUploading || isSending}>
+								<AttachFileRoundedIcon /> {isUploading ? 'Uploading…' : 'Attach'}
+							</Button>
+							<Button type="submit" disabled={isSending || (!messageText.trim() && !messageImages.length)} data-testid="message-send-button">
+								{isSending ? 'Sending…' : 'Send'} <SendRoundedIcon />
+							</Button>
+						</div>
+					</div>
 					{!!messageImages.length && (
 						<div className="my-messages__preview">
 							{messageImages.map((image) => (
@@ -343,15 +520,6 @@ const MyMessages = () => {
 							))}
 						</div>
 					)}
-					<div className="my-messages__composer-actions">
-						<input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadMessageImages} />
-						<Button type="button" onClick={() => fileRef.current?.click()} disabled={isUploading || isSending}>
-							<AttachFileRoundedIcon /> {isUploading ? 'Uploading…' : 'Images'}
-						</Button>
-						<Button type="submit" disabled={isSending || (!messageText.trim() && !messageImages.length)}>
-							{isSending ? 'Sending…' : 'Send'} <SendRoundedIcon />
-						</Button>
-					</div>
 				</form>
 			</div>
 		</section>

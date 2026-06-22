@@ -25,7 +25,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert } from '../../sweetAlert';
 
-type MenuCategory =
+export type MenuCategory =
 	| 'myProfile'
 	| 'myFavorites'
 	| 'recentlyVisited'
@@ -37,7 +37,7 @@ type MenuCategory =
 	| 'addPharmacy'
 	| 'myPharmacies';
 
-interface MenuItem {
+export interface MenuItem {
 	category?: MenuCategory;
 	href?: string;
 	label: string;
@@ -46,7 +46,7 @@ interface MenuItem {
 	nonOwnerOnly?: boolean;
 }
 
-const menuGroups: Array<{ label: string; items: MenuItem[] }> = [
+export const menuGroups: Array<{ label: string; items: MenuItem[] }> = [
 	{
 		label: 'Account',
 		items: [
@@ -86,7 +86,7 @@ const menuGroups: Array<{ label: string; items: MenuItem[] }> = [
 	},
 ];
 
-const normalizeCategory = (value: string | string[] | undefined): MenuCategory => {
+export const normalizeCategory = (value: string | string[] | undefined): MenuCategory => {
 	const category = Array.isArray(value) ? value[0] : value;
 
 	if (category === 'addProperty') return 'addPharmacy';

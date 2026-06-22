@@ -53,8 +53,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
 3. Complete authenticated browser QA for redesigned `/agent/detail`, including pharmacy likes, pharmacy detail links, comment submission, and signed-out/self-comment blocking.
 4. Continue authenticated browser smoke checks for the shared mobile top navbar, catalog, Community, and account states.
-5. Replace Korean footer regions/phone content later; preserve it until that phase.
-6. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
+5. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
 
 ## Pharmacy Owner Directory Follow-up
 
@@ -100,7 +99,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Smoke test an authenticated customer sending a text message, image message, and text-plus-image message from `/pharmacies/detail`.
 3. Smoke test a Pharmacy Owner receiving the thread in `/mypage?category=messages`, unread badge updates, mark-read behavior, and a reply.
 4. Verify WebSocket updates reach only the sender and receiver.
-5. Design the dedicated mobile Messages flow as thread-list first, then conversation detail with a clear back path.
+5. Complete authenticated browser QA for the fixed Messages scroll behavior and mobile overlay navigation: near-bottom auto-scroll, reading-old-messages no-force-scroll, `New messages` button, independent desktop thread/history scrolling, mobile section shortcuts, clickable pharmacy header identity, desktop Enter-to-send, 320px/375px/iPhone 14 Pro Max/tablet/desktop responsive states, and mobile keyboard/safe-area behavior.
 6. Add focused backend service tests for message authorization, thread reuse, unread counters, image-path validation, and self-message rejection.
 7. Keep delete/archive, blocking, typing indicators, chatbot integration, moderation, and non-image attachments deferred.
 

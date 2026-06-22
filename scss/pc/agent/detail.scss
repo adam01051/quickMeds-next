@@ -571,6 +571,238 @@
 			}
 		}
 	}
+
+	.member-profile {
+		&__hero {
+			.pharmacy-owner-detail__stats {
+				grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+			}
+		}
+
+		&__actions {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 10px;
+			margin-top: 14px;
+		}
+
+		&__like {
+			width: 42px !important;
+			height: 42px !important;
+			border: 1px solid #d9e4df !important;
+			background: #fff !important;
+			color: var(--owner-emerald) !important;
+		}
+
+		&__follow {
+			min-height: 42px !important;
+			padding: 9px 18px !important;
+			border-radius: 8px !important;
+			background: var(--owner-emerald) !important;
+			color: #fff !important;
+			font: 750 13px $font !important;
+			text-transform: none !important;
+
+			&--secondary {
+				border: 1px solid #cbd7d1 !important;
+				background: #fff !important;
+				color: var(--owner-emerald) !important;
+			}
+		}
+
+		&__tabs {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+			gap: 10px;
+			margin-top: 18px;
+
+			button {
+				min-height: 58px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 12px 14px;
+				border: 1px solid var(--owner-border);
+				border-radius: 10px;
+				background: #fff;
+				color: var(--owner-muted);
+				font: 750 13px $font;
+				cursor: pointer;
+				transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+
+				svg {
+					width: 19px;
+					height: 19px;
+					color: var(--owner-emerald);
+				}
+
+				span {
+					min-width: 0;
+					flex: 1 1 auto;
+					text-align: left;
+				}
+
+				strong {
+					color: var(--owner-ink);
+					font-size: 14px;
+				}
+
+				&:hover,
+				&:focus-visible {
+					border-color: var(--owner-emerald);
+					outline: none;
+				}
+
+				&.is-active {
+					background: var(--owner-emerald);
+					color: #fff;
+
+					svg,
+					strong {
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
+
+	.member-profile-list {
+		display: grid;
+		gap: 12px;
+	}
+
+	.member-profile-follow-card {
+		display: grid;
+		grid-template-columns: minmax(220px, 1fr) minmax(260px, 0.8fr) auto;
+		gap: 14px;
+		align-items: center;
+		padding: 14px;
+		border: 1px solid #d9e4df;
+		border-radius: 12px;
+		background: #fbfdfc;
+
+		&__identity {
+			min-width: 0;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			text-align: left;
+			cursor: pointer;
+
+			img {
+				width: 52px;
+				height: 52px;
+				border-radius: 50%;
+				object-fit: cover;
+				background: #edf7f2;
+			}
+
+			span {
+				min-width: 0;
+			}
+
+			strong {
+				display: block;
+				overflow: hidden;
+				color: var(--owner-ink);
+				font-size: 15px;
+				font-weight: 800;
+				text-overflow: ellipsis;
+			}
+
+			small {
+				display: block;
+				margin-top: 4px;
+				color: var(--owner-muted);
+				font-size: 12px;
+				font-weight: 700;
+			}
+		}
+
+		&__stats {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px 14px;
+			color: var(--owner-muted);
+			font-size: 12px;
+			font-weight: 700;
+
+			button {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+				padding: 0;
+				border: 0;
+				background: transparent;
+				color: var(--owner-emerald);
+				font: 800 12px $font;
+				cursor: pointer;
+
+				svg {
+					width: 17px;
+					height: 17px;
+				}
+			}
+		}
+
+		&__actions {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 10px;
+
+			span {
+				color: var(--owner-muted);
+				font-size: 12px;
+				font-weight: 750;
+			}
+
+			button {
+				min-height: 38px;
+				padding: 8px 14px;
+				border: 1px solid var(--owner-emerald);
+				border-radius: 8px;
+				background: var(--owner-emerald);
+				color: #fff;
+				font: 750 12px $font;
+				text-transform: none;
+
+				&:first-of-type:not(:last-child),
+				&:only-child {
+					background: var(--owner-emerald);
+					color: #fff;
+				}
+			}
+		}
+	}
+
+	.member-profile-articles {
+		display: grid;
+		gap: 14px;
+
+		.community-article-row {
+			border-color: #d9e4df;
+			background: #fbfdfc;
+		}
+	}
+
+	.member-profile-list-skeleton {
+		display: grid;
+		gap: 12px;
+
+		div {
+			min-height: 82px;
+			border-radius: 12px;
+			background: linear-gradient(90deg, #eef4f1 0%, #f8fbf9 45%, #eef4f1 100%);
+			background-size: 200% 100%;
+			animation: owner-detail-pulse 1.4s ease-in-out infinite;
+		}
+	}
 }
 
 @media (max-width: 1024px) {
@@ -671,6 +903,27 @@
 
 			&__submit {
 				width: 100%;
+			}
+		}
+
+		.member-profile {
+			&__tabs {
+				display: flex;
+				overflow-x: auto;
+				padding-bottom: 3px;
+
+				button {
+					min-width: 148px;
+				}
+			}
+		}
+
+		.member-profile-follow-card {
+			grid-template-columns: 1fr;
+			align-items: stretch;
+
+			&__actions {
+				justify-content: flex-start;
 			}
 		}
 

@@ -166,7 +166,7 @@ const MyPage: NextPage = () => {
 	};
 
 	return (
-		<div id="my-page">
+		<div id="my-page" className={category === 'messages' ? 'my-page--messages' : undefined}>
 			<div className="my-page-shell">
 				<MyMenu />
 				<main className={`my-page-workspace ${category === 'messages' ? 'my-page-workspace--messages' : ''}`} id="my-page-content">

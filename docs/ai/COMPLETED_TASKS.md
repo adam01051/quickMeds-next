@@ -682,3 +682,84 @@ Validation limitations:
 
 - Local HTTP route probes could not connect to the existing port `3000` listener, and backend `3007` was unreachable from this shell during validation.
 - Authenticated owner-detail interaction QA remains pending for pharmacy likes, detail links, and comment submission.
+
+## Messages Fixed Chat Layout And Scroll Behavior
+
+- Refined `MyMessages` so the Messages workspace uses a bounded full-height chat structure instead of allowing the whole page to grow with message history.
+- The desktop inbox now has independent scroll ownership: the conversation list scrolls inside the left column, and the active conversation history scrolls inside the chat column.
+- The active chat header and composer remain non-scrolling flex children while message history is the only vertical scroll area inside the conversation.
+- Added near-bottom tracking so sent or received messages auto-scroll only when the user is already near the latest message.
+- Added a `New messages` scroll-to-bottom control for messages received while the user is reading older content.
+- Added message scroll/composer/send/new-message `data-testid` hooks.
+- Preserved existing GraphQL queries and mutations, image upload flow, socket event handling, unread marking, pharmacy links, and message ordering.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `/mypage?category=messages` returned HTTP 200 from the local Next.js server when probed with localhost access.
+- Source scan confirmed the required Messages `data-testid` hooks and scroll-layout CSS hooks are present.
+
+Validation limitations:
+
+- Authenticated inbox interaction QA remains pending for live send/receive, scroll-position preservation while reading older messages, the new-message indicator click path, and 390px/430px keyboard behavior because this pass did not use a signed-in browser session.
+
+## Shared Public Footer Standardization
+
+- Replaced the split desktop/mobile `Footer` rendering with one shared professional QuickMeds footer used by public layouts.
+- Updated the footer copy, contact formatting, navigation columns, region links, social icon treatment, copyright line, and responsive spacing to remove the legacy real-estate-era labels.
+- Removed the homepage-only mobile footer component from `LayoutHome`, so desktop and mobile homepage rendering now use the same shared footer component as other public pages.
+- Added unified desktop and mobile footer styles with an emerald surface, accessible link/focus states, responsive columns, and safe-area-aware mobile bottom padding.
+- Kept `/mypage` footer omission unchanged because that route intentionally uses the account workspace layout.
+
+Validation completed:
+
+- Source scan confirmed stale footer labels and the old `.home-mobile-footer` selector are no longer present in `libs` or `scss`.
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Manual browser visual QA across every public route remains pending for authenticated and localized states.
+
+## Mobile Messages Telegram-Style Navigation
+
+- Redesigned mobile `/mypage?category=messages` navigation so the initial phone view shows only the conversation list.
+- Added state-driven mobile chat opening: selecting a row pushes `threadId`, opens a full Messages-area overlay, and browser/back-button navigation returns to the list by removing the selected thread.
+- Added a dedicated mobile chat header with back button, avatar, participant name, pharmacy context, compact call action, and compact View pharmacy action.
+- Kept the existing shared GraphQL queries, mutations, image upload, socket refresh, unread marking, message ordering, and desktop chat layout.
+- Hid the My Page sidebar only for mobile Messages, leaving other My Page sections and desktop Messages unchanged.
+- Added mobile-specific layout rules below 767px: conversation list owns the list scroll, the chat overlay slides in from the right and covers the list completely, and only message history scrolls inside the active chat.
+- Added the requested test hooks for conversation list rows, mobile overlay, mobile back button, message history, composer, send button, scroll-to-latest button, and View pharmacy action.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+- `/mypage?category=messages` returned HTTP 200 from the local Next.js server when probed with localhost access.
+- Source scan confirmed the mobile overlay, slide transforms, breakpoint scoping, page-level messages class, and requested test hooks are present.
+
+Validation limitations:
+
+- Authenticated browser interaction QA remains pending for 320px, 375px, iPhone 14 Pro Max, tablet, and desktop because this shell did not have an authenticated inbox session or browser automation package available.
+
+## Messages Navigation And Composer Follow-up
+
+- Added a compact mobile My Page section switcher to the Messages list screen using the same menu metadata as the main My Page sidebar.
+- Removed the extra right-side View pharmacy button from the active chat header.
+- Made the chat header identity area clickable when a pharmacy is available, so the avatar/name area opens `/pharmacies/detail?id=...` and carries the existing `view-pharmacy-action` test hook.
+- Reworked the desktop composer so the textarea comes first and the Attach/Send controls sit directly after the input area.
+- Added desktop Enter-to-send behavior while preserving Shift+Enter line breaks and mobile multiline keyboard behavior.
+- Preserved all existing message queries, mutations, image upload, sockets, unread marking, thread routing, and scroll-to-latest behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated browser QA remains pending for the mobile section switcher, clickable chat identity, desktop Enter-to-send, and attachment/send controls.

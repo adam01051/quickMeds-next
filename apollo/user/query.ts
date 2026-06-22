@@ -74,6 +74,11 @@ query GetMember($input: String!) {
 					followerId
 					myFollowing
 				}
+        meLiked {
+          memberId
+          likeRefId
+          myFavorite
+        }
     }
 }
 `);

@@ -206,6 +206,14 @@ Deferred compatibility work:
 - Replaced the disabled pharmacy-detail contact card with a real logged-in customer message form using text and image attachments.
 - Preserved current global raw chat behavior while changing it to `addEventListener` so it no longer overrides other WebSocket consumers.
 - Preserved existing Apollo setup, routes, authentication, pharmacy detail behavior, global chat, footer, and unrelated panels.
+- Messages now uses a fixed-height chat workspace: the thread list owns left-column scrolling, message history owns active-conversation scrolling, and the conversation header/composer remain fixed within the chat column.
+- New-message scroll behavior now respects user intent: the history auto-scrolls only when the user is near the bottom, otherwise a `New messages` control appears and scrolls to the latest message on demand.
+- The fixed chat layout uses viewport-height and safe-area-aware mobile styles while preserving existing message APIs, uploads, socket refreshes, unread marking, and pharmacy links.
+- Mobile Messages now follows a Telegram-style navigation structure below 767px: the list view is the initial screen, selecting a conversation opens a full-width chat overlay sliding in from the right, and the My Page sidebar is hidden for this mobile Messages flow only.
+- The mobile chat overlay keeps the QuickMeds visual system, fixed header, scroll-owned message history, safe-area-aware composer, compact back/call/View pharmacy actions, and route-backed `threadId` state so browser back can return to the list.
+- The mobile list view now exposes compact My Page section shortcuts from the shared menu metadata, so users can leave Messages without reopening the hidden sidebar.
+- The active chat pharmacy detail affordance now lives on the clickable header identity area instead of a separate right-side View pharmacy button.
+- Desktop composer controls now sit after the textarea, and desktop Enter submits while Shift+Enter continues to add a new line; mobile keeps normal multiline keyboard behavior.
 
 ## Homepage Interactive Trending Migration
 
@@ -241,8 +249,16 @@ Deferred compatibility work:
 
 - The homepage mobile branch now uses the same vertical pharmacy-card presentation for `Featured pharmacies` and `Trending pharmacies`; the desktop trending shared-layout interaction remains unchanged.
 - Mobile homepage sections use restrained Framer Motion reveal/tap motion with reduced-motion fallbacks.
-- The mobile homepage footer is now a compact homepage-only footer with QuickMeds brand, supported links, language text, and bottom-tab-safe spacing; shared desktop and non-home mobile footers remain unchanged.
+- The mobile homepage footer later moved back onto the shared public footer component so public pages use one consistent footer system across desktop and mobile.
 - `Community health reading` is visible again on the mobile homepage as compact article cards using the existing Community article query and real detail links.
+
+## Shared Public Footer Migration
+
+- Public layouts now use a single shared `Footer` component for desktop and mobile instead of branching into separate footer markup.
+- `LayoutHome` no longer renders a homepage-only mobile footer; the homepage uses the same shared footer as other public pages.
+- The shared footer uses pharmacy-specific QuickMeds copy, structured Discover/Quick links/Regions navigation, normalized customer-care formatting, and a professional dark emerald visual treatment.
+- Footer styles are centralized around the shared `.footer-container` structure in the main desktop/mobile stylesheets, with responsive columns and safe-area-aware mobile padding.
+- `/mypage` remains excluded from the shared footer because it is an account workspace, not a public marketing/content route.
 
 ## Mobile Pharmacy Directory Migration
 
