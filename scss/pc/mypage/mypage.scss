@@ -537,6 +537,11 @@
 				height: 20px;
 			}
 
+			.my-page-menu__external {
+				margin-left: auto;
+				color: var(--mypage-emerald);
+			}
+
 			&:focus-visible {
 				outline: 3px solid rgba(6, 78, 59, 0.24);
 				outline-offset: 2px;
@@ -658,29 +663,44 @@
 
 			&__identity {
 				padding: 0 0 16px;
+				gap: 10px;
+				border-bottom: 0;
+
+				> img {
+					width: 40px;
+					height: 40px;
+				}
+
+				> div {
+					flex: 1;
+					min-width: 0;
+				}
 			}
 
 			&__mobile-trigger {
-				width: 100%;
-				min-height: 46px;
-				margin-top: 14px;
-				padding: 0 13px;
+				width: auto;
+				min-width: 116px;
+				max-width: 48%;
+				min-height: 42px;
+				margin-left: auto;
+				padding: 0 11px;
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
-				gap: 10px;
+				justify-content: center;
+				gap: 8px;
 				border: 1px solid var(--mypage-border);
-				border-radius: 8px;
+				border-radius: 999px;
 				background: #fff;
 				color: var(--mypage-ink);
 				font-family: $font;
-				font-size: 14px;
-				font-weight: 700;
+				font-size: 12px;
+				font-weight: 800;
 				text-align: left;
+				box-shadow: 0 8px 18px rgba(16, 41, 35, 0.06);
 
 				svg {
-					width: 19px;
-					height: 19px;
+					width: 17px;
+					height: 17px;
 					flex: 0 0 auto;
 					color: var(--mypage-emerald);
 				}
@@ -691,6 +711,11 @@
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+				}
+
+				&:active {
+					background: rgba(204, 235, 221, 0.55);
+					transform: scale(0.98);
 				}
 
 				&:focus-visible {
@@ -759,7 +784,7 @@
 						font-weight: 650;
 						letter-spacing: 0;
 
-						> svg:not(.my-page-menu__check) {
+						> svg:not(.my-page-menu__check):not(.my-page-menu__external) {
 							display: block;
 							width: 19px;
 							height: 19px;
@@ -775,13 +800,21 @@
 							color: var(--mypage-emerald);
 						}
 
+						.my-page-menu__external {
+							width: 18px;
+							height: 18px;
+							margin-left: auto;
+							order: 3;
+							color: var(--mypage-emerald);
+						}
+
 						&.active {
 							background: var(--mypage-mint);
 							border-color: #a9d9c4;
 							color: var(--mypage-emerald);
 							font-weight: 800;
 
-							> svg:not(.my-page-menu__check) {
+							> svg:not(.my-page-menu__check):not(.my-page-menu__external) {
 								color: var(--mypage-emerald);
 							}
 

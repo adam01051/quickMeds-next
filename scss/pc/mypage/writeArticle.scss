@@ -1,4 +1,5 @@
-#pc-wrap {
+#pc-wrap,
+#mobile-wrap {
 	#write-article-page {
 		width: 100%;
 		height: auto;
@@ -76,6 +77,108 @@
 		}
 		.toastui-editor-defaultUI button {
 			padding: 4px;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	#pc-wrap,
+	#mobile-wrap {
+		#write-article-page {
+			width: 100%;
+			max-width: 100%;
+			overflow-x: hidden;
+
+			.community-editor-form {
+				width: 100%;
+				min-width: 0;
+				padding: 14px;
+				border: 1px solid var(--mypage-border, #cbd7d1);
+				border-radius: 12px;
+				background: #fff;
+				box-shadow: 0 8px 20px rgba(16, 41, 35, 0.05);
+			}
+
+			.community-editor-fields {
+				width: 100%;
+				margin: 0 0 14px !important;
+				flex-direction: column !important;
+				gap: 12px;
+			}
+
+			.community-editor-field,
+			.form_row {
+				width: 100% !important;
+				min-width: 0;
+			}
+
+			.community-editor-label {
+				margin: 0 0 7px !important;
+				color: var(--mypage-muted, #52615b) !important;
+				font-family: $font;
+				font-size: 12px !important;
+				font-weight: 800 !important;
+				letter-spacing: 0.02em;
+			}
+
+			.community-editor-title-input,
+			.community-editor-title-input .MuiInputBase-root,
+			.MuiFormControl-root,
+			.MuiTextField-root {
+				width: 100% !important;
+				min-width: 0;
+			}
+
+			.MuiInputBase-root {
+				min-height: 44px;
+				border-radius: 9px;
+				background: #fff;
+			}
+
+			.toastui-editor-defaultUI {
+				width: 100%;
+				min-width: 0;
+				overflow: hidden;
+				border-color: var(--mypage-border, #cbd7d1);
+				border-radius: 12px;
+				font-family: $font;
+			}
+
+			.toastui-editor-toolbar {
+				overflow-x: auto;
+				overflow-y: hidden;
+			}
+
+			.toastui-editor-defaultUI-toolbar {
+				min-width: max-content;
+			}
+
+			.toastui-editor-main,
+			.toastui-editor-md-container,
+			.toastui-editor-ww-container {
+				min-width: 0;
+			}
+
+			.toastui-editor-contents {
+				font-size: 14px;
+				line-height: 1.6;
+			}
+
+			.community-editor-actions {
+				width: 100%;
+				margin-top: 14px;
+			}
+
+			.community-editor-submit {
+				width: 100% !important;
+				min-height: 46px;
+				margin: 0 !important;
+				border-radius: 9px;
+				background: var(--mypage-emerald, #08634f);
+				font-size: 14px;
+				font-weight: 800;
+				text-transform: none;
+			}
 		}
 	}
 }

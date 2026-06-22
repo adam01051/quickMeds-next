@@ -51,7 +51,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. Redesign the catalog filter shell while preserving the current `PharmaciesInquiry` behavior.
 2. Migrate Favorites and Recently Visited from the shared legacy `PropertyCard` to an approved pharmacy card presentation.
-3. Redesign Pharmacy Owner detail at `/agent/detail`; the public directory is complete and compatibility internals remain intentionally unchanged.
+3. Complete authenticated browser QA for redesigned `/agent/detail`, including pharmacy likes, pharmacy detail links, comment submission, and signed-out/self-comment blocking.
 4. Continue authenticated browser smoke checks for the shared mobile top navbar, catalog, Community, and account states.
 5. Replace Korean footer regions/phone content later; preserve it until that phase.
 6. Keep verified-only filtering and current-location distance search deferred until backend contracts are approved.
@@ -61,7 +61,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 1. Complete an authenticated browser smoke test for like and unlike behavior while a search or non-default sort is active.
 2. Verify pagination interaction after the owner dataset exceeds the current nine-owner page limit.
 3. Investigate why local headless Chromium remains on the Apollo loading skeleton even though direct live GraphQL requests succeed.
-4. Redesign `/agent/detail` as its own approved micro-phase.
+4. Complete 390px/430px mobile visual QA for `/agent/detail` and verify no horizontal overflow.
 5. Correct the shared global mobile-navbar clipping during the separate mobile-navigation phase.
 
 ## Account Access Follow-up
@@ -117,5 +117,5 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 ## My Page Mobile Follow-up
 
-1. Complete authenticated 390px and 430px visual QA for the new left-side My Page mobile menu.
-2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, and logout from a signed-in browser session.
+1. Complete authenticated 390px and 430px visual QA for the user-row My Page trigger, left-side My Page mobile menu, real mobile My Profile form, Followers, Followings, My Articles, and Write Article.
+2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, profile image upload, profile update, own-Followings unfollow, Followers follow-back/unfollow, member likes, article likes, article detail navigation, write-article submission, external owner-link arrows, and logout from a signed-in browser session.

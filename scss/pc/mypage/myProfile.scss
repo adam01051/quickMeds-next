@@ -1,4 +1,5 @@
-#pc-wrap {
+#pc-wrap,
+#mobile-wrap {
 	#my-page {
 		#my-profile-page {
 			width: 100%;
@@ -36,16 +37,15 @@
 			.top-box {
 				width: 100%;
 				padding: 30px;
-				margin-top: 35px;
 				gap: 25px;
 				border-radius: 12px;
-				border: 1px solid #c4c4c4;
+				border: 1px solid var(--mypage-border, #c4c4c4);
 				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+				box-shadow: 0 8px 22px rgba(22, 63, 51, 0.05);
 				.photo-box {
 					gap: 23px;
 					.title {
-						color: #181a20;
+						color: var(--mypage-ink, #181a20);
 						font-family: $font;
 						font-size: 17px;
 						font-style: normal;
@@ -89,23 +89,32 @@
 							.labeler {
 								display: flex;
 								width: 210.023px;
-								height: 40.135px;
+								min-height: 42px;
 								justify-content: center;
 								align-items: center;
 								cursor: pointer;
 								border-radius: 12px;
-								border: 1px solid #181a20;
+								border: 1px solid var(--mypage-emerald, #181a20);
+								background: #fff;
+								transition:
+									background-color 160ms ease,
+									border-color 160ms ease,
+									color 160ms ease;
 								p {
-									color: #181a20;
+									color: var(--mypage-emerald, #181a20);
 									font-family: $font;
 									font-size: 13px;
 									font-style: normal;
 									font-weight: 600;
 									line-height: normal;
 								}
+
+								&:hover {
+									background: rgba(204, 235, 221, 0.35);
+								}
 							}
 							.upload-text {
-								color: #181a20;
+								color: var(--mypage-muted, #181a20);
 								font-family: $font;
 								font-size: 12px;
 								font-style: normal;
@@ -125,7 +134,7 @@
 						width: 48%;
 						gap: 10px;
 						.title {
-							color: #181a20;
+							color: var(--mypage-ink, #181a20);
 							font-family: $font;
 							font-size: 12px;
 							font-style: normal;
@@ -137,8 +146,13 @@
 							outline: none;
 							padding: 0px 15px;
 							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
+							border: 1px solid #d8e2dd;
+							color: var(--mypage-ink, #181a20);
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 500;
+
+							&::placeholder {
 								color: #717171;
 								font-family: $font;
 								font-size: 12px;
@@ -146,13 +160,18 @@
 								font-weight: 400;
 								line-height: 26px;
 							}
+
+							&:focus {
+								border-color: var(--mypage-emerald, #064e3b);
+								box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.13);
+							}
 						}
 					}
 				}
 				.address-box {
 					gap: 10px;
 					.title {
-						color: #181a20;
+						color: var(--mypage-ink, #181a20);
 						font-family: $font;
 						font-size: 12px;
 						font-style: normal;
@@ -164,8 +183,13 @@
 						outline: none;
 						padding: 0px 15px;
 						border-radius: 8px;
-						border: 1px solid #ddd;
-						::placeholder {
+						border: 1px solid #d8e2dd;
+						color: var(--mypage-ink, #181a20);
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 500;
+
+						&::placeholder {
 							color: #717171;
 							font-family: $font;
 							font-size: 12px;
@@ -173,12 +197,17 @@
 							font-weight: 400;
 							line-height: 26px;
 						}
+
+						&:focus {
+							border-color: var(--mypage-emerald, #064e3b);
+							box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.13);
+						}
 					}
 				}
 				.about-me-box {
 					gap: 10px;
 					.title {
-						color: #181a20;
+						color: var(--mypage-ink, #181a20);
 						font-family: $font;
 						font-size: 12px;
 						font-style: normal;
@@ -207,7 +236,10 @@
 						align-self: flex-end;
 						margin-top: 30px;
 						border-radius: 12px;
-						background-color: #000000;
+						background-color: var(--mypage-emerald, #064e3b);
+						transition:
+							background-color 160ms ease,
+							transform 160ms ease;
 						p {
 							color: #fff;
 							font-family: $font;
@@ -216,9 +248,23 @@
 							font-weight: 600;
 							line-height: normal;
 						}
+
+						&:hover {
+							background-color: #075f48;
+						}
+
+						&:active {
+							transform: scale(0.98);
+						}
+
+						&:focus-visible {
+							outline: 3px solid rgba(6, 78, 59, 0.24);
+							outline-offset: 2px;
+						}
 					}
 					button:disabled {
-						background: #181a2045;
+						background: rgba(24, 26, 32, 0.27);
+						transform: none;
 					}
 				}
 			}
@@ -326,9 +372,118 @@
 }
 
 @media (max-width: 900px) {
-	#pc-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box {
+	#pc-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box,
+	#mobile-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box {
 		align-items: flex-start;
 		flex-direction: column;
 		gap: 18px;
+	}
+}
+
+@media (max-width: 767px) {
+	#pc-wrap,
+	#mobile-wrap {
+		#my-page {
+			#my-profile-page {
+				.top-box {
+					padding: 18px;
+					gap: 18px;
+					border-radius: 10px;
+
+					.photo-box {
+						gap: 14px;
+
+						.title {
+							font-size: 14px;
+						}
+
+						.image-big-box {
+							width: 100%;
+							align-items: center;
+							flex-direction: row;
+							gap: 14px;
+
+							.image-box {
+								width: 76px;
+								height: 76px;
+								flex-basis: 76px;
+							}
+
+							.upload-big-box {
+								min-width: 0;
+								flex: 1;
+								gap: 7px;
+
+								.labeler {
+									width: 100%;
+									min-height: 44px;
+									border-radius: 9px;
+								}
+
+								.upload-text {
+									font-size: 11px;
+									line-height: 1.45;
+								}
+							}
+						}
+					}
+
+					.small-input-box {
+						display: flex;
+						flex-direction: column;
+						gap: 16px;
+
+						.input-box {
+							width: 100%;
+							gap: 8px;
+						}
+					}
+
+					.address-box {
+						gap: 8px;
+					}
+
+					.small-input-box .input-box input,
+					.address-box input {
+						width: 100%;
+						height: 48px;
+						border-radius: 9px;
+						font-size: 13px;
+					}
+
+					.about-me-box {
+						.update-button {
+							width: 100%;
+							height: 46px;
+							margin-top: 4px;
+							align-self: stretch;
+							border-radius: 9px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 374px) {
+	#mobile-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+
+@media (hover: none) {
+	#mobile-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box .upload-big-box .labeler:hover {
+		background: #fff;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#pc-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box .upload-big-box .labeler,
+	#mobile-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box .upload-big-box .labeler,
+	#pc-wrap #my-page #my-profile-page .top-box .about-me-box .update-button,
+	#mobile-wrap #my-page #my-profile-page .top-box .about-me-box .update-button {
+		transition: none;
 	}
 }

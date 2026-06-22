@@ -36,10 +36,11 @@ const MemberMenu = (props: MemberMenuProps) => {
   notifyOnNetworkStatusChange: true,
   onCompleted: (data: T) => {
     setMember(data?.getMember);
-  },
+	},
 });
 
 
+	const alreadyFollowingMember = Boolean(member?.meFollowed?.some((follow) => follow.myFollowing));
 
 	if (device === 'mobile') {
 		return <div>MEMBER MENU MOBILE</div>;
@@ -63,12 +64,12 @@ const MemberMenu = (props: MemberMenuProps) => {
 					</Stack>
 				</Stack>
 				<Stack className="follow-button-box">
-					{member?.meFollowed && member?.meFollowed[0]?.myFollowing ? (
+					{alreadyFollowingMember ? (
 						<>
 							<Button
 								variant="outlined"
 								sx={{ background: '#b9b9b9' }}
-								onClick={() => unsubscribeHandler(member?._id, getMemberRefetch, memberId)}
+								onClick={() => member?._id && unsubscribeHandler(member._id, getMemberRefetch, memberId)}
 							>
 								Unfollow
 							</Button>
@@ -78,7 +79,7 @@ const MemberMenu = (props: MemberMenuProps) => {
 						<Button
 							variant="contained"
 							sx={{ background: '#08634f', ':hover': { background: '#064e3b' } }}
-							onClick={() => subscribeHandler(member?._id, getMemberRefetch, memberId)}
+							onClick={() => member?._id && subscribeHandler(member._id, getMemberRefetch, memberId)}
 						>
 							Follow
 						</Button>

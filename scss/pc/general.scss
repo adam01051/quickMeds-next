@@ -314,3 +314,101 @@
 		}
 	}
 }
+
+@media (max-width: 767px) {
+	#mobile-wrap,
+	#pc-wrap {
+		.community-general-card-config {
+			width: 100% !important;
+			max-width: 100%;
+			gap: 0;
+			overflow: hidden;
+			border: 1px solid var(--mypage-border, #cbd7d1);
+			border-radius: 12px;
+			background: #fff;
+			box-shadow: 0 8px 20px rgba(16, 41, 35, 0.05);
+
+			.image-box {
+				height: 174px;
+				background: #f5faf7;
+
+				.card-img {
+					object-fit: cover;
+					border-radius: 12px 12px 0 0;
+				}
+			}
+
+			.desc-box {
+				height: auto;
+				min-height: 96px;
+				margin-top: 0 !important;
+				padding: 13px 14px 12px;
+				flex-direction: column;
+				align-items: stretch;
+				justify-content: flex-start;
+				gap: 9px;
+
+				.title {
+					display: -webkit-box;
+					color: var(--mypage-ink, #073f34);
+					font-size: 15px;
+					font-weight: 800;
+					line-height: 1.35;
+					overflow: hidden;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+				}
+
+				.desc {
+					color: var(--mypage-muted, #52615b);
+					font-size: 12px;
+					font-weight: 750;
+					line-height: 1.35;
+					text-transform: none;
+				}
+
+				.buttons {
+					justify-content: flex-start;
+					gap: 2px;
+
+					button {
+						width: 32px;
+						height: 32px;
+						padding: 4px;
+					}
+
+					svg {
+						width: 20px;
+						height: 20px;
+					}
+
+					.view-cnt {
+						min-width: 18px;
+						color: var(--mypage-muted, #52615b);
+						font-size: 12px;
+						font-weight: 700;
+					}
+				}
+			}
+
+			.date-box {
+				top: 118px;
+				right: 12px;
+				width: 58px;
+				height: 58px;
+				border: 1px solid rgba(203, 215, 209, 0.75);
+				border-radius: 10px;
+				box-shadow: 0 8px 18px rgba(16, 41, 35, 0.12);
+
+				.month {
+					font-size: 10px;
+					font-weight: 750;
+				}
+
+				.day {
+					font-size: 18px;
+				}
+			}
+		}
+	}
+}

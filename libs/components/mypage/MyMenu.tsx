@@ -15,6 +15,7 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import AddBusinessOutlinedIcon from '@mui/icons-material/AddBusinessOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import MenuOpenRoundedIcon from '@mui/icons-material/MenuOpenRounded';
@@ -145,9 +146,9 @@ const MyMenu = () => {
 									<li key={item.category ?? item.href}>
 										{item.href ? (
 											<Link href={item.href} onClick={() => setMobileMenuOpen(false)}>
-												{variant === 'mobile' && <CheckRoundedIcon className="my-page-menu__check" aria-hidden="true" />}
 												{item.icon}
 												<span>{item.label}</span>
+												<ArrowForwardRoundedIcon className="my-page-menu__external" aria-hidden="true" />
 											</Link>
 										) : item.category ? (
 											<Link
@@ -185,18 +186,17 @@ const MyMenu = () => {
 					<strong>{user?.memberNick || 'QuickMeds member'}</strong>
 					<span>{isPharmacyOwner ? 'Pharmacy Owner' : 'My QuickMeds account'}</span>
 				</div>
+				<button
+					type="button"
+					className="my-page-menu__mobile-trigger"
+					aria-haspopup="dialog"
+					aria-expanded={mobileMenuOpen}
+					onClick={() => setMobileMenuOpen(true)}
+				>
+					<MenuOpenRoundedIcon aria-hidden="true" />
+					<span>{activeItem?.label ?? 'My Profile'}</span>
+				</button>
 			</div>
-
-			<button
-				type="button"
-				className="my-page-menu__mobile-trigger"
-				aria-haspopup="dialog"
-				aria-expanded={mobileMenuOpen}
-				onClick={() => setMobileMenuOpen(true)}
-			>
-				<MenuOpenRoundedIcon aria-hidden="true" />
-				<span>{activeItem?.label ?? 'My Profile'}</span>
-			</button>
 
 			<nav className="my-page-menu__nav">
 				{renderMenuGroups('desktop')}

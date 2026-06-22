@@ -118,10 +118,10 @@ const TuiEditor = () => {
 	};
 
 	return (
-		<Stack>
-			<Stack direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
-				<Box component={'div'} className={'form_row'} style={{ width: '300px' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
+		<Stack className="community-editor-form">
+			<Stack className="community-editor-fields" direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
+				<Box component={'div'} className={'form_row community-editor-field'} style={{ width: '300px' }}>
+					<Typography className="community-editor-label" style={{ color: '#7f838d', margin: '10px' }} variant="h3">
 						Category
 					</Typography>
 					<FormControl sx={{ width: '100%', background: 'white' }}>
@@ -140,14 +140,15 @@ const TuiEditor = () => {
 						</Select>
 					</FormControl>
 				</Box>
-				<Box component={'div'} style={{ width: '300px', flexDirection: 'column' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
+				<Box component={'div'} className="community-editor-field" style={{ width: '300px', flexDirection: 'column' }}>
+					<Typography className="community-editor-label" style={{ color: '#7f838d', margin: '10px' }} variant="h3">
 						Title
 					</Typography>
 					<TextField
 						onChange={articleTitleHandler}
 						id="filled-basic"
 						label="Type Title"
+						className="community-editor-title-input"
 						style={{ width: '300px', background: 'white' }}
 					/>
 				</Box>
@@ -178,8 +179,9 @@ const TuiEditor = () => {
 				}}
 			/>
 
-			<Stack direction="row" justifyContent="center">
+			<Stack className="community-editor-actions" direction="row" justifyContent="center">
 				<Button
+					className="community-editor-submit"
 					variant="contained"
 					color="primary"
 					style={{ margin: '30px', width: '250px', height: '45px' }}

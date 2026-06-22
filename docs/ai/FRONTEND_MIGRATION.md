@@ -156,10 +156,17 @@ Intentionally deferred Nestar surfaces:
 
 Deferred compatibility work:
 
-- Redesign `/agent/detail` separately while preserving its existing GraphQL behavior.
 - Keep internal Agent names and the legacy `/agent` route until a coordinated route and contract migration is approved.
 - Complete authenticated browser checks for owner likes and pagination with a dataset larger than one page.
 - Resolve the shared global mobile-navbar clipping in the future mobile-navigation phase.
+
+## Pharmacy Owner Detail Migration
+
+- `/agent/detail?agentId=...` now renders a responsive Pharmacy Owner profile instead of legacy agent-detail desktop markup and mobile placeholders.
+- Existing owner, pharmacy, comment, like, and create-comment GraphQL contracts remain unchanged.
+- Owner pharmacies now use page-scoped pharmacy cards with real detail links and favorite behavior instead of the legacy `PropertyBigCard`.
+- Owner comments now use page-scoped comment cards with real member avatars, dates, and content instead of the legacy `ReviewCard`.
+- The page includes loading, not-selected, not-found, query-error, empty-pharmacy, and empty-comment states.
 
 ## Account Access Migration
 
@@ -269,3 +276,9 @@ Deferred compatibility work:
 - Existing My Page sections, owner-only items, non-owner owner-signup item, admin shortcut, logout flow, and desktop sidebar remain unchanged.
 - The mobile sheet closes on backdrop, close button, or route change and locks background scrolling while open.
 - The mobile sheet now visually follows the desktop sidebar with grouped labels, icons, emerald active row styling, a left-slide motion transition, and Escape-key close.
+- Mobile My Profile now reuses the real desktop profile-edit form instead of a placeholder, preserving the existing member update and image upload contracts while using mobile-sized My Page card, field, and button styling.
+- The mobile My Page section trigger now sits in the user identity row as a compact active-section pill, removing the separate full-width selector row while keeping the same modal navigation behavior.
+- Mobile Followers, Followings, My Articles, and Write Article now reuse their real desktop data/action contracts instead of mobile placeholders, with phone-specific My Page card, list, pagination, and editor styling.
+- My Page drawer links that navigate outside the section flow now show an arrow affordance; category links keep the active checkmark behavior.
+- My Page Followings now treats the signed-in user's own followings list as authoritative, so those rows expose Unfollow instead of attempting a duplicate Follow mutation.
+- Followers and other member-profile follow controls still use the backend `meFollowed` relationship state, hardened with order-independent checks.

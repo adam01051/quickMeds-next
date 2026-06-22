@@ -112,3 +112,16 @@
 - `myProfile` remains the default My Page section for missing, invalid, or legacy category queries.
 - The mobile sheet reuses the same route categories and visibility rules as the desktop sidebar so mobile and desktop stay contract-compatible.
 - Mobile My Page drawer styling follows the desktop sidebar palette and active-row language, while using a left-slide modal interaction on phone widths.
+- Mobile My Profile must render the same editable account form as desktop; phone styling adapts spacing and controls, but does not create a separate mobile-only contract or placeholder surface.
+- Profile updates are change-based on the frontend: the button enables when any editable profile field differs from current account data, and optional empty fields such as address or profile image must not block submission.
+- On mobile, the My Page section trigger belongs in the account identity row so section navigation stays close to the user context without adding a second header row.
+- Mobile My Page sections should reuse the same working desktop data and action contracts, then adapt layout with responsive CSS instead of adding placeholder-only mobile branches.
+- My Page menu arrows are reserved for links that navigate away from `/mypage?category=...`; in-section category links continue to use active-row and checkmark language.
+- A member listed under the signed-in user's own Followings is already followed, even if the optional `meFollowed` aggregation is missing or stale; render Unfollow there to avoid duplicate subscribe mutations.
+- Follower lists remain relationship-based because a follower is not necessarily followed back by the signed-in user.
+
+# Pharmacy Owner Detail Decision
+
+- `/agent/detail?agentId=...` remains the compatibility route for Pharmacy Owner detail until a coordinated route migration is approved.
+- Pharmacy Owner detail uses the same public owner-directory emerald/mint visual system and avoids legacy property-era cards on this route.
+- Owner-detail comments are member-profile comments using the existing `CommentGroup.MEMBER` contract; no ratings, scores, credentials, specialties, or unsupported professional claims are added.

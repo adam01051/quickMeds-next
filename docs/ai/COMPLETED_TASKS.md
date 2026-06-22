@@ -597,3 +597,88 @@ Validation completed:
 Validation limitations:
 
 - Authenticated mobile visual QA was not completed in-browser during this pass; `/mypage` redirects without a signed-in session.
+
+## My Page Mobile Profile Form Fix
+
+- Removed the mobile-only `MY PROFILE PAGE MOBILE` placeholder and render the real My Profile form on mobile and desktop.
+- Preserved the existing profile image upload, username, phone, address, `UPDATE_MEMBER`, JWT refresh, and success/error alerts.
+- Fixed the Update Profile button so it enables when any profile field changes, without forcing empty optional fields such as address or profile image to be filled.
+- Hardened profile state updates to avoid direct mutation during image upload and keep user data synced from `userVar`.
+- Extended the desktop My Profile card styling to `#mobile-wrap`, with phone-sized avatar/upload layout, one-column fields, emerald focus states, and a full-width mobile update button.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated 390px/430px visual QA and live profile update/upload checks remain pending because this pass did not use a signed-in browser session.
+
+## My Page Mobile Trigger Placement Fix
+
+- Moved the mobile My Page section trigger into the user identity row so the active section control appears beside the avatar/account details instead of as a separate full-width row.
+- Preserved the existing left-side modal, route-driven categories, active label, owner/admin visibility, backdrop close, Escape close, route-change close, and desktop sidebar behavior.
+- Tightened the mobile trigger into a compact pill with a 42px tap target and ellipsis handling for long section labels.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+
+## My Page Mobile Sections Fix
+
+- Removed mobile placeholder branches from Followers, Followings, My Articles, Write Article, and the shared Community card so mobile My Page now reuses the same working desktop functionality.
+- Preserved existing follower/following queries, follow/unfollow actions, member likes, profile navigation, article query, article likes, detail navigation, pagination, and the Toast UI write-article flow.
+- Added phone-specific card/layout styling for follower rows, following rows, My Articles cards, empty states, pagination, and the write-article editor surface.
+- Added arrow indicators to My Page menu items that leave the section flow, including `Become a Pharmacy Owner` and `Explore Pharmacy Owners`, while keeping active checkmarks only on category section links.
+- Kept backend contracts, GraphQL operations, routes, owner/admin visibility rules, and desktop section rendering unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated 390px/430px browser QA remains pending for this pass.
+
+## My Page Follow State Logic Fix
+
+- Fixed My Page Followings so rows in the signed-in user's own followings list always render as `Following` with an `Unfollow` action.
+- Kept Followers relationship-based, so follower rows still show Follow or Unfollow depending on whether the signed-in user follows that member back.
+- Hardened follow-state checks in Followers, Followings, and member profile menu to use `meFollowed.some(...)` instead of trusting the first aggregation row.
+- Added missing-id guards before member follow, unfollow, like, and profile-navigation actions fire from follow rows.
+- Preserved existing member-like, article-like, favorite-pharmacy, article-detail, and comment-detail contracts.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+
+Validation limitations:
+
+- Authenticated follow/unfollow browser QA remains pending for this pass.
+
+## Pharmacy Owner Detail Redesign
+
+- Replaced the legacy `/agent/detail?agentId=...` desktop/mobile split with one responsive Pharmacy Owner detail page.
+- Removed this route's dependency on legacy `PropertyBigCard` and `ReviewCard`, so the page no longer falls back to `PHARMACY OWNER DETAIL MOBILE`, `PHARMACY CARD`, or `REVIEW CARD` placeholders.
+- Preserved existing `agentId`, `GET_MEMBER`, `GET_PHARMACIES`, `GET_COMMENTS`, `LIKE_TARGET_PHARMACY`, and `CREATE_COMMENT` contracts.
+- Added loading, missing-owner, owner-load-error, pharmacy-load-error, comments-load-error, empty-pharmacies, and empty-comments states.
+- Added a redesigned owner profile header, modern owner pharmacy cards, real comment cards, pagination, and signed-in/self-comment guards.
+- Replaced the old owner-detail SCSS with a responsive emerald/mint page system for desktop and mobile.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 73 pages.
+- `git diff --check` passed.
+- Source scan confirmed `/agent/detail` no longer contains the old mobile placeholder, `agent-detail-page`, `PropertyBigCard`, or `ReviewCard`.
+
+Validation limitations:
+
+- Local HTTP route probes could not connect to the existing port `3000` listener, and backend `3007` was unreachable from this shell during validation.
+- Authenticated owner-detail interaction QA remains pending for pharmacy likes, detail links, and comment submission.
