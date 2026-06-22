@@ -61,11 +61,18 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 			if (!files.length) return;
 			if (files.length > 5) throw new Error('Cannot upload more than 5 images.');
 			const body = new FormData();
-			body.append('operations', JSON.stringify({
-				query: 'mutation ImagesUploader($files: [Upload!]!, $target: String!) { imagesUploader(files: $files, target: $target) }',
-				variables: { files: files.map(() => null), target: 'pharmacy' },
-			}));
-			body.append('map', JSON.stringify(Object.fromEntries(files.map((_, index) => [index, [`variables.files.${index}`]]))));
+			body.append(
+				'operations',
+				JSON.stringify({
+					query:
+						'mutation ImagesUploader($files: [Upload!]!, $target: String!) { imagesUploader(files: $files, target: $target) }',
+					variables: { files: files.map(() => null), target: 'pharmacy' },
+				}),
+			);
+			body.append(
+				'map',
+				JSON.stringify(Object.fromEntries(files.map((_, index) => [index, [`variables.files.${index}`]]))),
+			);
 			files.forEach((file, index) => body.append(String(index), file));
 			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, body, {
 				headers: { Authorization: `Bearer ${getJwtToken()}`, 'apollo-require-preflight': true },
@@ -88,7 +95,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 		}
 	};
 
-	const removeImage = (image: string) => update({ pharmacyImages: form.pharmacyImages.filter((item) => item !== image) });
+	const removeImage = (image: string) =>
+		update({ pharmacyImages: form.pharmacyImages.filter((item) => item !== image) });
 
 	if (user.memberType !== 'AGENT') return null;
 
@@ -98,11 +106,13 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	if (device === 'mobile') {
 		return (
 			<div id="add-property-page" className="add-pharmacy-mobile">
-				<section className="add-pharmacy-mobile__summary">
-					<span>{isEditMode ? 'Edit Pharmacy' : 'Add Pharmacy'}</span>
-					<h2>{isEditMode ? 'Update pharmacy details' : 'Register a pharmacy'}</h2>
-					<p>Keep your public pharmacy profile accurate for customers browsing QuickMeds.</p>
-				</section>
+				{isEditMode && (
+					<section className="add-pharmacy-mobile__summary">
+						<span>Edit Pharmacy</span>
+						<h2>Update pharmacy details</h2>
+						<p>Keep your public pharmacy profile accurate for customers browsing QuickMeds.</p>
+					</section>
+				)}
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
@@ -111,25 +121,47 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					</div>
 					<label className="add-pharmacy-mobile__field">
 						<span>Pharmacy name</span>
-						<input placeholder="Pharmacy name" value={form.pharmacyName} onChange={(e) => update({ pharmacyName: e.target.value })} />
+						<input
+							placeholder="Pharmacy name"
+							value={form.pharmacyName}
+							onChange={(e) => update({ pharmacyName: e.target.value })}
+						/>
 					</label>
 					<div className="add-pharmacy-mobile__grid">
 						<label className="add-pharmacy-mobile__field">
 							<span>Pharmacy type</span>
-							<select value={form.pharmacyType} onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}>
-								{Object.values(PharmacyType).map((value) => <option key={value} value={value}>{value}</option>)}
+							<select
+								value={form.pharmacyType}
+								onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}
+							>
+								{Object.values(PharmacyType).map((value) => (
+									<option key={value} value={value}>
+										{value}
+									</option>
+								))}
 							</select>
 						</label>
 						<label className="add-pharmacy-mobile__field">
 							<span>Region</span>
-							<select value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
-								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{getPharmacyLocationLabel(value)}</option>)}
+							<select
+								value={form.pharmacyLocation}
+								onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}
+							>
+								{Object.values(PharmacyLocation).map((value) => (
+									<option key={value} value={value}>
+										{getPharmacyLocationLabel(value)}
+									</option>
+								))}
 							</select>
 						</label>
 					</div>
 					<label className="add-pharmacy-mobile__field">
 						<span>Address</span>
-						<input placeholder="Full pharmacy address" value={form.pharmacyAddress} onChange={(e) => update({ pharmacyAddress: e.target.value })} />
+						<input
+							placeholder="Full pharmacy address"
+							value={form.pharmacyAddress}
+							onChange={(e) => update({ pharmacyAddress: e.target.value })}
+						/>
 					</label>
 				</section>
 
@@ -139,17 +171,50 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						<strong>Delivery, insurance, and opening date</strong>
 					</div>
 					<div className="add-pharmacy-mobile__toggles">
-						<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
-						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked, pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0 })} />} label="Offers delivery" />
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.acceptsInsurance ?? false}
+									onChange={(e) => update({ acceptsInsurance: e.target.checked })}
+								/>
+							}
+							label="Accepts insurance"
+						/>
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.hasDelivery ?? false}
+									onChange={(e) =>
+										update({
+											hasDelivery: e.target.checked,
+											pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0,
+										})
+									}
+								/>
+							}
+							label="Offers delivery"
+						/>
 					</div>
 					<div className="add-pharmacy-mobile__grid">
 						<label className="add-pharmacy-mobile__field">
 							<span>Delivery fee (UZS)</span>
-							<input type="number" min="0" step="1" disabled={!form.hasDelivery} placeholder="0 means free delivery" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
+							<input
+								type="number"
+								min="0"
+								step="1"
+								disabled={!form.hasDelivery}
+								placeholder="0 means free delivery"
+								value={form.pharmacyDeliveryFee}
+								onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })}
+							/>
 						</label>
 						<label className="add-pharmacy-mobile__field">
 							<span>Opened date</span>
-							<input type="date" value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''} onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })} />
+							<input
+								type="date"
+								value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''}
+								onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })}
+							/>
 						</label>
 					</div>
 				</section>
@@ -162,11 +227,21 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					<div className="add-pharmacy-mobile__grid">
 						<label className="add-pharmacy-mobile__field">
 							<span>Latitude</span>
-							<input type="number" step="any" value={form.pharmacyLatitude} onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })} />
+							<input
+								type="number"
+								step="any"
+								value={form.pharmacyLatitude}
+								onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })}
+							/>
 						</label>
 						<label className="add-pharmacy-mobile__field">
 							<span>Longitude</span>
-							<input type="number" step="any" value={form.pharmacyLongitude} onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })} />
+							<input
+								type="number"
+								step="any"
+								value={form.pharmacyLongitude}
+								onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })}
+							/>
 						</label>
 					</div>
 				</section>
@@ -177,7 +252,20 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						<strong>Optional public schedule</strong>
 					</div>
 					<div className="add-pharmacy-mobile__toggles">
-						<FormControlLabel control={<Checkbox checked={form.open24Hours ?? false} onChange={(e) => update({ open24Hours: e.target.checked, operatingHours: e.target.checked ? [] : form.operatingHours })} />} label="Open 24/7" />
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.open24Hours ?? false}
+									onChange={(e) =>
+										update({
+											open24Hours: e.target.checked,
+											operatingHours: e.target.checked ? [] : form.operatingHours,
+										})
+									}
+								/>
+							}
+							label="Open 24/7"
+						/>
 					</div>
 					{!form.open24Hours && (
 						<div className="add-pharmacy-mobile__hours">
@@ -187,15 +275,44 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
 								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
 									const remaining = (form.operatingHours ?? []).filter((item) => item.dayOfWeek !== dayOfWeek);
-									update({ operatingHours: [...remaining, { dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value }].sort((a, b) => a.dayOfWeek - b.dayOfWeek) });
+									update({
+										operatingHours: [
+											...remaining,
+											{ dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value },
+										].sort((a, b) => a.dayOfWeek - b.dayOfWeek),
+									});
 								};
 								return (
 									<div className="add-pharmacy-mobile__day" key={label}>
 										<strong>{label}</strong>
-										<FormControlLabel control={<Checkbox checked={day?.isClosed ?? false} onChange={(e) => updateDay({ isClosed: e.target.checked, opensAt: e.target.checked ? undefined : day?.opensAt, closesAt: e.target.checked ? undefined : day?.closesAt })} />} label="Closed" />
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={day?.isClosed ?? false}
+													onChange={(e) =>
+														updateDay({
+															isClosed: e.target.checked,
+															opensAt: e.target.checked ? undefined : day?.opensAt,
+															closesAt: e.target.checked ? undefined : day?.closesAt,
+														})
+													}
+												/>
+											}
+											label="Closed"
+										/>
 										<div>
-											<input type="time" disabled={day?.isClosed} value={day?.opensAt ?? ''} onChange={(e) => updateDay({ opensAt: e.target.value })} />
-											<input type="time" disabled={day?.isClosed} value={day?.closesAt ?? ''} onChange={(e) => updateDay({ closesAt: e.target.value })} />
+											<input
+												type="time"
+												disabled={day?.isClosed}
+												value={day?.opensAt ?? ''}
+												onChange={(e) => updateDay({ opensAt: e.target.value })}
+											/>
+											<input
+												type="time"
+												disabled={day?.isClosed}
+												value={day?.closesAt ?? ''}
+												onChange={(e) => updateDay({ closesAt: e.target.value })}
+											/>
 										</div>
 									</div>
 								);
@@ -213,14 +330,23 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						<img src="/img/icons/discovery.svg" alt="" />
 						<span>Add pharmacy photos</span>
 						<small>JPEG or PNG format</small>
-						<input ref={inputRef} type="file" hidden accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadImages} />
+						<input
+							ref={inputRef}
+							type="file"
+							hidden
+							accept="image/jpeg,image/jpg,image/png"
+							multiple
+							onChange={uploadImages}
+						/>
 					</button>
 					{form.pharmacyImages.length > 0 && (
 						<div className="add-pharmacy-mobile__gallery">
 							{form.pharmacyImages.map((image) => (
 								<div className="add-pharmacy-mobile__image" key={image}>
 									<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
-									<button type="button" onClick={() => removeImage(image)}>Remove</button>
+									<button type="button" onClick={() => removeImage(image)}>
+										Remove
+									</button>
 								</div>
 							))}
 						</div>
@@ -253,22 +379,43 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				<Stack className="description-box">
 					<Stack className="config-column">
 						<Typography className="title">Pharmacy name</Typography>
-						<input className="description-input" placeholder="Pharmacy name" value={form.pharmacyName} onChange={(e) => update({ pharmacyName: e.target.value })} />
+						<input
+							className="description-input"
+							placeholder="Pharmacy name"
+							value={form.pharmacyName}
+							onChange={(e) => update({ pharmacyName: e.target.value })}
+						/>
 					</Stack>
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
 							<Typography className="title">Pharmacy type</Typography>
-							<select className="select-description" value={form.pharmacyType} onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}>
-								{Object.values(PharmacyType).map((value) => <option key={value} value={value}>{value}</option>)}
+							<select
+								className="select-description"
+								value={form.pharmacyType}
+								onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}
+							>
+								{Object.values(PharmacyType).map((value) => (
+									<option key={value} value={value}>
+										{value}
+									</option>
+								))}
 							</select>
 							<div className="divider" />
 							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 						</Stack>
 						<Stack className="price-year-after-price">
 							<Typography className="title">Region</Typography>
-							<select className="select-description" value={form.pharmacyLocation} onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}>
-								{Object.values(PharmacyLocation).map((value) => <option key={value} value={value}>{getPharmacyLocationLabel(value)}</option>)}
+							<select
+								className="select-description"
+								value={form.pharmacyLocation}
+								onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}
+							>
+								{Object.values(PharmacyLocation).map((value) => (
+									<option key={value} value={value}>
+										{getPharmacyLocationLabel(value)}
+									</option>
+								))}
 							</select>
 							<div className="divider" />
 							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
@@ -277,54 +424,152 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 					<Stack className="config-column">
 						<Typography className="title">Address</Typography>
-						<input className="description-input" placeholder="Full pharmacy address" value={form.pharmacyAddress} onChange={(e) => update({ pharmacyAddress: e.target.value })} />
+						<input
+							className="description-input"
+							placeholder="Full pharmacy address"
+							value={form.pharmacyAddress}
+							onChange={(e) => update({ pharmacyAddress: e.target.value })}
+						/>
 					</Stack>
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
 							<Typography className="title">Delivery fee (UZS)</Typography>
-							<input className="description-input" type="number" min="0" step="1" disabled={!form.hasDelivery} placeholder="0 means free delivery" value={form.pharmacyDeliveryFee} onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })} />
+							<input
+								className="description-input"
+								type="number"
+								min="0"
+								step="1"
+								disabled={!form.hasDelivery}
+								placeholder="0 means free delivery"
+								value={form.pharmacyDeliveryFee}
+								onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })}
+							/>
 						</Stack>
 						<Stack className="price-year-after-price">
 							<Typography className="title">Opened date</Typography>
-							<input className="description-input" type="date" value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''} onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })} />
+							<input
+								className="description-input"
+								type="date"
+								value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''}
+								onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })}
+							/>
 						</Stack>
 					</Stack>
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
 							<Typography className="title">Latitude</Typography>
-							<input className="description-input" type="number" step="any" value={form.pharmacyLatitude} onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })} />
+							<input
+								className="description-input"
+								type="number"
+								step="any"
+								value={form.pharmacyLatitude}
+								onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })}
+							/>
 						</Stack>
 						<Stack className="price-year-after-price">
 							<Typography className="title">Longitude</Typography>
-							<input className="description-input" type="number" step="any" value={form.pharmacyLongitude} onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })} />
+							<input
+								className="description-input"
+								type="number"
+								step="any"
+								value={form.pharmacyLongitude}
+								onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })}
+							/>
 						</Stack>
 					</Stack>
 
 					<Typography className="property-title">Pharmacy services</Typography>
 					<Stack className="pharmacy-service-row">
-						<FormControlLabel control={<Checkbox checked={form.acceptsInsurance ?? false} onChange={(e) => update({ acceptsInsurance: e.target.checked })} />} label="Accepts insurance" />
-						<FormControlLabel control={<Checkbox checked={form.hasDelivery ?? false} onChange={(e) => update({ hasDelivery: e.target.checked, pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0 })} />} label="Offers delivery" />
-						<FormControlLabel control={<Checkbox checked={form.open24Hours ?? false} onChange={(e) => update({ open24Hours: e.target.checked, operatingHours: e.target.checked ? [] : form.operatingHours })} />} label="Open 24/7" />
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.acceptsInsurance ?? false}
+									onChange={(e) => update({ acceptsInsurance: e.target.checked })}
+								/>
+							}
+							label="Accepts insurance"
+						/>
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.hasDelivery ?? false}
+									onChange={(e) =>
+										update({
+											hasDelivery: e.target.checked,
+											pharmacyDeliveryFee: e.target.checked ? form.pharmacyDeliveryFee || 3000 : 0,
+										})
+									}
+								/>
+							}
+							label="Offers delivery"
+						/>
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={form.open24Hours ?? false}
+									onChange={(e) =>
+										update({
+											open24Hours: e.target.checked,
+											operatingHours: e.target.checked ? [] : form.operatingHours,
+										})
+									}
+								/>
+							}
+							label="Open 24/7"
+						/>
 					</Stack>
 					{!form.open24Hours && (
 						<Stack className="config-column">
 							<Typography className="property-title">Working hours</Typography>
-							<Typography className="sub-title">Optional. Leave all days unset to display Hours not provided.</Typography>
+							<Typography className="sub-title">
+								Optional. Leave all days unset to display Hours not provided.
+							</Typography>
 							{WEEKDAYS.map((label, index) => {
 								const dayOfWeek = index + 1;
 								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
 								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
 									const remaining = (form.operatingHours ?? []).filter((item) => item.dayOfWeek !== dayOfWeek);
-									update({ operatingHours: [...remaining, { dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value }].sort((a, b) => a.dayOfWeek - b.dayOfWeek) });
+									update({
+										operatingHours: [
+											...remaining,
+											{ dayOfWeek, isClosed: false, opensAt: '09:00', closesAt: '18:00', ...day, ...value },
+										].sort((a, b) => a.dayOfWeek - b.dayOfWeek),
+									});
 								};
 								return (
 									<Stack className="config-row" key={label}>
 										<Typography className="title">{label}</Typography>
-										<FormControlLabel control={<Checkbox checked={day?.isClosed ?? false} onChange={(e) => updateDay({ isClosed: e.target.checked, opensAt: e.target.checked ? undefined : day?.opensAt, closesAt: e.target.checked ? undefined : day?.closesAt })} />} label="Closed" />
-										<input className="description-input" type="time" disabled={day?.isClosed} value={day?.opensAt ?? ''} onChange={(e) => updateDay({ opensAt: e.target.value })} />
-										<input className="description-input" type="time" disabled={day?.isClosed} value={day?.closesAt ?? ''} onChange={(e) => updateDay({ closesAt: e.target.value })} />
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={day?.isClosed ?? false}
+													onChange={(e) =>
+														updateDay({
+															isClosed: e.target.checked,
+															opensAt: e.target.checked ? undefined : day?.opensAt,
+															closesAt: e.target.checked ? undefined : day?.closesAt,
+														})
+													}
+												/>
+											}
+											label="Closed"
+										/>
+										<input
+											className="description-input"
+											type="time"
+											disabled={day?.isClosed}
+											value={day?.opensAt ?? ''}
+											onChange={(e) => updateDay({ opensAt: e.target.value })}
+										/>
+										<input
+											className="description-input"
+											type="time"
+											disabled={day?.isClosed}
+											value={day?.closesAt ?? ''}
+											onChange={(e) => updateDay({ closesAt: e.target.value })}
+										/>
 									</Stack>
 								);
 							})}
@@ -334,7 +579,11 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					<Typography className="property-title">Pharmacy description</Typography>
 					<Stack className="config-column">
 						<Typography className="title">Description</Typography>
-						<textarea className="description-text" value={form.pharmacyDesc ?? ''} onChange={(e) => update({ pharmacyDesc: e.target.value })} />
+						<textarea
+							className="description-text"
+							value={form.pharmacyDesc ?? ''}
+							onChange={(e) => update({ pharmacyDesc: e.target.value })}
+						/>
 					</Stack>
 				</Stack>
 
@@ -348,21 +597,34 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						</Stack>
 						<Button className="browse-button" onClick={() => inputRef.current?.click()}>
 							<Typography className="browse-button-text">Browse Files</Typography>
-							<input ref={inputRef} type="file" hidden accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadImages} />
+							<input
+								ref={inputRef}
+								type="file"
+								hidden
+								accept="image/jpeg,image/jpg,image/png"
+								multiple
+								onChange={uploadImages}
+							/>
 						</Button>
 					</Stack>
 					<Stack className="gallery-box">
 						{form.pharmacyImages.map((image) => (
 							<Stack className="image-box" key={image}>
 								<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
-								<Button className="absolute-box" onClick={() => removeImage(image)}>×</Button>
+								<Button className="absolute-box" onClick={() => removeImage(image)}>
+									×
+								</Button>
 							</Stack>
 						))}
 					</Stack>
 				</Stack>
 
 				<Stack className="buttons-row">
-					<Button className="next-button" disabled={!form.pharmacyName || !form.pharmacyAddress || !form.pharmacyImages.length} onClick={submit}>
+					<Button
+						className="next-button"
+						disabled={!form.pharmacyName || !form.pharmacyAddress || !form.pharmacyImages.length}
+						onClick={submit}
+					>
 						<Typography className="next-button-text">Save pharmacy</Typography>
 					</Button>
 				</Stack>

@@ -53,7 +53,7 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						{!isMyPage && !isCatalog && (
+						{!isMyPage && (
 							<Stack id={'footer'}>
 								<Footer />
 							</Stack>

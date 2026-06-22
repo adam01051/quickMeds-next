@@ -881,3 +881,15 @@ Validation completed:
 - `yarn typecheck --pretty false` passed.
 - `yarn build` passed and generated all 70 current pages.
 - `git diff --check` passed.
+
+## Pharmacy Detail Mobile Card Width Fix
+
+- Fixed mobile `/pharmacies/detail` owner and contact cards shrinking to their content width after the detail layout switches from desktop grid to mobile flex column.
+- Set the mobile detail layout to stretch its children and gave the owner/contact cards full-width border-box sizing, preserving the existing desktop pharmacy detail layout and behavior.
+- Kept nearby pharmacy cards, main detail sections, comments, messaging/upload logic, and GraphQL contracts unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 70 current pages.
+- `git diff --check` passed.

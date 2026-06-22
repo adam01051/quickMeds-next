@@ -110,6 +110,7 @@ Intentionally deferred Nestar surfaces:
 - The submission form is collapsed by default, includes logged-out guidance, and reports mutation loading state.
 - The optional additive `CommentsInquiry.search.commentGroup` filter is now used to isolate pharmacy feedback from other comment groups.
 - Comment creation inserts the mutation result immediately and reconciles it with a network-only first-page query without allowing stale results to erase it.
+- Mobile pharmacy detail owner and contact cards now stretch to the same content width as the surrounding detail cards after the layout switches to the phone flex column.
 
 ## Pharmacy Catalog Header Migration
 

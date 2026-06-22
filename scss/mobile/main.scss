@@ -1535,6 +1535,7 @@
 		margin-top: 24px;
 		display: flex;
 		flex-direction: column;
+		align-items: stretch;
 		gap: 16px;
 	}
 
@@ -1608,10 +1609,14 @@
 	}
 
 	.pharmacy-detail__owner-card {
+		width: 100%;
+		box-sizing: border-box;
 		order: 1;
 	}
 
 	.pharmacy-detail__message-card {
+		width: 100%;
+		box-sizing: border-box;
 		order: 2;
 
 		input,
