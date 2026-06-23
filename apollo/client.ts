@@ -90,7 +90,7 @@ function createIsomorphicLink() {
 		const wsLink = new WebSocketLink({
 			uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
 			options: {
-				reconnect: false,
+				reconnect: true,
 				timeout: 30000,
 				connectionParams: () => {
 					return { headers: getHeaders() };

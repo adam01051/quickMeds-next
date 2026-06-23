@@ -99,7 +99,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Smoke test an authenticated customer sending a text message, image message, and text-plus-image message from `/pharmacies/detail`.
 3. Smoke test a Pharmacy Owner receiving the thread in `/mypage?category=messages`, unread badge updates, mark-read behavior, and a reply.
 4. Verify WebSocket updates reach only the sender and receiver.
-5. Complete authenticated browser QA for the fixed Messages scroll behavior and mobile overlay navigation: entering Messages from other My Page sections, near-bottom auto-scroll, reading-old-messages no-force-scroll, `New messages` button, independent desktop thread/history scrolling, shared mobile menu trigger/sheet, clickable pharmacy header identity, desktop Enter-to-send, 320px/375px/iPhone 14 Pro Max/tablet/desktop responsive states, and mobile keyboard/safe-area behavior.
+5. Complete authenticated browser QA for the fixed Messages real-time behavior and mobile overlay navigation: User B receiving messages instantly without refresh, conversation-list preview/unread updates while chat is closed, immediate sent-message rendering in the active chat, entering Messages from other My Page sections, near-bottom auto-scroll, reading-old-messages no-force-scroll, `New messages` button, independent desktop thread/history scrolling, shared mobile menu trigger/sheet, clickable pharmacy header identity, desktop Enter-to-send, 320px/375px/iPhone 14 Pro Max/tablet/desktop responsive states, reconnect behavior, and mobile keyboard/safe-area behavior.
 6. Add focused backend service tests for message authorization, thread reuse, unread counters, image-path validation, and self-message rejection.
 7. Keep delete/archive, blocking, typing indicators, chatbot integration, moderation, and non-image attachments deferred.
 
@@ -114,11 +114,17 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Manually exercise Community category tabs, sort changes, article likes, and comment submission in an authenticated browser session.
 3. Keep the existing board-article categories and routes until a backend health-article migration is approved.
 
+## CS Mobile Follow-up
+
+1. Complete mobile browser QA for `/cs` and `/cs?tab=faq` at 320px, 390px, and 430px, including Notice/FAQ tab switching, FAQ category scrolling, accordion expansion, footer visibility, and horizontal-overflow checks.
+
 ## My Page Mobile Follow-up
 
 1. Complete authenticated 390px and 430px visual QA for the user-row My Page trigger, left-side My Page mobile menu, real mobile My Profile form, Followers, Followings, My Pharmacies, Add Pharmacy, My Articles, and Write Article.
 2. Smoke test each mobile My Page menu item, owner/non-owner visibility, admin shortcut visibility, profile image upload, profile update, My Pharmacies status filters, My Pharmacies View/Edit/Close/Delete actions, Add Pharmacy create/edit/image upload/save behavior, own-Followings unfollow, Followers follow-back/unfollow, member likes, article likes, article detail navigation, write-article submission, external owner-link arrows, and logout from a signed-in browser session.
+3. Manually verify outside-tap close for the public mobile navigation sheet and My Page mobile section sheet on 320px, 390px, and 430px devices, including Uzbek language selection persistence.
 
 ## My Page Desktop Follow-up
 
 1. Complete authenticated desktop visual QA for `/mypage?category=followers` and `/mypage?category=followings`, including follow/unfollow, member-like, pagination, and profile navigation on restored desktop rows.
+2. Visually verify the desktop typography normalization across the public navbar and My Page sections: My Profile, My Favorites, My Pharmacies, Add Pharmacy, My Articles, Write Article, Followers, and Followings.

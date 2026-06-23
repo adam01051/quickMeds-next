@@ -28,6 +28,16 @@ import BrandLogo from './common/BrandLogo';
 import { AnimatePresence, motion } from 'framer-motion';
 import { GET_UNREAD_MESSAGE_COUNT } from '../../apollo/user/query';
 
+const LANGUAGE_OPTIONS = [
+	{ locale: 'en', labelKey: 'English', flagSrc: '/img/flag/langen.png' },
+	{ locale: 'kr', labelKey: 'Korean', flagSrc: '/img/flag/langkr.png' },
+	{ locale: 'ru', labelKey: 'Russian', flagSrc: '/img/flag/langru.png' },
+	{ locale: 'uz', labelKey: 'Uzbek', flagSrc: '/img/flag/languz.svg' },
+];
+
+const resolveLocale = (value?: string | null) =>
+	LANGUAGE_OPTIONS.some((option) => option.locale === value) ? value! : 'en';
+
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
@@ -66,12 +76,9 @@ const Top = () => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
-			localStorage.setItem('locale', 'en');
-			setLang('en');
-		} else {
-			setLang(localStorage.getItem('locale'));
-		}
+		const storedLocale = resolveLocale(localStorage.getItem('locale'));
+		localStorage.setItem('locale', storedLocale);
+		setLang(storedLocale);
 	}, [router]);
 
 	useEffect(() => {
@@ -127,7 +134,7 @@ const Top = () => {
 
 	const langChoice = useCallback(
 		async (e: any) => {
-			const nextLang = e.currentTarget.id || e.target.id;
+			const nextLang = resolveLocale(e.currentTarget.dataset.locale || e.currentTarget.id || e.target.id);
 			setLang(nextLang);
 			localStorage.setItem('locale', nextLang);
 			setAnchorEl2(null);
@@ -173,6 +180,8 @@ const Top = () => {
 			},
 		},
 	}));
+
+	const activeLanguage = LANGUAGE_OPTIONS.find((option) => option.locale === lang) ?? LANGUAGE_OPTIONS[0];
 
 	if (device == 'mobile') {
 		return (
@@ -230,20 +239,21 @@ const Top = () => {
 				</div>
 				<AnimatePresence>
 					{mobileMenuOpen && (
-						<>
-							<motion.button
-								type="button"
-								className="catalog-mobile-nav-backdrop"
-								aria-label="Close navigation menu"
-								onClick={() => setMobileMenuOpen(false)}
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-							/>
+						<motion.div
+							className="catalog-mobile-nav-backdrop"
+							role="presentation"
+							onPointerDown={(event: React.PointerEvent<HTMLDivElement>) => {
+								if (event.target === event.currentTarget) setMobileMenuOpen(false);
+							}}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+						>
 							<motion.nav
 								className="catalog-mobile-nav-sheet"
 								aria-label="Mobile navigation"
+								onPointerDown={(event: React.PointerEvent<HTMLElement>) => event.stopPropagation()}
 								initial={{ opacity: 0, y: -10, scale: 0.98 }}
 								animate={{ opacity: 1, y: 0, scale: 1 }}
 								exit={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -268,21 +278,21 @@ const Top = () => {
 									))}
 								</div>
 								<div className="catalog-mobile-nav-sheet__language" aria-label="Language">
-									<button type="button" id="en" className={lang === 'en' ? 'is-active' : ''} onClick={langChoice}>
-										<img src="/img/flag/langen.png" alt="" />
-										English
-									</button>
-									<button type="button" id="kr" className={lang === 'kr' ? 'is-active' : ''} onClick={langChoice}>
-										<img src="/img/flag/langkr.png" alt="" />
-										Korean
-									</button>
-									<button type="button" id="ru" className={lang === 'ru' ? 'is-active' : ''} onClick={langChoice}>
-										<img src="/img/flag/langru.png" alt="" />
-										Russian
-									</button>
+									{LANGUAGE_OPTIONS.map((option) => (
+										<button
+											type="button"
+											key={option.locale}
+											data-locale={option.locale}
+											className={lang === option.locale ? 'is-active' : ''}
+											onClick={langChoice}
+										>
+											<img src={option.flagSrc} alt="" />
+											{t(option.labelKey)}
+										</button>
+									))}
 								</div>
 							</motion.nav>
-						</>
+						</motion.div>
 					)}
 				</AnimatePresence>
 			</Stack>
@@ -373,45 +383,17 @@ const Top = () => {
 									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
 								>
 									<Box component={'div'} className={'flag'}>
-										{lang !== null ? (
-											<img src={`/img/flag/lang${lang}.png`} alt={'usaFlag'} />
-										) : (
-											<img src={`/img/flag/langen.png`} alt={'usaFlag'} />
-										)}
+										<img src={activeLanguage.flagSrc} alt={t(activeLanguage.labelKey)} />
 									</Box>
 								</Button>
 
 								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
-									<MenuItem disableRipple onClick={langChoice} id="en">
-										<img
-											className="img-flag"
-											src={'/img/flag/langen.png'}
-											onClick={langChoice}
-											id="en"
-											alt={'usaFlag'}
-										/>
-										{t('English')}
-									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="kr">
-										<img
-											className="img-flag"
-											src={'/img/flag/langkr.png'}
-											onClick={langChoice}
-											id="uz"
-											alt={'koreanFlag'}
-										/>
-										{t('Korean')}
-									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="ru">
-										<img
-											className="img-flag"
-											src={'/img/flag/langru.png'}
-											onClick={langChoice}
-											id="ru"
-											alt={'russiaFlag'}
-										/>
-										{t('Russian')}
-									</MenuItem>
+									{LANGUAGE_OPTIONS.map((option) => (
+										<MenuItem disableRipple onClick={langChoice} data-locale={option.locale} key={option.locale}>
+											<img className="img-flag" src={option.flagSrc} alt={t(option.labelKey)} />
+											{t(option.labelKey)}
+										</MenuItem>
+									))}
 								</StyledMenu>
 							</div>
 						</Box>

@@ -34,6 +34,7 @@ const memberImageUrl = (image?: string) => (image ? `${REACT_APP_API_URL}/${imag
 const messageDate = (date?: Date | string) =>
 	date ? new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(date)) : '';
 const NEAR_BOTTOM_THRESHOLD = 96;
+type ThreadRealtimeUpdate = Pick<MessageThread, 'lastMessageText' | 'lastMessageAt' | 'myUnreadCount'>;
 
 const MyMessages = () => {
 	const router = useRouter();
@@ -57,6 +58,8 @@ const MyMessages = () => {
 	const [threadSearch, setThreadSearch] = useState('');
 	const [showNewMessageButton, setShowNewMessageButton] = useState(false);
 	const [deviceReady, setDeviceReady] = useState(false);
+	const [realtimeMessages, setRealtimeMessages] = useState<PharmacyMessage[]>([]);
+	const [realtimeThreadUpdates, setRealtimeThreadUpdates] = useState<Record<string, ThreadRealtimeUpdate>>({});
 
 	const {
 		data: threadsData,
@@ -69,14 +72,27 @@ const MyMessages = () => {
 		skip: !user?._id,
 	});
 
-	const threads: MessageThread[] = threadsData?.getMyMessageThreads?.list ?? [];
+	const serverThreads: MessageThread[] = threadsData?.getMyMessageThreads?.list ?? [];
+	const threads: MessageThread[] = useMemo(() => {
+		return serverThreads
+			.map((thread) => {
+				const update = realtimeThreadUpdates[thread._id];
+				return update ? { ...thread, ...update } : thread;
+			})
+			.sort((first, second) => {
+				const firstTime = new Date(first.lastMessageAt ?? first.updatedAt ?? first.createdAt).getTime();
+				const secondTime = new Date(second.lastMessageAt ?? second.updatedAt ?? second.createdAt).getTime();
+				return secondTime - firstTime;
+			});
+	}, [realtimeThreadUpdates, serverThreads]);
 	const selectedThread = useMemo(
 		() => threads.find((thread) => thread._id === activeThreadId) ?? null,
 		[activeThreadId, threads],
 	);
-	const messageInquiry: MessagesInquiry | null = activeThreadId
-		? { page: 1, limit: 80, sort: 'createdAt', direction: Direction.ASC, threadId: activeThreadId }
-		: null;
+	const messageInquiry: MessagesInquiry | null = useMemo(
+		() => (activeThreadId ? { page: 1, limit: 80, sort: 'createdAt', direction: Direction.ASC, threadId: activeThreadId } : null),
+		[activeThreadId],
+	);
 
 	const {
 		data: messagesData,
@@ -92,6 +108,18 @@ const MyMessages = () => {
 	const [sendMessage] = useMutation(SEND_MESSAGE);
 	const [markThreadRead] = useMutation(MARK_MESSAGE_THREAD_READ);
 	const messages: PharmacyMessage[] = messagesData?.getMessages?.list ?? [];
+	const displayedMessages = useMemo(() => {
+		const messageMap = new Map<string, PharmacyMessage>();
+		const activeRealtimeMessages = realtimeMessages.filter((message) => message.threadId === activeThreadId);
+
+		[...messages, ...activeRealtimeMessages].forEach((message) => {
+			if (message?._id) messageMap.set(message._id, message);
+		});
+
+		return Array.from(messageMap.values()).sort(
+			(first, second) => new Date(first.createdAt).getTime() - new Date(second.createdAt).getTime(),
+		);
+	}, [activeThreadId, messages, realtimeMessages]);
 	const filteredThreads = useMemo(() => {
 		const query = threadSearch.trim().toLowerCase();
 		if (!query) return threads;
@@ -132,6 +160,30 @@ const MyMessages = () => {
 		if (messageInquiry) await refetchMessages({ input: messageInquiry });
 	};
 
+	const mergeRealtimeMessage = (message: PharmacyMessage) => {
+		setRealtimeMessages((current) => {
+			if (current.some((item) => item._id === message._id)) return current;
+			return [...current, message];
+		});
+	};
+
+	const applyRealtimeThreadUpdate = (message: PharmacyMessage) => {
+		if (!message.threadId) return;
+		const isIncoming = message.receiverId === user?._id;
+		const isOpenThread = message.threadId === activeThreadId;
+		setRealtimeThreadUpdates((current) => {
+			const currentUnread = current[message.threadId]?.myUnreadCount ?? threads.find((thread) => thread._id === message.threadId)?.myUnreadCount ?? 0;
+			return {
+				...current,
+				[message.threadId]: {
+					lastMessageText: message.messageText || (message.messageImages?.length ? 'Image' : ''),
+					lastMessageAt: message.createdAt,
+					myUnreadCount: isIncoming && !isOpenThread ? currentUnread + 1 : isOpenThread ? 0 : currentUnread,
+				},
+			};
+		});
+	};
+
 	const handleHistoryScroll = () => {
 		const nearBottom = isNearHistoryBottom();
 		wasNearBottomRef.current = nearBottom;
@@ -155,6 +207,7 @@ const MyMessages = () => {
 
 	useEffect(() => {
 		if (!activeThreadId) return;
+		setRealtimeMessages((current) => current.filter((message) => message.threadId === activeThreadId));
 		lastMessageIdRef.current = null;
 		wasNearBottomRef.current = true;
 		pendingBottomScrollRef.current = 'auto';
@@ -170,9 +223,37 @@ const MyMessages = () => {
 	}, [activeThreadId, markThreadRead, refetchThreads]);
 
 	useEffect(() => {
+		if (!realtimeMessages.length) return;
+		const serverMessageIds = new Set(messages.map((message) => message._id));
+		setRealtimeMessages((current) => {
+			const nextMessages = current.filter((message) => message.threadId === activeThreadId && !serverMessageIds.has(message._id));
+			return nextMessages.length === current.length ? current : nextMessages;
+		});
+	}, [activeThreadId, messages, realtimeMessages.length]);
+
+	useEffect(() => {
+		if (!Object.keys(realtimeThreadUpdates).length) return;
+		setRealtimeThreadUpdates((current) => {
+			const nextUpdates = { ...current };
+			serverThreads.forEach((thread) => {
+				const update = nextUpdates[thread._id];
+				if (!update) return;
+				if (
+					String(thread.lastMessageAt ?? '') === String(update.lastMessageAt ?? '') &&
+					thread.lastMessageText === update.lastMessageText &&
+					thread.myUnreadCount === update.myUnreadCount
+				) {
+					delete nextUpdates[thread._id];
+				}
+			});
+			return Object.keys(nextUpdates).length === Object.keys(current).length ? current : nextUpdates;
+		});
+	}, [realtimeThreadUpdates, serverThreads]);
+
+	useEffect(() => {
 		const history = historyRef.current;
 		if (!history) return;
-		const lastMessageId = messages[messages.length - 1]?._id ?? null;
+		const lastMessageId = displayedMessages[displayedMessages.length - 1]?._id ?? null;
 		const hasNewLastMessage = lastMessageId !== lastMessageIdRef.current;
 		const pendingPreserve = preserveScrollRef.current;
 		const pendingBottom = pendingBottomScrollRef.current;
@@ -189,7 +270,7 @@ const MyMessages = () => {
 
 		lastMessageIdRef.current = lastMessageId;
 		pendingBottomScrollRef.current = null;
-	}, [messages]);
+	}, [displayedMessages]);
 
 	useEffect(() => {
 		if (!socket) return;
@@ -198,6 +279,19 @@ const MyMessages = () => {
 				const data = JSON.parse(event.data);
 				if (!String(data.event || '').startsWith('message:')) return;
 				refetchThreads({ input: threadInquiry }).catch(() => undefined);
+				const socketMessage = data.message as PharmacyMessage | undefined;
+				if (data.event === 'message:new' && socketMessage?._id) {
+					mergeRealtimeMessage(socketMessage);
+					applyRealtimeThreadUpdate(socketMessage);
+					if (socketMessage.threadId === activeThreadId) {
+						const shouldScrollToBottom = isNearHistoryBottom();
+						if (shouldScrollToBottom) pendingBottomScrollRef.current = 'auto';
+						else setShowNewMessageButton(true);
+						if (messageInquiry) refetchMessages({ input: messageInquiry }).catch(() => undefined);
+						if (socketMessage.receiverId === user?._id) markThreadRead({ variables: { threadId: activeThreadId } }).catch(() => undefined);
+					}
+					return;
+				}
 				if (data.thread?._id === activeThreadId || data.message?.threadId === activeThreadId) {
 					refreshMessagesWithIntent().catch(() => undefined);
 					if (activeThreadId) markThreadRead({ variables: { threadId: activeThreadId } }).catch(() => undefined);
@@ -209,7 +303,7 @@ const MyMessages = () => {
 
 		socket.addEventListener('message', handleSocketMessage);
 		return () => socket.removeEventListener('message', handleSocketMessage);
-	}, [activeThreadId, markThreadRead, messageInquiry, refetchThreads, socket]);
+	}, [activeThreadId, markThreadRead, messageInquiry, refetchMessages, refetchThreads, socket, threads, user?._id]);
 
 	const selectThread = (threadId: string) => {
 		setActiveThreadId(threadId);
@@ -253,19 +347,25 @@ const MyMessages = () => {
 
 	const sendCurrentMessage = async () => {
 		try {
-			if (!activeThreadId) return;
+			const currentThreadId = activeThreadId;
+			if (!currentThreadId) return;
 			if (!messageText.trim() && !messageImages.length) throw new Error('Write a message or attach an image first.');
 			if (isSending) return;
 			setIsSending(true);
-			await sendMessage({
+			const response = await sendMessage({
 				variables: {
 					input: {
-						threadId: activeThreadId,
+						threadId: currentThreadId,
 						messageText: messageText.trim(),
 						messageImages,
 					},
 				},
 			});
+			const sentMessage = response.data?.sendMessage as PharmacyMessage | undefined;
+			if (sentMessage?._id && sentMessage.threadId === currentThreadId) {
+				mergeRealtimeMessage(sentMessage);
+				applyRealtimeThreadUpdate(sentMessage);
+			}
 			setMessageText('');
 			setMessageImages([]);
 			await refreshMessagesWithIntent(true);
@@ -436,11 +536,11 @@ const MyMessages = () => {
 					ref={historyRef}
 					onScroll={handleHistoryScroll}
 				>
-					{!!messages.length && <div className="my-messages__day-divider">Conversation history</div>}
+					{!!displayedMessages.length && <div className="my-messages__day-divider">Conversation history</div>}
 					{messagesLoading && <p className="my-messages__hint">Loading conversation…</p>}
 					{messagesError && <p className="my-messages__hint">Messages could not load. Please try again.</p>}
-					{!messagesLoading && !messages.length && <p className="my-messages__hint">No messages in this conversation yet.</p>}
-					{messages.map((message) => {
+					{!messagesLoading && !displayedMessages.length && <p className="my-messages__hint">No messages in this conversation yet.</p>}
+					{displayedMessages.map((message) => {
 						const mine = message.senderId === user?._id;
 						return (
 							<article key={message._id} className={mine ? 'mine' : ''}>

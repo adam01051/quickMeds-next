@@ -104,22 +104,23 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 	const mobileSheet = (
 		<AnimatePresence>
 			{mobileMenuOpen && (
-				<>
-					<motion.button
-						type="button"
-						className="my-page-menu__mobile-backdrop"
-						aria-label="Close My Page menu"
-						onClick={() => setMobileMenuOpen(false)}
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-					/>
+				<motion.div
+					className="my-page-menu__mobile-backdrop"
+					role="presentation"
+					onPointerDown={(event: React.PointerEvent<HTMLDivElement>) => {
+						if (event.target === event.currentTarget) setMobileMenuOpen(false);
+					}}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+				>
 					<motion.div
 						className="my-page-menu__mobile-sheet"
 						role="dialog"
 						aria-modal="true"
 						aria-label="My Page sections"
+						onPointerDown={(event: React.PointerEvent<HTMLDivElement>) => event.stopPropagation()}
 						initial={{ opacity: 0, x: -24, scale: 0.98 }}
 						animate={{ opacity: 1, x: 0, scale: 1 }}
 						exit={{ opacity: 0, x: -24, scale: 0.98 }}
@@ -145,7 +146,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 							</button>
 						</nav>
 					</motion.div>
-				</>
+				</motion.div>
 			)}
 		</AnimatePresence>
 	);

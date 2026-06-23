@@ -272,6 +272,7 @@ Deferred compatibility work:
 
 - Removed the public `Pharmacy Owners` navigation entry from the desktop navbar and generic mobile public nav.
 - Added a `/pharmacies` mobile header menu sheet for primary navigation across Home, Pharmacies, Community, CS, and My Page/Login while preserving logged-in messages, notifications, avatar, and logout actions.
+- Public mobile navigation and the My Page mobile section sheet now close reliably from outside-sheet taps through full-screen overlay handling.
 - Removed the homepage mobile Owners bottom-tab/footer shortcuts; bottom tabs now stay focused on Explore, Search, Messages, and Profile.
 - Moved owner-oriented account actions into the final My Page navigation group, `For Pharmacy Owners`.
 - Normal users now see `Become a Pharmacy Owner` and `Explore Pharmacy Owners` from My Page; pharmacy-owner accounts see `My Pharmacies`, `Add Pharmacy`, and `Explore Pharmacy Owners`.
@@ -307,3 +308,36 @@ Deferred compatibility work:
 - My Page owner pharmacy management now uses `MyPharmacies` and `MyPharmacyCard` component names while preserving the existing desktop layout classes; the mobile My Pharmacies placeholder has been replaced with real owner pharmacy cards, status filters, pagination, and owner actions using the existing pharmacy contracts.
 - Mobile Add Pharmacy now reuses the existing create/update/upload/edit contracts in a grouped phone layout with safe-area sticky save controls, while the current desktop Add Pharmacy form and stylesheet remain unchanged.
 - Mobile My Page typography has been normalized across section headers, Followers/Followings cards, and Add Pharmacy grouped cards so account sections use the same compact text scale without changing desktop layouts or data contracts.
+
+## Uzbek Locale Migration
+
+- Added `uz` to the `next-i18next` locale list and shared language selector.
+- Added the Uzbek common translation namespace and Uzbek flag asset while preserving the existing English, Korean, and Russian locale contracts.
+- Stored locale values are normalized against the supported language list before routing, preventing stale values from creating missing flag paths.
+
+## Mobile CS Page Migration
+
+- Mobile `/cs` now reuses the same Notice and FAQ route structure as desktop instead of returning placeholder mobile text.
+- The mobile CS presentation is isolated in `scss/mobile/main.scss` under `#mobile-wrap .cs-page`, preserving the existing desktop support-center stylesheet.
+- Notice content becomes stacked mobile cards, while FAQ categories become horizontal chips and accordion answers wrap safely on phone widths.
+- No backend, GraphQL, route, or admin support-management contracts changed.
+
+## CS FAQ Content Migration
+
+- Public `/cs` now defaults to FAQ content instead of showing notice/news content first.
+- The public Notice tab remains available but shows a truthful empty state when there are no platform notices.
+- FAQ content now focuses on real QuickMeds user questions about pharmacy search, open status, delivery, insurance, messaging, account actions, comments, and Pharmacy Owner listing management.
+- Admin CS management and backend support contracts remain unchanged.
+
+## Desktop Typography Normalization
+
+- Desktop public navbar route/auth labels were increased to 14px so navigation reads more clearly and aligns with the My Page sidebar label scale.
+- Desktop My Page section headers, legacy section titles, and Followers/Followings stat rows were tightened further to reduce oversized typography and better match the account workspace scale.
+- My Page Followers/Followings stat counts now render as plain numeric values without parentheses, matching the cleaner desktop account-table presentation.
+- Mobile My Page typography and navigation behavior remain unchanged.
+
+## Messages Sent-Message Reconciliation
+
+- My Page Messages now merges successful `SEND_MESSAGE` mutation results into the active chat history immediately, then removes the local pending copy once `GET_MESSAGES` returns the same message id.
+- This keeps the left thread preview and active conversation in sync without changing message GraphQL contracts, uploads, socket events, unread marking, or responsive chat layout.
+- Receiver-side real-time delivery now uses complete raw WebSocket `message:new` payloads to update the active chat and conversation list immediately, with `GET_MESSAGES` and `GET_MY_MESSAGE_THREADS` kept as reconciliation sources.

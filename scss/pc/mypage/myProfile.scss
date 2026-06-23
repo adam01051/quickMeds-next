@@ -466,6 +466,12 @@
 	}
 }
 
+@media (min-width: 768px) {
+	#pc-wrap #my-page #my-profile-page .main-title-box .right-box .main-title {
+		font-size: 22px;
+	}
+}
+
 @media (max-width: 374px) {
 	#mobile-wrap #my-page #my-profile-page .top-box .photo-box .image-big-box {
 		align-items: flex-start;

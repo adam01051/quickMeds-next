@@ -893,3 +893,89 @@ Validation completed:
 - `yarn typecheck --pretty false` passed.
 - `yarn build` passed and generated all 70 current pages.
 - `git diff --check` passed.
+
+## Mobile Navigation Outside-Tap Close And Uzbek Locale
+
+- Reworked the public mobile navigation sheet and My Page mobile section sheet so each uses a full-screen overlay that closes on outside pointer press while preserving the existing X close, route-change close, and body scroll lock behavior.
+- Kept desktop navigation structure unchanged; the only desktop-facing change is adding Uzbek to the existing language dropdown.
+- Added `uz` to the `next-i18next` locale list, created the Uzbek common translation namespace, added an Uzbek flag asset, and hardened stored locale handling so stale language values fall back to English.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## Mobile CS Page
+
+- Replaced the mobile `/cs`, Notice, and FAQ placeholders with the real shared CS content so the mobile route now exposes the same Notice and FAQ behavior as desktop.
+- Added mobile-only CS styling under `#mobile-wrap`, including a compact support header, segmented Notice/FAQ tabs, stacked notice cards, scrollable FAQ category chips, and wrapping mobile-safe accordions.
+- Cleaned visible CS copy away from legacy real-estate wording toward QuickMeds pharmacy discovery and Pharmacy Owner terminology while preserving local component data and route query behavior.
+- Kept the existing desktop `#pc-wrap .cs-page` stylesheet unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## CS FAQ Content Upgrade
+
+- Made public `/cs` FAQ-first by default while keeping `/cs?tab=notice` route-compatible.
+- Removed fake promotional/news-style Notice rows and replaced them with an honest empty platform-notice state.
+- Replaced the old noisy FAQ data with 18 practical QuickMeds support answers across Getting Started, Pharmacy Search, Messaging, Account, and Pharmacy Owners.
+- Preserved the existing local FAQ accordion behavior, CS routes, admin CS pages, backend contracts, and GraphQL contracts.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## Desktop Typography Normalization
+
+- Increased desktop public navbar route and auth labels to 14px so top navigation matches the My Page sidebar navigation scale without changing navbar layout, routes, icons, language controls, or spacing.
+- Tightened desktop My Page header scale more noticeably by reducing the section title clamp, description size, and eyebrow size/letter spacing.
+- Reduced legacy desktop My Page section titles from 30px to 22px where those older `.main-title` styles remain, using desktop-only overrides for shared desktop/mobile files.
+- Reduced desktop Followers/Followings table headers, member names, and stat numbers while preserving restored row layout, follow/unfollow, likes, pagination, and profile navigation behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` initially compiled but hit a transient Next page-module lookup error for `/_document`; rerunning `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## Member Follow Count Cleanup
+
+- Removed the visible parentheses around Followers, Followings, and Likes counts in the My Page Followers/Followings rows so the stat cards render plain numbers.
+- Preserved the existing follow/unfollow, member like, pagination, profile navigation, GraphQL, and mobile/desktop layout behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## Messages Sent-Message Rendering Fix
+
+- Added local reconciliation for successful `SEND_MESSAGE` results so newly sent messages render immediately in the active My Page chat history while `GET_MESSAGES` remains the server source of truth.
+- Merged server messages and pending sent messages by message id, sorted them by creation time, and removed pending entries once the server message list includes the same id.
+- Stabilized the active message inquiry and preserved existing message send, upload, socket refresh, unread marking, desktop Enter-to-send, mobile overlay, thread preview, and scroll behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+## Messages Receiver Real-Time Delivery Fix
+
+- Updated My Page Messages to consume complete raw WebSocket `message:new` payloads and merge received messages into local chat state immediately instead of waiting on a successful message-history refetch.
+- Added local thread-preview reconciliation so incoming messages update the conversation list preview, timestamp, ordering, and unread count while GraphQL remains the source of truth.
+- Enabled raw WebSocket reconnect in the existing Apollo WebSocket setup and kept Socket.IO, polling, duplicate sockets, uploads, unread marking, and responsive chat layout unchanged.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.

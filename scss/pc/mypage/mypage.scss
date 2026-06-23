@@ -602,9 +602,9 @@
 		span {
 			color: var(--mypage-emerald);
 			font-family: $font;
-			font-size: 11px;
+			font-size: 9px;
 			font-weight: 750;
-			letter-spacing: 0.12em;
+			letter-spacing: 0.08em;
 			text-transform: uppercase;
 		}
 
@@ -612,7 +612,7 @@
 			margin: 8px 0 7px;
 			color: var(--mypage-ink);
 			font-family: $font;
-			font-size: clamp(30px, 3vw, 38px);
+			font-size: clamp(22px, 1.8vw, 26px);
 			font-weight: 650;
 			letter-spacing: -0.025em;
 			line-height: 1.15;
@@ -622,7 +622,7 @@
 			margin: 0;
 			color: var(--mypage-muted);
 			font-family: $font;
-			font-size: 15px;
+			font-size: 14px;
 			line-height: 1.55;
 		}
 	}
@@ -674,7 +674,7 @@
 				.title-text {
 					margin: 0;
 					color: var(--mypage-ink);
-					font: 800 13px/1.2 $font;
+					font: 800 12px/1.2 $font;
 				}
 			}
 
@@ -720,7 +720,7 @@
 					margin: 0;
 					overflow: hidden;
 					color: var(--mypage-ink);
-					font: 800 16px/1.25 $font;
+					font: 800 14px/1.25 $font;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 				}
@@ -755,7 +755,7 @@
 
 				span {
 					color: var(--mypage-ink);
-					font: 850 18px/1 $font;
+					font: 850 14px/1 $font;
 				}
 
 				svg {
@@ -1137,7 +1137,7 @@
 		cursor: pointer;
 	}
 
-	body > .my-page-menu__mobile-sheet {
+	body > .my-page-menu__mobile-backdrop .my-page-menu__mobile-sheet {
 		--mypage-ink: #102923;
 		--mypage-muted: #5e6f69;
 		--mypage-emerald: #064e3b;
@@ -1159,6 +1159,7 @@
 		background: var(--mypage-sidebar);
 		box-shadow: 0 18px 34px rgba(10, 24, 18, 0.24);
 		color: var(--mypage-ink);
+		cursor: default;
 		font-family: $font;
 		transform-origin: left top;
 
@@ -1351,7 +1352,7 @@
 @media (prefers-reduced-motion: reduce) {
 	#pc-wrap #my-page .my-page-menu__group a,
 	#mobile-wrap #my-page .my-page-menu__group a,
-	body > .my-page-menu__mobile-sheet .my-page-menu__group a {
+	body > .my-page-menu__mobile-backdrop .my-page-menu__mobile-sheet .my-page-menu__group a {
 		transition: none;
 	}
 }
