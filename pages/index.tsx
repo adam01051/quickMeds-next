@@ -20,6 +20,7 @@ const Home: NextPage = () => {
 				title="Featured pharmacies"
 				description="Highly ranked pharmacies ready to support everyday care."
 				initialInput={{ page: 1, limit: 6, sort: 'pharmacyRank', direction: Direction.DESC, search: {} }}
+				mobileOnly
 			/>
 			<HomeTrendingSection initialInput={{ page: 1, limit: 5, sort: 'pharmacyLikes', direction: Direction.DESC, search: {} }} />
 			<HomeSupportingSections />

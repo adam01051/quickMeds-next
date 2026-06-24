@@ -218,6 +218,8 @@ Deferred compatibility work:
 
 ## Homepage Interactive Trending Migration
 
+- The desktop homepage no longer renders the Featured pharmacies section; Trending pharmacies now follows the hero/search area on desktop.
+- Featured pharmacies remains available on the mobile homepage through a mobile-only section render that preserves the existing pharmacy query, cards, favorite behavior, and loading/error/empty states.
 - The currently rendered homepage `Popular choices` section has been replaced by `Trending pharmacies`.
 - Trending uses the existing `getPharmacies` query with `pharmacyLikes DESC` and no backend contract changes.
 - The section uses Framer Motion layout transitions: the selected pharmacy appears as the large feature card, and compact cards swap into that featured position when selected.
@@ -341,3 +343,17 @@ Deferred compatibility work:
 - My Page Messages now merges successful `SEND_MESSAGE` mutation results into the active chat history immediately, then removes the local pending copy once `GET_MESSAGES` returns the same message id.
 - This keeps the left thread preview and active conversation in sync without changing message GraphQL contracts, uploads, socket events, unread marking, or responsive chat layout.
 - Receiver-side real-time delivery now uses complete raw WebSocket `message:new` payloads to update the active chat and conversation list immediately, with `GET_MESSAGES` and `GET_MY_MESSAGE_THREADS` kept as reconciliation sources.
+
+## QuickMeds Assistant Frontend Integration
+
+- The reserved floating global chat has been converted into the QuickMeds Assistant surface; human pharmacy Messages remain isolated under `/mypage?category=messages`.
+- Detected integration shape: Next.js Pages Router, Yarn frontend, SCSS design system, no Tailwind/shadcn `components.json`, and NestJS backend.
+- Assistant UI is integrated manually through `@assistant-ui/react@0.8.20` and `useExternalStoreRuntime`; `assistant-ui init`, Assistant Cloud, and generated App Router `/api/chat` routes are not used.
+- The assistant sends non-streaming requests to the backend REST endpoint at `${REACT_APP_API_URL}/api/v1/chatbot/message`, preserving backend-owned Gemini provider credentials.
+- The frontend now handles `unavailable` and `rate_limited` assistant statuses from the Gemini-backed endpoint with FAQ/pharmacy route actions.
+- Desktop uses a fixed right-bottom support panel; mobile uses a full-screen assistant overlay with a back control and safe-area-aware composer.
+- Assistant CSS is shell-scoped: desktop rules live under `#pc-wrap`, mobile rules under `#mobile-wrap`, preventing mobile import order from overriding desktop placement.
+- The open assistant no longer keeps the floating launcher visible, preventing the bottom-right close button from overlapping the composer send control; the desktop panel was also tightened to a smaller right-bottom size while mobile remains full-screen.
+- Assistant responses now treat backend-approved `links` as page-name navigation controls separate from direct `actions`.
+- Visible assistant copy should remain natural and should not expose raw route paths, API paths, component names, or implementation details.
+- Approved assistant link labels/routes are Pharmacy, Messages, My Page, Become a Pharmacy Owner, Contact Support, and FAQ; the frontend renders only the label and navigates to the backend-approved href.

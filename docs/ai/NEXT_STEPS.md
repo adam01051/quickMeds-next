@@ -107,6 +107,7 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. Re-run visual screenshot QA for the interactive Trending pharmacies section in a browser session that does not retain the local Next.js FOUC-hiding style in screenshots.
 2. Manually exercise compact-card swap, keyboard selection, and favorite click behavior in an authenticated browser session.
+3. Verify desktop homepage no longer shows Featured pharmacies and mobile 390px/430px still shows the Featured pharmacies card list.
 
 ## Community Follow-up
 
@@ -128,3 +129,11 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. Complete authenticated desktop visual QA for `/mypage?category=followers` and `/mypage?category=followings`, including follow/unfollow, member-like, pagination, and profile navigation on restored desktop rows.
 2. Visually verify the desktop typography normalization across the public navbar and My Page sections: My Profile, My Favorites, My Pharmacies, Add Pharmacy, My Articles, Write Article, Followers, and Followings.
+
+## QuickMeds Assistant Follow-up
+
+1. Restart the backend on port `3007` so `POST /api/v1/chatbot/message` is available in the live dev server.
+2. Configure backend-only `GEMINI_API_KEY` and optional `GEMINI_MODEL`, then smoke test platform-support questions through the floating assistant.
+3. Browser-check desktop and mobile assistant open/close, compact desktop panel sizing, composer send-button access, suggested prompts, page-name links, action links, missing-provider state, Gemini unavailable/rate-limited states, and exact medical-advice refusal text.
+4. Confirm `/mypage?category=messages` remains unaffected by the assistant launcher and no raw WebSocket human-message state is reused.
+5. With a live Gemini key, verify assistant copy still avoids visible raw route paths and that only the approved page-name links are returned for navigation.

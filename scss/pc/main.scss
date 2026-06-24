@@ -39,6 +39,18 @@ body::-webkit-scrollbar {
 	display: none; /* for Chrome, Safari, and Opera */
 }
 
+@keyframes assistant-typing {
+	0%,
+	100% {
+		opacity: 0.35;
+		transform: translateY(0);
+	}
+	50% {
+		opacity: 1;
+		transform: translateY(-2px);
+	}
+}
+
 #pc-wrap {
 	#top {
 		.navbar {
@@ -534,136 +546,327 @@ body::-webkit-scrollbar {
 		}
 	}
 
-	.chatting {
-		.chat-button {
-			border: none;
+	.quickmeds-assistant {
+		.quickmeds-assistant__launcher {
 			position: fixed;
-			bottom: 90px;
 			right: 30px;
-			height: 50px;
-			width: 50px;
+			bottom: 90px;
+			z-index: 999;
+			width: 58px;
+			height: 58px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			border: 1px solid rgba(8, 99, 79, 0.2);
 			border-radius: 50%;
-			height: 50px;
 			background: #fff;
-			box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.2);
-			transition: transform 0.3s;
-			z-index: 999;
+			color: #064e3b;
+			box-shadow: 0 18px 45px rgba(15, 60, 48, 0.16);
+			cursor: pointer;
+			transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
 			&:hover {
-				cursor: pointer;
-				transform: scale(1.1);
-				background-color: #fff;
+				transform: translateY(-2px);
+				background: #f2fbf7;
+				box-shadow: 0 22px 55px rgba(15, 60, 48, 0.2);
+			}
+
+			svg {
+				font-size: 25px;
 			}
 		}
-		.chat-frame {
+
+		&.is-open {
+			.quickmeds-assistant__launcher {
+				display: none;
+				pointer-events: none;
+			}
+		}
+
+		.quickmeds-assistant__panel {
 			position: fixed;
-			right: -380px;
-			transition: right 0.7s ease-in-out;
-			width: 380px;
-			height: 500px;
+			right: 28px;
+			bottom: 108px;
+			z-index: 998;
+			width: min(380px, calc(100vw - 56px));
+			height: min(560px, calc(100vh - 156px));
+			min-height: 420px;
 			display: flex;
 			flex-direction: column;
-			background: rgb(233, 243, 255);
-			border-radius: 34px;
-			box-shadow: 0px 0px 15px 0px rgba(50, 50, 50, 0.3);
-			z-index: 100;
-			bottom: 150px;
-			transition: right 0.7s ease-in-out;
-			&.open {
-				right: 10px;
+			overflow: hidden;
+			border: 1px solid rgba(8, 99, 79, 0.16);
+			border-radius: 22px;
+			background: #f7fbf9;
+			box-shadow: 0 26px 80px rgba(18, 45, 38, 0.22);
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(14px) scale(0.98);
+			transition: opacity 0.22s ease, transform 0.22s ease;
+
+			&.is-open {
+				opacity: 1;
+				pointer-events: auto;
+				transform: translateY(0) scale(1);
 			}
-			.chat-top {
-				width: 100%;
-				height: 103px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				border-bottom: 1px solid rgba(205, 205, 205, 0.83);
-				font-size: 30px;
-				line-height: 54px;
-				color: #000000;
+		}
+
+		.quickmeds-assistant__header {
+			height: 78px;
+			padding: 16px 18px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			border-bottom: 1px solid #dce8e3;
+			background: #fff;
+		}
+
+		.quickmeds-assistant__back {
+			display: none;
+		}
+
+		.quickmeds-assistant__identity {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			min-width: 0;
+
+			p {
+				margin: 0;
+				color: #102f27;
+				font-family: $font;
+				font-size: 15px;
+				font-weight: 800;
+				line-height: 1.2;
 			}
-			.chat-content {
-				position: relative;
-				padding: 17px;
-				width: 100%;
-				height: 100%;
-				display: flex;
-				flex-direction: column;
+
+			span:not(.quickmeds-assistant__avatar) {
+				display: block;
+				margin-top: 3px;
+				color: #6d8179;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 600;
+				line-height: 1.25;
+			}
+		}
+
+		.quickmeds-assistant__avatar {
+			width: 42px;
+			height: 42px;
+			display: inline-flex;
+			flex: 0 0 42px;
+			align-items: center;
+			justify-content: center;
+			border-radius: 14px;
+			background: #dff5ea;
+			color: #08634f;
+		}
+
+		.quickmeds-assistant__close {
+			width: 36px;
+			height: 36px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border: 1px solid #dce8e3;
+			border-radius: 999px;
+			background: #fff;
+			color: #33554b;
+			cursor: pointer;
+		}
+
+		.quickmeds-assistant__history {
+			flex: 1;
+			min-height: 0;
+			padding: 18px;
+			overflow-y: auto;
+			background: linear-gradient(180deg, #f7fbf9 0%, #eef7f3 100%);
+		}
+
+		.quickmeds-assistant__intro,
+		.quickmeds-assistant__bubble {
+			border: 1px solid #dce8e3;
+			border-radius: 16px;
+			background: #fff;
+			box-shadow: 0 12px 34px rgba(18, 45, 38, 0.06);
+		}
+
+		.quickmeds-assistant__intro {
+			padding: 15px;
+
+			strong {
+				color: #102f27;
+				font-family: $font;
+				font-size: 16px;
+				font-weight: 850;
+			}
+
+			p {
+				margin: 7px 0 0;
+				color: #60756d;
+				font-family: $font;
+				font-size: 12px;
+				font-weight: 500;
+				line-height: 1.5;
+			}
+		}
+
+		.quickmeds-assistant__prompts {
+			margin: 14px 0 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+
+			button {
+				padding: 8px 11px;
+				border: 1px solid rgba(8, 99, 79, 0.18);
+				border-radius: 999px;
+				background: #fff;
+				color: #08634f;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 800;
+				line-height: 1;
+				cursor: pointer;
+			}
+		}
+
+		.quickmeds-assistant__message {
+			margin-top: 10px;
+			display: flex;
+
+			&--user {
+				justify-content: flex-end;
+
+				.quickmeds-assistant__bubble {
+					border-color: #b8ead6;
+					background: #def7ec;
+				}
+			}
+
+			&--assistant {
 				justify-content: flex-start;
-				overflow: auto;
-				.chat-main {
-					position: relative;
-					width: 100%;
-					display: flex;
-					flex-direction: column;
-					.msg-left {
-						margin-left: 10px;
-						padding: 9px;
-						width: auto;
-						height: auto;
-						display: flex;
-						background: #3c96cf;
-						border-radius: 20px 20px 20px 0px;
-						color: #fff;
-					}
-					.welcome {
-						margin-left: 10px;
-						padding: 9px;
-						width: auto;
-						height: auto;
-						display: flex;
-						background: #9fa7ac;
-						border-radius: 20px 20px 20px 0px;
-						color: #fff;
-					}
-				}
 			}
-			.chat-bott {
-				width: 100%;
-				height: 103px;
+		}
+
+		.quickmeds-assistant__bubble {
+			max-width: 82%;
+			padding: 11px 13px;
+
+			p {
+				margin: 0;
+				color: #153d33;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 550;
+				line-height: 1.45;
+				white-space: pre-wrap;
+			}
+
+			&--typing {
 				display: flex;
-				justify-content: center;
-				align-items: center;
-				border-top: 1px solid rgba(205, 205, 205, 0.83);
-				.msg-input {
-					padding: 20px;
-					width: 276px;
-					height: 50px;
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					background: #f7f7f7;
-					border-radius: 28px;
-					border: none;
-					outline-color: #257677;
-					font-family: 'Poppins';
-					font-style: normal;
-					font-weight: 400;
-					font-size: 16px;
-					line-height: 24px;
-				}
-				.send-msg-btn {
-					margin-left: 14px;
-					width: 50px;
-					height: 50px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
+				gap: 5px;
+
+				span {
+					width: 6px;
+					height: 6px;
 					border-radius: 50%;
-					background: #33c1c1;
-					border: none;
+					background: #08634f;
+					animation: assistant-typing 1s ease-in-out infinite;
+
+					&:nth-child(2) {
+						animation-delay: 0.12s;
+					}
+
+					&:nth-child(3) {
+						animation-delay: 0.24s;
+					}
 				}
 			}
-			.msg-right {
-				padding: 9px;
-				width: auto;
-				height: auto;
-				display: flex;
-				background: #d0ece8;
-				border-radius: 20px 20px 0px 20px;
+		}
+
+		.quickmeds-assistant__links,
+		.quickmeds-assistant__actions {
+			margin-top: 10px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+
+			button {
+				height: 30px;
+				padding: 0 11px;
+				border: 1px solid rgba(8, 99, 79, 0.2);
+				border-radius: 999px;
+				background: #f2fbf7;
+				color: #08634f;
+				font-family: $font;
+				font-size: 11px;
+				font-weight: 800;
+				cursor: pointer;
+			}
+		}
+
+		.quickmeds-assistant__links button {
+			background: #ffffff;
+			text-decoration: none;
+		}
+
+		.quickmeds-assistant__composer {
+			padding: 14px;
+			display: flex;
+			align-items: flex-end;
+			gap: 10px;
+			border-top: 1px solid #dce8e3;
+			background: #fff;
+		}
+
+		.quickmeds-assistant__composer-label {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0 0 0 0);
+		}
+
+		.quickmeds-assistant__composer textarea {
+			flex: 1;
+			min-height: 46px;
+			max-height: 120px;
+			padding: 13px 15px;
+			resize: none;
+			border: 1px solid #cbdcd5;
+			border-radius: 16px;
+			outline: none;
+			background: #f8fbfa;
+			color: #153d33;
+			font-family: $font;
+			font-size: 13px;
+			font-weight: 550;
+			line-height: 1.45;
+
+			&:focus {
+				border-color: #08634f;
+				box-shadow: 0 0 0 3px rgba(8, 99, 79, 0.1);
+			}
+		}
+
+		.quickmeds-assistant__composer button {
+			width: 46px;
+			height: 46px;
+			display: inline-flex;
+			flex: 0 0 46px;
+			align-items: center;
+			justify-content: center;
+			border: none;
+			border-radius: 15px;
+			background: #08634f;
+			color: #fff;
+			cursor: pointer;
+
+			&:disabled {
+				background: #c7d6d0;
+				cursor: not-allowed;
 			}
 		}
 	}

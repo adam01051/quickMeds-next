@@ -92,6 +92,17 @@
 - Pharmacy detail now offers real messaging for logged-in non-owner users, login guidance for guests, and a non-sendable owner notice for owners viewing their own pharmacy.
 - Delete, archive, blocking, typing indicators, moderation, chatbot integration, and non-image attachments remain deferred.
 
+# QuickMeds Assistant Decision
+
+- The former floating global chat surface is now the QuickMeds Assistant launcher and support panel.
+- The assistant is separate from My Page pharmacy Messages and must not use message GraphQL operations, raw WebSocket human-message events, unread state, or notification state.
+- The frontend uses the existing Next.js Pages Router and SCSS design system with manual `@assistant-ui/react` external-store integration; Assistant Cloud, generated App Router routes, and Tailwind/shadcn initialization are not used.
+- The assistant calls the backend REST endpoint at `/api/v1/chatbot/message`; Gemini provider credentials stay backend-only through `GEMINI_API_KEY` and optional `GEMINI_MODEL`.
+- The backend default model is `gemini-3.1-flash-lite`, selected as a Google AI Studio Free Tier eligible Flash-Lite model for small text-only platform-support answers.
+- The assistant is limited to QuickMeds platform support and must refuse medical or medicine-advice requests with the approved safety text.
+- Assistant visible message text must be natural user-facing copy and must not expose raw route paths, API paths, component names, or implementation details.
+- Assistant navigation is whitelisted through backend-returned page-name links only: Pharmacy, Messages, My Page, Become a Pharmacy Owner, Contact Support, and FAQ. Direct actions remain reserved for focused next steps such as Start pharmacy registration.
+
 # Homepage Trending Decision
 
 - The active homepage `Popular choices` surface now represents `Trending pharmacies` and sorts by `pharmacyLikes DESC`.

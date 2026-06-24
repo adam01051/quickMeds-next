@@ -979,3 +979,101 @@ Validation completed:
 - `yarn typecheck --pretty false` passed.
 - `yarn build` passed and generated all 90 current locale-expanded pages.
 - `git diff --check` passed.
+
+## QuickMeds Assistant Chatbot Frontend
+
+- Replaced the reserved floating global `Online Chat` UI with an isolated QuickMeds Assistant launcher and panel while keeping My Page pharmacy Messages separate.
+- Integrated `@assistant-ui/react@0.8.20` with `useExternalStoreRuntime`, pinned to the older Assistant UI line because the current release requires TypeScript syntax newer than this repo's 4.6 compiler.
+- Added a desktop right-bottom assistant panel and mobile full-screen overlay using the existing emerald/mint SCSS language, suggested prompts, loading state, retryable error copy, route action buttons, and safe-area-aware composer.
+- The assistant calls `POST /api/v1/chatbot/message` on the QuickMeds backend through `REACT_APP_API_URL`; no AI provider key is exposed to the frontend.
+- Fixed assistant CSS scoping so desktop uses the right-bottom `#pc-wrap` panel while mobile uses the full-screen `#mobile-wrap` overlay; mobile rules no longer override desktop due import order.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+
+Remaining verification:
+
+- Browser visual QA and live provider QA remain pending until the backend is restarted with the new endpoint and assistant provider env is configured.
+
+## QuickMeds Assistant Launcher Overlap Fix
+
+- Removed the open-state bottom-right assistant launcher so it no longer turns into a floating `X` over the composer/send area.
+- Kept the desktop header close button and mobile back/close controls as the open-state close affordances.
+- Added defensive desktop and mobile CSS guards that hide the launcher whenever the assistant root is open.
+- Reduced the desktop assistant panel from the previous oversized dimensions to a more compact right-bottom panel while keeping the mobile assistant full-screen.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+Remaining verification:
+
+- Browser visual QA for the compact desktop panel and composer send-button click path remains pending.
+
+## Homepage Desktop Featured Pharmacies Disable
+
+- Added a `mobileOnly` option to the homepage pharmacy section so the existing Featured pharmacies surface can remain available on mobile while being disabled on desktop.
+- Marked the homepage Featured pharmacies section as mobile-only; desktop now skips rendering the section and skips its pharmacy query, so Trending pharmacies follows the hero/search area without an empty gap.
+- Preserved the mobile Featured pharmacies query, cards, favorite behavior, loading/error/empty states, and motion behavior.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 90 current locale-expanded pages.
+- `git diff --check` passed.
+
+Remaining verification:
+
+- Browser visual QA remains pending for desktop homepage spacing and mobile Featured pharmacies visibility at 390px and 430px.
+
+## QuickMeds Assistant Gemini Integration
+
+- Kept the existing Assistant UI visual shell and frontend REST transport while updating status handling for Gemini-backed `unavailable` and `rate_limited` responses.
+- Backend provider was migrated from OpenAI-compatible env names to Google Gemini API through Google AI Studio with the official `@google/genai` SDK.
+- Selected backend default model: `gemini-3.1-flash-lite`, a Free Tier eligible Flash-Lite model suited to small text-only QuickMeds platform-support answers.
+- Required backend env: `GEMINI_API_KEY`; optional backend env: `GEMINI_MODEL`. No Gemini key is exposed through frontend env, browser code, logs, or request payloads.
+- Endpoint contract remains `POST /api/v1/chatbot/message` with `{ message, history?, locale? }` and `{ message, actions?, status }`.
+- Supported assistant topics remain limited to verified QuickMeds platform help: pharmacy search, filters, profiles, contact/messages, account tools, Pharmacy Owner listing tools, comments, support, and FAQ.
+
+Validation completed:
+
+- Frontend `yarn typecheck --pretty false` passed.
+- Frontend `yarn build` passed and generated all 90 current locale-expanded pages.
+- Frontend `git diff --check` passed.
+- Backend `npx tsc -p apps/quickmeds-api/tsconfig.app.json --noEmit` passed.
+- Backend `npx tsc -p apps/quickmeds-batch/tsconfig.app.json --noEmit` passed.
+- Backend `npm run build` passed.
+- Backend local `ChatbotService` smoke verified missing-provider `not_configured`, exact medical refusal text, and 11th same-client request `rate_limited`.
+- Backend `git diff --check` passed.
+
+Remaining verification:
+
+- Live browser and POST QA with a real `GEMINI_API_KEY` remain pending, including quota/rate-limit behavior from Google AI Studio.
+
+## QuickMeds Assistant Natural Responses And Links
+
+- Extended the assistant frontend types to accept backend-approved `links` separately from direct `actions`.
+- Rendered assistant links as compact page-name controls inside assistant replies, so visible response text no longer needs raw route paths.
+- Kept the existing Assistant UI shell, desktop/mobile panel layout, send behavior, status handling, and My Page human Messages isolation unchanged.
+- Backend assistant responses now return natural plain text plus whitelisted page links only: Pharmacy, Messages, My Page, Become a Pharmacy Owner, Contact Support, and FAQ.
+- Backend deterministic assistant replies now cover stable common intents for greetings, pharmacy search, contacting pharmacies, owner registration, support, FAQ/account guidance, unknown prompts, and malicious raw-route prompts.
+- Backend Gemini prompting now asks for structured JSON and forbids visible raw routes, API paths, component names, or implementation details; model output is parsed, sanitized, and filtered against the whitelist before returning.
+- The exact medical/medicine refusal remains unchanged and still skips provider execution.
+
+Validation completed:
+
+- Backend local `ChatbotService` smoke verified `hello`, pharmacy search, contact pharmacy, add pharmacy, contact QuickMeds, unknown prompt, exact medical refusal, and a raw-route prompt. Visible assistant messages contained no raw route paths.
+- Frontend `yarn typecheck --pretty false` passed.
+- Frontend `yarn build` passed and generated all 90 current locale-expanded pages.
+- Backend `npx tsc -p apps/quickmeds-api/tsconfig.app.json --noEmit` passed.
+- Backend `npx tsc -p apps/quickmeds-batch/tsconfig.app.json --noEmit` passed.
+- Backend `npm run build` passed.
+- Frontend and backend `git diff --check` passed.
+
+Remaining verification:
+
+- Live Gemini/browser QA remains pending until the backend runs with `GEMINI_API_KEY`; the backend docs update for this natural-link contract was blocked by the tool approval layer during this pass.

@@ -19,17 +19,27 @@ interface HomePharmacySectionProps {
 	description: string;
 	initialInput: PharmaciesInquiry;
 	tone?: 'default' | 'soft';
+	mobileOnly?: boolean;
 }
 
-const HomePharmacySection = ({ title, description, initialInput, tone = 'default' }: HomePharmacySectionProps) => {
+const HomePharmacySection = ({
+	title,
+	description,
+	initialInput,
+	tone = 'default',
+	mobileOnly = false,
+}: HomePharmacySectionProps) => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const reduceMotion = useReducedMotion();
 	const [pharmacies, setPharmacies] = useState<Property[]>([]);
 	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
+	const isMobile = device === 'mobile';
+	const shouldRender = !mobileOnly || isMobile;
 	const { loading, error, refetch } = useQuery(GET_PHARMACIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
+		skip: !shouldRender,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => setPharmacies(data?.getPharmacies?.list ?? []),
 	});
@@ -46,7 +56,6 @@ const HomePharmacySection = ({ title, description, initialInput, tone = 'default
 		}
 	};
 
-	const isMobile = device === 'mobile';
 	const mobileListVariants = {
 		hidden: { opacity: 1 },
 		visible: {
@@ -62,6 +71,8 @@ const HomePharmacySection = ({ title, description, initialInput, tone = 'default
 			transition: { duration: reduceMotion ? 0.01 : 0.42, ease: [0.22, 1, 0.36, 1] },
 		},
 	};
+
+	if (!shouldRender) return null;
 
 	return (
 		<section className={`home-discovery-section home-discovery-section--${tone}`}>

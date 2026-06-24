@@ -14,6 +14,7 @@
 	"dependencies": {
 		"@apollo/client": "^3.5.10",
 		"@apollo/react-components": "^4.0.0-beta.2",
+		"@assistant-ui/react": "0.8.20",
 		"@babel/plugin-proposal-private-methods": "^7.16.11",
 		"@cahil/utils": "^2.3.2",
 		"@date-io/date-fns": "^2.14.0",

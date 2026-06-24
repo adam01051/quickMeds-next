@@ -3870,6 +3870,294 @@
 
 }
 
+#mobile-wrap .quickmeds-assistant {
+	.quickmeds-assistant__launcher {
+		position: fixed;
+		right: 18px;
+		bottom: calc(22px + env(safe-area-inset-bottom));
+		z-index: 999;
+		width: 54px;
+		height: 54px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid rgba(8, 99, 79, 0.22);
+		border-radius: 50%;
+		background: #fff;
+		color: #064e3b;
+		box-shadow: 0 18px 45px rgba(15, 60, 48, 0.18);
+	}
+
+	&.is-open {
+		.quickmeds-assistant__launcher {
+			display: none;
+			pointer-events: none;
+		}
+	}
+
+	.quickmeds-assistant__panel {
+		position: fixed;
+		inset: 0;
+		z-index: 998;
+		height: 100vh;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		background: #f6faf8;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(100%);
+		transition: opacity 0.2s ease, transform 0.24s ease;
+
+		&.is-open {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translateX(0);
+		}
+	}
+
+	.quickmeds-assistant__header {
+		min-height: 68px;
+		padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		border-bottom: 1px solid #dce8e3;
+		background: #fff;
+	}
+
+	.quickmeds-assistant__back,
+	.quickmeds-assistant__close {
+		width: 38px;
+		height: 38px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #dce8e3;
+		border-radius: 999px;
+		background: #fff;
+		color: #153d33;
+	}
+
+	.quickmeds-assistant__close {
+		margin-left: auto;
+	}
+
+	.quickmeds-assistant__identity {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-width: 0;
+
+		p {
+			margin: 0;
+			color: #102f27;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 850;
+			line-height: 1.2;
+		}
+
+		span:not(.quickmeds-assistant__avatar) {
+			display: block;
+			margin-top: 2px;
+			color: #6d8179;
+			font-family: $font;
+			font-size: 10px;
+			font-weight: 650;
+			line-height: 1.25;
+		}
+	}
+
+	.quickmeds-assistant__avatar {
+		width: 38px;
+		height: 38px;
+		display: inline-flex;
+		flex: 0 0 38px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 13px;
+		background: #dff5ea;
+		color: #08634f;
+	}
+
+	.quickmeds-assistant__history {
+		flex: 1;
+		min-height: 0;
+		padding: 14px;
+		overflow-y: auto;
+		background: linear-gradient(180deg, #f8fbfa 0%, #eef7f3 100%);
+	}
+
+	.quickmeds-assistant__intro,
+	.quickmeds-assistant__bubble {
+		border: 1px solid #dce8e3;
+		border-radius: 16px;
+		background: #fff;
+		box-shadow: 0 12px 34px rgba(18, 45, 38, 0.06);
+	}
+
+	.quickmeds-assistant__intro {
+		padding: 14px;
+
+		strong {
+			color: #102f27;
+			font-family: $font;
+			font-size: 15px;
+			font-weight: 850;
+		}
+
+		p {
+			margin: 7px 0 0;
+			color: #60756d;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 500;
+			line-height: 1.48;
+		}
+	}
+
+	.quickmeds-assistant__prompts {
+		margin: 12px 0 16px;
+		display: flex;
+		gap: 8px;
+		overflow-x: auto;
+		padding-bottom: 2px;
+
+		button {
+			padding: 8px 11px;
+			flex: 0 0 auto;
+			border: 1px solid rgba(8, 99, 79, 0.18);
+			border-radius: 999px;
+			background: #fff;
+			color: #08634f;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 800;
+			line-height: 1;
+		}
+	}
+
+	.quickmeds-assistant__message {
+		margin-top: 10px;
+		display: flex;
+
+		&--user {
+			justify-content: flex-end;
+
+			.quickmeds-assistant__bubble {
+				border-color: #b8ead6;
+				background: #def7ec;
+			}
+		}
+	}
+
+	.quickmeds-assistant__bubble {
+		max-width: 86%;
+		padding: 11px 13px;
+
+		p {
+			margin: 0;
+			color: #153d33;
+			font-family: $font;
+			font-size: 12px;
+			font-weight: 550;
+			line-height: 1.45;
+			white-space: pre-wrap;
+		}
+
+		&--typing {
+			display: flex;
+			gap: 5px;
+
+			span {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: #08634f;
+				animation: assistant-typing 1s ease-in-out infinite;
+			}
+		}
+	}
+
+	.quickmeds-assistant__links,
+	.quickmeds-assistant__actions {
+		margin-top: 10px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+
+		button {
+			height: 30px;
+			padding: 0 11px;
+			border: 1px solid rgba(8, 99, 79, 0.2);
+			border-radius: 999px;
+			background: #f2fbf7;
+			color: #08634f;
+			font-family: $font;
+			font-size: 11px;
+			font-weight: 800;
+		}
+	}
+
+	.quickmeds-assistant__links button {
+		background: #ffffff;
+		text-decoration: none;
+	}
+
+	.quickmeds-assistant__composer {
+		padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+		display: flex;
+		align-items: flex-end;
+		gap: 9px;
+		border-top: 1px solid #dce8e3;
+		background: #fff;
+	}
+
+	.quickmeds-assistant__composer-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+
+	.quickmeds-assistant__composer textarea {
+		flex: 1;
+		min-height: 44px;
+		max-height: 112px;
+		padding: 12px 14px;
+		resize: none;
+		border: 1px solid #cbdcd5;
+		border-radius: 15px;
+		outline: none;
+		background: #f8fbfa;
+		color: #153d33;
+		font-family: $font;
+		font-size: 12px;
+		font-weight: 550;
+		line-height: 1.45;
+	}
+
+	.quickmeds-assistant__composer button {
+		width: 44px;
+		height: 44px;
+		display: inline-flex;
+		flex: 0 0 44px;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		border-radius: 14px;
+		background: #08634f;
+		color: #fff;
+
+		&:disabled {
+			background: #c7d6d0;
+		}
+	}
+}
+
 @keyframes catalog-mobile-pulse {
 	0%,
 	100% {
@@ -3880,9 +4168,22 @@
 	}
 }
 
+@keyframes assistant-typing {
+	0%,
+	100% {
+		opacity: 0.35;
+		transform: translateY(0);
+	}
+	50% {
+		opacity: 1;
+		transform: translateY(-2px);
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	#mobile-wrap.quickmeds-home,
-	#mobile-wrap.quickmeds-catalog {
+	#mobile-wrap.quickmeds-catalog,
+	#mobile-wrap .quickmeds-assistant {
 		*,
 		*::before,
 		*::after {

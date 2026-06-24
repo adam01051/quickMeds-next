@@ -53,6 +53,8 @@ const withLayoutBasic = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
+						{!isMessagesPage && <Chat />}
+
 						{!isMyPage && (
 							<Stack id={'footer'}>
 								<Footer />
