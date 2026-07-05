@@ -374,3 +374,17 @@ Deferred compatibility work:
 - Header language state now resolves from `router.locale` before local storage so the default route remains English and route language changes are reflected in UI state.
 - My Page shell/menu, My Pharmacies management, Add Pharmacy location/save copy, the location picker, and pharmacy detail location labels now use `next-i18next` keys.
 - Korean touched pharmacy labels were corrected from property/agent wording to pharmacy/owner wording; Uzbek includes localized new keys and Russian touched pharmacy labels were corrected, while some new Russian/Korean nested owner-copy keys intentionally fall back to English text until a full translation pass.
+
+## Telegram Login Frontend Migration
+
+- Added a Telegram login action to `/account/join` without changing the existing nickname/password login, registration, GraphQL `LOGIN`, or GraphQL `SIGN_UP` flows.
+- The Telegram action redirects to `${REACT_APP_API_URL}/auth/telegram/start` with a safe relative `returnTo` value.
+- Added `/auth/telegram/complete` to exchange the backend-issued one-time ticket for the existing QuickMeds access token, then reuse `updateStorage` and `updateUserInfo`.
+- The completion route shows a compact retryable error state when the ticket is missing, expired, reused, or rejected.
+- The frontend does not receive Telegram client secrets, Telegram ID tokens, or QuickMeds JWTs through URL query strings.
+
+## Account Login Redirect Stabilization
+
+- Successful account login still uses the existing GraphQL `LOGIN` mutation, localStorage access token, and Apollo reactive user hydration.
+- The safe return-path helper now rejects `/account/join`, `/auth`, `/api`, and `/_next` paths before redirecting, preventing self-return and internal development asset URLs from becoming post-login destinations.
+- Telegram completion uses the same return-path policy so the new social-login bridge and the existing nickname/password login stay aligned.

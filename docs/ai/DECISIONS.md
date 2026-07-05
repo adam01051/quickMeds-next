@@ -150,3 +150,17 @@
 - Pharmacy pages should not introduce direct Google Maps iframes or a second map provider unless a future provider migration is approved.
 - The active Next locale is the source of truth for visible language; stored locale is only a fallback when the route has no valid locale, and English remains the default.
 - My Page and pharmacy map/location copy should use `next-i18next` keys so owner-facing language changes with the selected language.
+
+# Telegram Login Decision
+
+- Telegram login uses Telegram's current OpenID Connect authorization-code flow with PKCE; the old iframe widget is not used.
+- The NestJS backend owns Telegram callback handling, code exchange, ID-token validation, identity creation, and the one-time login-ticket bridge.
+- The frontend keeps the existing localStorage QuickMeds JWT model for v1 by exchanging the opaque ticket on `/auth/telegram/complete`.
+- New Telegram identities create normal `USER` accounts with `MemberAuthType.TELEGRAM`; Telegram login must not grant Pharmacy Owner permissions automatically.
+- The v1 Telegram scope is `openid profile`; phone sharing, bot direct-message access, account-linking UI, and HttpOnly-cookie auth migration remain deferred.
+
+# Account Redirect Stability Decision
+
+- Account login return targets must remain user-facing internal pages only.
+- Auth pages, Next.js internal asset paths, API paths, and the account join page itself are treated as unsafe post-login destinations and normalize to `/`.
+- The current localStorage JWT session model remains unchanged; this is a redirect-safety guard, not an auth storage migration.

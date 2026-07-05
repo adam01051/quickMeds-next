@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import LocalPharmacyOutlinedIcon from '@mui/icons-material/LocalPharmacyOutlined';
 import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useRouter } from 'next/router';
@@ -11,6 +12,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import BrandLogo from '../../libs/components/common/BrandLogo';
 import { logIn, signUp } from '../../libs/auth';
+import { REACT_APP_API_URL } from '../../libs/config';
 
 export const getStaticProps = async ({ locale }: { locale?: string }) => ({
 	props: {
@@ -23,6 +25,8 @@ type AccountType = 'USER' | 'AGENT';
 
 const safeReferrer = (referrer: string | string[] | undefined): string => {
 	if (typeof referrer !== 'string' || !referrer.startsWith('/') || referrer.startsWith('//')) return '/';
+	if (referrer.startsWith('/_next') || referrer.startsWith('/api') || referrer.startsWith('/auth')) return '/';
+	if (referrer.startsWith('/account/join')) return '/';
 	return referrer;
 };
 
@@ -32,6 +36,7 @@ const Join: NextPage = () => {
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' as AccountType });
 	const [showPassword, setShowPassword] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isTelegramRedirecting, setIsTelegramRedirecting] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
@@ -66,6 +71,14 @@ const Join: NextPage = () => {
 		} finally {
 			setIsSubmitting(false);
 		}
+	};
+
+	const handleTelegramLogin = () => {
+		if (isTelegramRedirecting) return;
+		setErrorMessage('');
+		setIsTelegramRedirecting(true);
+		const returnTo = safeReferrer(router.query.referrer);
+		window.location.assign(`${REACT_APP_API_URL}/auth/telegram/start?returnTo=${encodeURIComponent(returnTo)}`);
 	};
 
 	const isSignup = mode === 'signup';
@@ -197,6 +210,20 @@ const Join: NextPage = () => {
 										: 'Login'}
 							</Button>
 						</form>
+
+						<div className="join-page__divider" aria-hidden="true">
+							<span>or</span>
+						</div>
+
+						<button
+							type="button"
+							className="join-page__telegram"
+							onClick={handleTelegramLogin}
+							disabled={isTelegramRedirecting}
+						>
+							<TelegramIcon />
+							<span>{isTelegramRedirecting ? 'Opening Telegram...' : 'Continue with Telegram'}</span>
+						</button>
 
 						<p className="join-page__switch">
 							{isSignup ? 'Already have an account?' : 'New to QuickMeds?'}

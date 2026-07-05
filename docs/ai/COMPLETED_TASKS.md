@@ -1122,3 +1122,36 @@ Validation completed:
 Remaining verification:
 
 - Authenticated owner browser QA remains pending for My Page language switching inside `/mypage?category=myPharmacies` and `/mypage?category=addPharmacy`, plus live Add/Edit Pharmacy map interactions after login.
+
+## Telegram OIDC Login Frontend
+
+- Added `Continue with Telegram` to `/account/join`, preserving existing nickname/password login and registration behavior.
+- Added `/auth/telegram/complete` to exchange the backend one-time login ticket for the existing QuickMeds access token and hydrate `localStorage` plus `userVar`.
+- Kept the current Apollo Authorization-header model unchanged for v1; no Telegram secret, ID token, or QuickMeds JWT is exposed in frontend env or query strings.
+- Added account-page styling for the Telegram action and compact completion success/error states.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 94 current locale-expanded pages.
+- `git diff --check` passed.
+
+Remaining verification:
+
+- Browser visual QA and a live Telegram login flow require the backend to run with BotFather-provided Telegram OIDC env values.
+
+## Account Login Redirect Stabilization
+
+- Hardened successful login redirects so unsafe or self-referential destinations fall back to `/`.
+- `/account/join`, `/auth`, `/api`, and `/_next` paths are no longer accepted as post-login return targets for nickname/password login or Telegram completion.
+- Preserved the existing `LOGIN`, `SIGN_UP`, `updateStorage`, `updateUserInfo`, Apollo auth-header model, and account page presentation.
+- Reproduced the broken local state where the dev manifest knew `/account/join` but the compiled page artifact was missing, causing the account route to fall into `_error`.
+- Stopped the QuickMeds frontend writer, cleared `.next`, restarted one QuickMeds dev server on `3001`, and confirmed `.next/server/pages/account/join.js` is generated again.
+- Confirmed `3000` is currently owned by `/Users/adam/Desktop/Reja`, not QuickMeds; QuickMeds should be tested on `3001` while that process is active.
+
+Validation completed:
+
+- `yarn typecheck --pretty false` passed.
+- `git diff --check` passed.
+- Fresh headless Chrome loaded `http://localhost:3001/account/join/`; the Next dev log returned `GET /account/join 200`.
+- A fresh Chrome CDP diagnostic opened `http://localhost:3001/`, clicked the Login link, and submitted the login form without any `hot-update` request and without any 4xx network response.

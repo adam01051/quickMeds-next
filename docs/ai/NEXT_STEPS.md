@@ -149,3 +149,16 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 1. Complete authenticated My Page browser QA for English-to-Korean-to-English switching on `/mypage?category=myPharmacies` and `/mypage?category=addPharmacy`, including the My Page sidebar, mobile sheet, owner cards, location picker, and save/validation messages.
 2. Complete full Russian and Korean translation review for the new nested My Page/location keys; temporary English fallback copy is present where accurate translation was not verified in this pass.
 3. Re-check pharmacy detail and owner Add/Edit map rendering after any future map-provider or geocoding-provider change to ensure Google iframe usage is not reintroduced accidentally.
+
+## Telegram Login Follow-up
+
+1. Register production and development HTTPS callback URLs in BotFather Web Login, then configure backend-only `TELEGRAM_OIDC_CLIENT_ID`, `TELEGRAM_OIDC_CLIENT_SECRET`, and `TELEGRAM_OIDC_REDIRECT_URI`.
+2. Smoke test the live Telegram flow from `/account/join` through `/auth/telegram/complete`, including expired/reused tickets, safe `returnTo`, and existing-header authenticated state.
+3. Design optional logged-in account linking, phone scope, bot direct-message access, and a future HttpOnly-cookie auth migration as separate approved phases.
+
+## Account Login Follow-up
+
+1. Smoke test a real successful nickname/password login from a fresh browser tab and confirm it lands on `/` when no safe referrer is present.
+2. Verify login from a protected user-facing page still returns to that page when it passes the internal return-path guard.
+3. Use `http://localhost:3001` for QuickMeds while `/Users/adam/Desktop/Reja` owns port `3000`.
+4. If a browser tab still requests an old `/_next/static/webpack/*.hot-update.json` hash after this source fix, close that tab or clear the tab's site data because the request is retained by the browser's stale Next.js dev client session.
