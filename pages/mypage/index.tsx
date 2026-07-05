@@ -18,6 +18,7 @@ import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } f
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
 import MyMessages from '../../libs/components/mypage/MyMessages';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { LIKE_TARGET_MEMBER, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { Messages } from '../../libs/config';
 
@@ -30,57 +31,58 @@ export const getStaticProps = async ({ locale }: any) => ({
 const MyPage: NextPage = () => {
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const requestedCategory = Array.isArray(router.query.category) ? router.query.category[0] : router.query.category;
 	const pageDetails: Record<string, { eyebrow: string; title: string; description: string }> = {
 		myProfile: {
-			eyebrow: 'Account',
-			title: 'My Profile',
-			description: 'Keep your QuickMeds account information current.',
+			eyebrow: t('mypage.categories.myProfile.eyebrow'),
+			title: t('mypage.categories.myProfile.title'),
+			description: t('mypage.categories.myProfile.description'),
 		},
 		myFavorites: {
-			eyebrow: 'Pharmacy discovery',
-			title: 'My Favorites',
-			description: 'Return to the pharmacies you trust and want to remember.',
+			eyebrow: t('mypage.categories.myFavorites.eyebrow'),
+			title: t('mypage.categories.myFavorites.title'),
+			description: t('mypage.categories.myFavorites.description'),
 		},
 		recentlyVisited: {
-			eyebrow: 'Pharmacy discovery',
-			title: 'Recently Visited',
-			description: 'Continue exploring pharmacies you recently viewed.',
+			eyebrow: t('mypage.categories.recentlyVisited.eyebrow'),
+			title: t('mypage.categories.recentlyVisited.title'),
+			description: t('mypage.categories.recentlyVisited.description'),
 		},
 		followers: {
-			eyebrow: 'Connections',
-			title: 'Followers',
-			description: 'View members who follow your QuickMeds activity.',
+			eyebrow: t('mypage.categories.followers.eyebrow'),
+			title: t('mypage.categories.followers.title'),
+			description: t('mypage.categories.followers.description'),
 		},
 		followings: {
-			eyebrow: 'Connections',
-			title: 'Followings',
-			description: 'Manage the QuickMeds members you follow.',
+			eyebrow: t('mypage.categories.followings.eyebrow'),
+			title: t('mypage.categories.followings.title'),
+			description: t('mypage.categories.followings.description'),
 		},
 		messages: {
-			eyebrow: 'Connections',
-			title: 'Messages',
-			description: 'Continue conversations with Pharmacy Owners.',
+			eyebrow: t('mypage.categories.messages.eyebrow'),
+			title: t('mypage.categories.messages.title'),
+			description: t('mypage.categories.messages.description'),
 		},
 		myArticles: {
-			eyebrow: 'Community',
-			title: 'My Articles',
-			description: 'Review the articles you have shared with the community.',
+			eyebrow: t('mypage.categories.myArticles.eyebrow'),
+			title: t('mypage.categories.myArticles.title'),
+			description: t('mypage.categories.myArticles.description'),
 		},
 		writeArticle: {
-			eyebrow: 'Community',
-			title: 'Write Article',
-			description: 'Share a useful experience or update with the QuickMeds community.',
+			eyebrow: t('mypage.categories.writeArticle.eyebrow'),
+			title: t('mypage.categories.writeArticle.title'),
+			description: t('mypage.categories.writeArticle.description'),
 		},
 		myPharmacies: {
-			eyebrow: 'Pharmacy Owner',
-			title: 'My Pharmacies',
-			description: 'Manage the pharmacies registered to your account.',
+			eyebrow: t('mypage.categories.myPharmacies.eyebrow'),
+			title: t('mypage.categories.myPharmacies.title'),
+			description: t('mypage.categories.myPharmacies.description'),
 		},
 		addPharmacy: {
-			eyebrow: 'Pharmacy Owner',
-			title: 'Add Pharmacy',
-			description: 'Register a pharmacy and provide accurate service information.',
+			eyebrow: t('mypage.categories.addPharmacy.eyebrow'),
+			title: t('mypage.categories.addPharmacy.title'),
+			description: t('mypage.categories.addPharmacy.description'),
 		},
 	};
 	const aliasedCategory =

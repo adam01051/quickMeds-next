@@ -136,3 +136,17 @@
 - `/agent/detail?agentId=...` remains the compatibility route for Pharmacy Owner detail until a coordinated route migration is approved.
 - Pharmacy Owner detail uses the same public owner-directory emerald/mint visual system and avoids legacy property-era cards on this route.
 - Owner-detail comments are member-profile comments using the existing `CommentGroup.MEMBER` contract; no ratings, scores, credentials, specialties, or unsupported professional claims are added.
+
+# Pharmacy Owner Location Picker Decision
+
+- Pharmacy Owners must choose a readable address and confirm an interactive map pin; raw latitude and longitude fields are not shown in the owner create/edit UI.
+- The frontend continues sending backend scalar `pharmacyLatitude` and `pharmacyLongitude` fields for compatibility; GeoJSON remains deferred to the approved distance-search phase.
+- OSM/Leaflet is the v1 interactive map provider and Nominatim is the v1 address search/reverse-geocoding service, isolated behind local helpers for later provider replacement.
+- Owner save actions require a confirmed nonzero valid coordinate pair, and backend create/update validation rejects invalid coordinate scalars even if a client bypasses the UI.
+
+# Pharmacy Map And Language Decision
+
+- Leaflet/OpenStreetMap is the single default pharmacy map provider for both owner pin selection and public saved-coordinate display.
+- Pharmacy pages should not introduce direct Google Maps iframes or a second map provider unless a future provider migration is approved.
+- The active Next locale is the source of truth for visible language; stored locale is only a fallback when the route has no valid locale, and English remains the default.
+- My Page and pharmacy map/location copy should use `next-i18next` keys so owner-facing language changes with the selected language.

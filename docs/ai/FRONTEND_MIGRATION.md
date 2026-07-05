@@ -357,3 +357,20 @@ Deferred compatibility work:
 - Assistant responses now treat backend-approved `links` as page-name navigation controls separate from direct `actions`.
 - Visible assistant copy should remain natural and should not expose raw route paths, API paths, component names, or implementation details.
 - Approved assistant link labels/routes are Pharmacy, Messages, My Page, Become a Pharmacy Owner, Contact Support, and FAQ; the frontend renders only the label and navigates to the backend-approved href.
+
+## Pharmacy Owner Location Picker Migration
+
+- Owner Add/Edit Pharmacy now replaces manual latitude/longitude entry with a reusable `PharmacyLocationPicker`.
+- The picker uses OSM/Leaflet for map pin selection and Nominatim for address search/reverse geocoding while preserving the current GraphQL scalar coordinate payload.
+- Coordinates remain hidden in form state and are submitted only after the owner confirms a valid nonzero map pin.
+- Edit mode hydrates the existing address, region, latitude, and longitude into the picker and marks the location confirmed until the pin changes.
+- Structured city/district/street/landmark persistence, GeoJSON, radius search, and distance sorting remain deferred backend-contract work.
+
+## Pharmacy Map And My Page Language Migration
+
+- Public pharmacy detail now renders saved coordinates with the shared Leaflet/OpenStreetMap map instead of a Google Maps iframe.
+- The owner location picker now reuses the same shared map component for editable map-click and marker-drag behavior.
+- Map visibility on pharmacy detail uses the shared coordinate helper, preserving the nonzero valid-coordinate rule.
+- Header language state now resolves from `router.locale` before local storage so the default route remains English and route language changes are reflected in UI state.
+- My Page shell/menu, My Pharmacies management, Add Pharmacy location/save copy, the location picker, and pharmacy detail location labels now use `next-i18next` keys.
+- Korean touched pharmacy labels were corrected from property/agent wording to pharmacy/owner wording; Uzbek includes localized new keys and Russian touched pharmacy labels were corrected, while some new Russian/Korean nested owner-copy keys intentionally fall back to English text until a full translation pass.

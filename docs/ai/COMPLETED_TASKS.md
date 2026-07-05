@@ -1077,3 +1077,48 @@ Validation completed:
 Remaining verification:
 
 - Live Gemini/browser QA remains pending until the backend runs with `GEMINI_API_KEY`; the backend docs update for this natural-link contract was blocked by the tool approval layer during this pass.
+
+## Pharmacy Owner Location Picker
+
+- Replaced the visible latitude/longitude fields in Add Pharmacy with an address-first OSM/Leaflet location picker for desktop and mobile.
+- Added address search through Nominatim, draggable/clickable map pin selection, browser current-location support, reverse-geocoded readable address updates, selected-address preview, and explicit pin confirmation.
+- Kept `pharmacyLatitude` and `pharmacyLongitude` hidden in form state and preserved the existing `CREATE_PHARMACY` / `UPDATE_PHARMACY` scalar payload shape.
+- Edit mode preloads existing pharmacy address, region, and coordinates; moving the pin requires reconfirmation before saving.
+- Added shared coordinate and geocoding helpers so future GeoJSON conversion remains centralized and does not change the current API contract.
+- Added Leaflet dependencies with `react-leaflet@4.2.1` and pinned `@types/leaflet@1.9.8` for the repo's TypeScript 4.6 compiler.
+- Backend now rejects missing-pair, non-finite, out-of-range, and `0,0` pharmacy coordinates before persisting create/update data.
+
+Validation completed:
+
+- Frontend `yarn typecheck --pretty false` passed.
+- Frontend `yarn build` passed and generated all 90 current locale-expanded pages.
+- Backend `npx tsc -p apps/quickmeds-api/tsconfig.app.json --noEmit` passed.
+- Backend focused pharmacy service tests passed: `7/7`.
+- Backend `npm run build` passed.
+- Frontend and backend `git diff --check` passed.
+
+Remaining verification:
+
+- Authenticated browser QA remains pending for live owner create/edit flows, Nominatim result selection, current-location permission denial, reverse-geocode failure, mobile map confirmation, and detail-page map rendering after save.
+
+## Pharmacy Map Provider And My Page Language Standardization
+
+- Added a shared Leaflet/OpenStreetMap pharmacy map component for both saved-coordinate display and owner pin editing.
+- Replaced the pharmacy detail Google Maps iframe with the shared Leaflet map, keeping the existing scalar latitude/longitude coordinate contract unchanged.
+- Reused centralized coordinate validation for pharmacy detail map visibility so invalid, missing, or `0,0` coordinates do not render a map.
+- Updated header language initialization to prefer the active Next locale, then valid stored locale, and otherwise default to English.
+- Moved My Page shell, My Page menu, My Pharmacies owner-management copy, owner location-picker copy, Add Pharmacy map-save messages, and pharmacy detail map/location labels into `next-i18next`.
+- Added matching locale keys for English, Korean, Russian, and Uzbek; corrected touched Korean and Russian pharmacy labels that still used real-estate/agent wording.
+
+Validation completed:
+
+- Frontend `yarn typecheck --pretty false` passed.
+- Frontend `yarn build` passed and generated all 90 current locale-expanded pages.
+- Locale JSON parse check passed for `en`, `kr`, `ru`, and `uz`.
+- Browser DOM QA on `http://localhost:3001/pharmacies/detail?id=6a3e582875f0f8365f57234b` found `0` Google Maps embeds and Leaflet/OpenStreetMap map markup with attribution.
+- Browser DOM QA on unauthenticated `/mypage` confirmed the default locale payload is English and no Korean My Page text is rendered by default.
+- Browser DOM QA on `/kr/pharmacies/detail?id=6a3e582875f0f8365f57234b` confirmed Korean locale payload and corrected pharmacy wording without the old Korean real-estate/agent labels.
+
+Remaining verification:
+
+- Authenticated owner browser QA remains pending for My Page language switching inside `/mypage?category=myPharmacies` and `/mypage?category=addPharmacy`, plus live Add/Edit Pharmacy map interactions after login.

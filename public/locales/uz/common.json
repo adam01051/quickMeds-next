@@ -22,5 +22,141 @@
   "my page": "mening sahifam",
   "Community Detail": "Hamjamiyat tafsilotlari",
   "Login/Signup": "Kirish/Ro'yxatdan o'tish",
-  "Member Page": "A'zo sahifasi"
+  "Member Page": "A'zo sahifasi",
+  "pharmacyLocation": {
+    "TASHKENT_CITY": "Toshkent shahri",
+    "TASHKENT_REGION": "Toshkent viloyati",
+    "ANDIJAN": "Andijon",
+    "BUKHARA": "Buxoro",
+    "FERGANA": "Farg'ona",
+    "JIZZAKH": "Jizzax",
+    "KARAKALPAKSTAN": "Qoraqalpog'iston",
+    "KASHKADARYA": "Qashqadaryo",
+    "KHOREZM": "Xorazm",
+    "NAMANGAN": "Namangan",
+    "NAVOI": "Navoiy",
+    "SAMARKAND": "Samarqand",
+    "SIRDARYA": "Sirdaryo",
+    "SURKHANDARYA": "Surxondaryo"
+  },
+  "pharmacyDetail": {
+    "location": {
+      "eyebrow": "Joylashuv",
+      "title": "Dorixonani toping",
+      "noMap": "Xarita joylashuvi hali kiritilmagan."
+    },
+    "nearby": {
+      "title": "{{region}} hududidagi boshqa dorixonalar"
+    }
+  },
+  "locationPicker": {
+    "searchLabel": "Dorixona manzilini qidiring",
+    "searchPlaceholder": "Shahar, tuman, ko'cha, mo'ljal yoki dorixona nomi bo'yicha qidiring",
+    "searching": "Manzil qidirilmoqda...",
+    "region": "Hudud",
+    "city": "Shahar",
+    "district": "Tuman",
+    "street": "Ko'cha va bino",
+    "landmark": "Mo'ljal (ixtiyoriy)",
+    "useCurrentLocation": "Joriy joylashuvimdan foydalanish",
+    "openMap": "Xaritani ochish va joylashuvni tasdiqlash",
+    "confirmedLocation": "Tasdiqlangan joylashuv",
+    "selectedPreview": "Tanlangan manzil",
+    "chooseAddress": "Manzilni tanlang va xaritadagi belgini tasdiqlang.",
+    "pinSet": "Xarita belgisi qo'yildi. Saqlashdan oldin tasdiqlang.",
+    "reverseGeocoding": "Xarita belgisi bo'yicha manzil yangilanmoqda...",
+    "mapHelp": "Xaritani bosing yoki belgini dorixona kirish joyiga torting.",
+    "confirm": "Dorixona joylashuvini tasdiqlash",
+    "errors": {
+      "searchUnavailable": "Manzil qidiruvi vaqtincha ishlamayapti.",
+      "reverseFailed": "Manzil avtomatik yangilanmadi.",
+      "currentLocationUnsupported": "Bu brauzer joriy joylashuvni qo'llab-quvvatlamaydi.",
+      "permissionDenied": "Joylashuvga ruxsat berilmadi yoki mavjud emas. Manzilni qidiring yoki xaritada belgilang."
+    }
+  },
+  "addPharmacy": {
+    "location": {
+      "eyebrow": "Joylashuv",
+      "title": "Manzil va tasdiqlangan xarita belgisi",
+      "desktopTitle": "Dorixona joylashuvi",
+      "desktopDescription": "Manzilni qidiring, belgini dorixona kirish joyiga qo'ying va xaritadagi joylashuvni tasdiqlang."
+    },
+    "actions": {
+      "save": "Dorixonani saqlash",
+      "confirmToSave": "Saqlash uchun joylashuvni tasdiqlang",
+      "confirmLocation": "Joylashuvni tasdiqlash"
+    },
+    "errors": {
+      "maxImages": "5 tadan ortiq rasm yuklab bo'lmaydi.",
+      "confirmLocation": "Saqlashdan oldin manzilni tanlang va dorixona xarita belgisini tasdiqlang."
+    },
+    "success": {
+      "created": "Dorixona muvaffaqiyatli yaratildi.",
+      "updated": "Dorixona muvaffaqiyatli yangilandi."
+    }
+  },
+  "mypage": {
+    "common": {
+      "logout": "Chiqish",
+      "logoutConfirm": "Chiqishni xohlaysizmi?",
+      "tryAgain": "Qayta urinib ko'ring"
+    },
+    "menu": {
+      "account": "Hisob",
+      "connections": "Aloqalar",
+      "community": "Hamjamiyat",
+      "pharmacyOwners": "Dorixona egalari uchun",
+      "becomeOwner": "Dorixona egasi bo'lish",
+      "exploreOwners": "Dorixona egalarini ko'rish",
+      "ownerRole": "Dorixona egasi",
+      "memberRole": "Mening QuickMeds hisobim",
+      "defaultMember": "QuickMeds a'zosi",
+      "openAdmin": "Adminni ochish",
+      "closeMenu": "Mening sahifam menyusini yopish",
+      "mobileNavigation": "Mening sahifam mobil navigatsiyasi"
+    },
+    "categories": {
+      "myProfile": { "eyebrow": "Hisob", "title": "Mening profilim", "description": "QuickMeds hisob ma'lumotlaringizni yangilab boring." },
+      "myFavorites": { "eyebrow": "Dorixona qidiruvi", "title": "Sevimlilarim", "description": "Ishongan va eslab qolmoqchi bo'lgan dorixonalaringizga qayting." },
+      "recentlyVisited": { "eyebrow": "Dorixona qidiruvi", "title": "Yaqinda ko'rilganlar", "description": "Yaqinda ko'rgan dorixonalaringizni o'rganishda davom eting." },
+      "followers": { "eyebrow": "Aloqalar", "title": "Kuzatuvchilar", "description": "QuickMeds faoliyatingizni kuzatuvchi a'zolarni ko'ring." },
+      "followings": { "eyebrow": "Aloqalar", "title": "Kuzatilayotganlar", "description": "Siz kuzatadigan QuickMeds a'zolarini boshqaring." },
+      "messages": { "eyebrow": "Aloqalar", "title": "Xabarlar", "description": "Dorixona egalari bilan suhbatlarni davom ettiring." },
+      "myArticles": { "eyebrow": "Hamjamiyat", "title": "Maqolalarim", "description": "Hamjamiyat bilan ulashgan maqolalaringizni ko'ring." },
+      "writeArticle": { "eyebrow": "Hamjamiyat", "title": "Maqola yozish", "description": "QuickMeds hamjamiyati bilan foydali tajriba yoki yangilik ulashing." },
+      "myPharmacies": { "eyebrow": "Dorixona egasi", "title": "Mening dorixonalarim", "description": "Hisobingizga biriktirilgan dorixonalarni boshqaring." },
+      "addPharmacy": { "eyebrow": "Dorixona egasi", "title": "Dorixona qo'shish", "description": "Dorixonani ro'yxatdan o'tkazing va aniq xizmat ma'lumotlarini kiriting." }
+    },
+    "myPharmacies": {
+      "filterByStatus": "Dorixonalarimni holat bo'yicha filtrlash",
+      "loading": "Dorixonalarim yuklanmoqda",
+      "countInStatus": "{{status}} holatida {{count}} dorixona",
+      "totalAvailable": "{{count}} dorixona mavjud",
+      "confirmDelete": "Bu dorixonani o'chirishni xohlaysizmi?",
+      "confirmStatus": "Bu dorixonani {{status}} holatiga o'tkazishni xohlaysizmi?",
+      "loadErrorTitle": "Dorixonalar yuklanmadi",
+      "loadErrorText": "Ulanishni tekshirib, qayta urinib ko'ring.",
+      "emptyTitle": "Dorixona topilmadi",
+      "emptyText": "Dorixona qo'shing yoki boshqa ro'yxatni ko'rish uchun holat filtrini almashtiring.",
+      "status": { "hold": "Kutilmoqda", "active": "Faol", "closed": "Yopiq" },
+      "table": { "name": "Dorixona nomi", "datePublished": "E'lon qilingan sana", "status": "Holat", "views": "Ko'rishlar", "action": "Amal" },
+      "card": {
+        "open247": "24/7 ochiq",
+        "hoursNotProvided": "Ish vaqti kiritilmagan",
+        "openNow": "Hozir ochiq",
+        "closed": "Yopiq",
+        "pickupOnly": "Faqat olib ketish",
+        "insurance": "Sug'urta",
+        "noInsurance": "Sug'urta yo'q",
+        "published": "E'lon qilingan",
+        "view": "Ko'rish",
+        "edit": "Tahrirlash",
+        "moreActions": "{{name}} uchun boshqa amallar",
+        "closePharmacy": "Dorixonani yopish",
+        "deletePharmacy": "Dorixonani o'chirish",
+        "deliveryWithFee": "Yetkazib berish: {{fee}}",
+        "close": "Yopish"
+      }
+    }
+  }
 }

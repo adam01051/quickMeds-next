@@ -1,5 +1,6 @@
 import { Button, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
@@ -30,14 +31,15 @@ const formatPharmacyType = (value: string) =>
 		.replace(/_/g, ' ')
 		.replace(/\b\w/g, (letter) => letter.toUpperCase());
 
-const getHoursLabel = (property: Property) => {
-	if (property.open24Hours) return 'Open 24/7';
-	if (!property.hoursConfigured) return 'Hours not provided';
-	return property.isOpenNow ? 'Open now' : 'Closed';
+const getHoursLabelKey = (property: Property) => {
+	if (property.open24Hours) return 'mypage.myPharmacies.card.open247';
+	if (!property.hoursConfigured) return 'mypage.myPharmacies.card.hoursNotProvided';
+	return property.isOpenNow ? 'mypage.myPharmacies.card.openNow' : 'mypage.myPharmacies.card.closed';
 };
 
 export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 	const { property, deletePropertyHandler, memberPage, updatePharmacyHandler } = props;
+	const { t } = useTranslation('common');
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -78,7 +80,7 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 	const image = property.pharmacyImages?.[0]
 		? `${REACT_APP_API_URL}/${property.pharmacyImages[0]}`
 		: '/img/homepage/pharmacy-hero.webp';
-	const hoursLabel = getHoursLabel(property);
+	const hoursLabel = t(getHoursLabelKey(property));
 	const hoursClass = property.open24Hours || property.isOpenNow ? 'is-open' : property.hoursConfigured ? 'is-closed' : 'is-unknown';
 
 	const useFallbackImage = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -117,16 +119,16 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 						<span>{formatPharmacyType(property.pharmacyType)}</span>
 						<span>
 							<LocalShippingOutlinedIcon />
-							{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}
+							{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : t('mypage.myPharmacies.card.pickupOnly')}
 						</span>
 						<span>
 							<HealthAndSafetyOutlinedIcon />
-							{property.acceptsInsurance ? 'Insurance' : 'No insurance'}
+							{property.acceptsInsurance ? t('mypage.myPharmacies.card.insurance') : t('mypage.myPharmacies.card.noInsurance')}
 						</span>
 					</div>
 
 					<div className="my-pharmacy-card__meta">
-						<span>Published</span>
+						<span>{t('mypage.myPharmacies.card.published')}</span>
 						<strong>
 							<Moment format="DD MMM, YYYY">{property.createdAt}</Moment>
 						</strong>
@@ -134,13 +136,13 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 
 					<div className="my-pharmacy-card__actions">
 						<Button className="my-pharmacy-card__view" onClick={() => pushPharmacyDetail(property._id)}>
-							View
+							{t('mypage.myPharmacies.card.view')}
 							<ArrowForwardRoundedIcon />
 						</Button>
 						<Button className="my-pharmacy-card__edit" onClick={() => pushEditProperty(property._id)}>
-							Edit
+							{t('mypage.myPharmacies.card.edit')}
 						</Button>
-						<IconButton className="my-pharmacy-card__more" aria-label={`More actions for ${property.pharmacyName}`} onClick={handleClick}>
+						<IconButton className="my-pharmacy-card__more" aria-label={t('mypage.myPharmacies.card.moreActions', { name: property.pharmacyName })} onClick={handleClick}>
 							<MoreHorizRoundedIcon />
 						</IconButton>
 					</div>
@@ -153,7 +155,7 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 									updatePharmacyHandler(PharmacyStatus.CLOSED, property._id);
 								}}
 							>
-								Close pharmacy
+								{t('mypage.myPharmacies.card.closePharmacy')}
 							</MenuItem>
 						)}
 						<MenuItem
@@ -161,8 +163,8 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 								handleClose();
 								deletePropertyHandler(property._id);
 							}}
-						>
-							Delete pharmacy
+							>
+							{t('mypage.myPharmacies.card.deletePharmacy')}
 						</MenuItem>
 					</Menu>
 				</div>
@@ -178,7 +180,11 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 					<Typography className="name">{property.pharmacyName}</Typography>
 					<Typography className="address">{property.pharmacyAddress}</Typography>
 					<Typography className="price">
-						<strong>{property.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(property.pharmacyDeliveryFee)}` : 'Pickup only'}</strong>
+						<strong>
+							{property.hasDelivery
+								? t('mypage.myPharmacies.card.deliveryWithFee', { fee: formatDeliveryFeeUZS(property.pharmacyDeliveryFee) })
+								: t('mypage.myPharmacies.card.pickupOnly')}
+						</strong>
 					</Typography>
 				</Stack>
 				<Stack className="date-box">
@@ -223,7 +229,7 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 										updatePharmacyHandler(PharmacyStatus.CLOSED, property?._id);
 									}}
 								>
-									Close
+									{t('mypage.myPharmacies.card.close')}
 								</MenuItem>
 							</>
 						)} 

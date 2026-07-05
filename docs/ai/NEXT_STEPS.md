@@ -137,3 +137,15 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 3. Browser-check desktop and mobile assistant open/close, compact desktop panel sizing, composer send-button access, suggested prompts, page-name links, action links, missing-provider state, Gemini unavailable/rate-limited states, and exact medical-advice refusal text.
 4. Confirm `/mypage?category=messages` remains unaffected by the assistant launcher and no raw WebSocket human-message state is reused.
 5. With a live Gemini key, verify assistant copy still avoids visible raw route paths and that only the approved page-name links are returned for navigation.
+
+## Pharmacy Owner Location Picker Follow-up
+
+1. Complete authenticated browser QA for Add Pharmacy and Edit Pharmacy on desktop and mobile, including address search, map click, marker drag, current-location success/denial, reverse-geocode failure, pin reconfirmation after movement, save success, and detail-page map rendering.
+2. Review Nominatim public API usage before production; replace with a dedicated provider or self-hosted geocoder if expected traffic exceeds public usage limits.
+3. Keep structured city/district/street persistence, duplicate-near-coordinate detection, GeoJSON `Point`, `2dsphere` indexing, radius search, and returned distance deferred until the backend distance-search phase is approved.
+
+## Pharmacy Map And Language Follow-up
+
+1. Complete authenticated My Page browser QA for English-to-Korean-to-English switching on `/mypage?category=myPharmacies` and `/mypage?category=addPharmacy`, including the My Page sidebar, mobile sheet, owner cards, location picker, and save/validation messages.
+2. Complete full Russian and Korean translation review for the new nested My Page/location keys; temporary English fallback copy is present where accurate translation was not verified in this pass.
+3. Re-check pharmacy detail and owner Add/Edit map rendering after any future map-provider or geocoding-provider change to ensure Google iframe usage is not reintroduced accidentally.

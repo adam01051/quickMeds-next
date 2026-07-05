@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { MyPharmacyCard } from './MyPharmacyCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
@@ -16,12 +17,13 @@ import { UPDATE_PHARMACY } from '../../../apollo/user/mutation';
 import Link from 'next/link';
 
 const statusTabs = [
-	{ value: PharmacyStatus.HOLD, label: 'Hold' },
-	{ value: PharmacyStatus.ACTIVE, label: 'Active' },
-	{ value: PharmacyStatus.CLOSED, label: 'Closed' },
+	{ value: PharmacyStatus.HOLD, labelKey: 'mypage.myPharmacies.status.hold' },
+	{ value: PharmacyStatus.ACTIVE, labelKey: 'mypage.myPharmacies.status.active' },
+	{ value: PharmacyStatus.CLOSED, labelKey: 'mypage.myPharmacies.status.closed' },
 ];
 
 const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
+	const { t } = useTranslation('common');
 	const device = useDeviceDetect();
 	const [searchFilter, setSearchFilter] = useState<AgentPharmaciesInquiry>(initialInput);
 	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
@@ -57,7 +59,7 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 
 	const deletePropertyHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('are you sure to delete this pharmacy')) {
+			if (await sweetConfirmAlert(t('mypage.myPharmacies.confirmDelete'))) {
 				await updatePharmacy({
 					variables: {
 						input: {
@@ -75,7 +77,7 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 
 	const updatePharmacyHandler = async (status: string, id: string) => {
 		try {
-			if (await sweetConfirmAlert(`are you sure change to ${status} status`)) {
+			if (await sweetConfirmAlert(t('mypage.myPharmacies.confirmStatus', { status }))) {
 				await updatePharmacy({
 					variables: {
 						input: {
@@ -101,12 +103,12 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 				<div className="my-pharmacies-page__bar">
 					<div>
 						<strong>{total}</strong>
-						<span>{total === 1 ? 'pharmacy' : 'pharmacies'} in {String(searchFilter.search?.pharmacyStatus ?? '').toLowerCase()}</span>
+						<span>{t('mypage.myPharmacies.countInStatus', { count: total, status: String(searchFilter.search?.pharmacyStatus ?? '').toLowerCase() })}</span>
 					</div>
-					<Link href="/mypage?category=addPharmacy">Add pharmacy</Link>
+					<Link href="/mypage?category=addPharmacy">{t('mypage.categories.addPharmacy.title')}</Link>
 				</div>
 
-				<div className="my-pharmacies-page__tabs" role="tablist" aria-label="Filter my pharmacies by status">
+				<div className="my-pharmacies-page__tabs" role="tablist" aria-label={t('mypage.myPharmacies.filterByStatus')}>
 					{statusTabs.map((tab) => (
 						<button
 							key={tab.value}
@@ -114,26 +116,26 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 							className={searchFilter.search?.pharmacyStatus === tab.value ? 'is-active' : ''}
 							onClick={() => changeStatusHandler(tab.value)}
 						>
-							{tab.label}
+							{t(tab.labelKey)}
 						</button>
 					))}
 				</div>
 
 				{getAgentPharmaciesLoading && !agentProperties.length ? (
-					<div className="my-pharmacies-page__list" aria-label="Loading my pharmacies">
+					<div className="my-pharmacies-page__list" aria-label={t('mypage.myPharmacies.loading')}>
 						{Array.from({ length: 3 }).map((_, index) => <div className="my-pharmacy-card-skeleton" key={index} />)}
 					</div>
 				) : getAgentPharmaciesError ? (
 					<div className="my-pharmacies-page__state" role="alert">
-						<h2>Pharmacies could not be loaded</h2>
-						<p>Please check your connection and try again.</p>
-						<button type="button" onClick={() => getAgentPharmaciesRefetch({ input: searchFilter })}>Try again</button>
+						<h2>{t('mypage.myPharmacies.loadErrorTitle')}</h2>
+						<p>{t('mypage.myPharmacies.loadErrorText')}</p>
+						<button type="button" onClick={() => getAgentPharmaciesRefetch({ input: searchFilter })}>{t('mypage.common.tryAgain')}</button>
 					</div>
 				) : agentProperties?.length === 0 ? (
 					<div className="my-pharmacies-page__state">
-						<h2>No pharmacy found</h2>
-						<p>Add a pharmacy or switch status filters to review another list.</p>
-						<Link href="/mypage?category=addPharmacy">Add pharmacy</Link>
+						<h2>{t('mypage.myPharmacies.emptyTitle')}</h2>
+						<p>{t('mypage.myPharmacies.emptyText')}</p>
+						<Link href="/mypage?category=addPharmacy">{t('mypage.categories.addPharmacy.title')}</Link>
 					</div>
 				) : (
 					<div className="my-pharmacies-page__list">
@@ -157,7 +159,7 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 							color="primary"
 							onChange={paginationHandler}
 						/>
-						<p>{total} pharmacies available</p>
+						<p>{t('mypage.myPharmacies.totalAvailable', { count: total })}</p>
 					</div>
 				)}
 			</div>
@@ -172,34 +174,34 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 						onClick={() => changeStatusHandler(PharmacyStatus.HOLD)}
 						className={searchFilter?.search?.pharmacyStatus === 'HOLD' ? 'active-tab-name' : 'tab-name'}
 					>
-						Hold
+						{t('mypage.myPharmacies.status.hold')}
 					</Typography>
 					<Typography
 						onClick={() => changeStatusHandler(PharmacyStatus.ACTIVE)}
 						className={searchFilter?.search?.pharmacyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
 					>
-						Active
+						{t('mypage.myPharmacies.status.active')}
 					</Typography>
 					<Typography
 						onClick={() => changeStatusHandler(PharmacyStatus.CLOSED)}
 						className={searchFilter?.search?.pharmacyStatus === 'CLOSED' ? 'active-tab-name' : 'tab-name'}
 					>
-						Closed
+						{t('mypage.myPharmacies.status.closed')}
 					</Typography>
 				</Stack>
 				<Stack className="list-box">
 					<Stack className="listing-title-box">
-						<Typography className="title-text">Pharmacy name</Typography>
-						<Typography className="title-text">Date Published</Typography>
-						<Typography className="title-text">Status</Typography>
-						<Typography className="title-text">View</Typography>
-						{searchFilter?.search?.pharmacyStatus === 'ACTIVE' && <Typography className="title-text">Action</Typography>}
+						<Typography className="title-text">{t('mypage.myPharmacies.table.name')}</Typography>
+						<Typography className="title-text">{t('mypage.myPharmacies.table.datePublished')}</Typography>
+						<Typography className="title-text">{t('mypage.myPharmacies.table.status')}</Typography>
+						<Typography className="title-text">{t('mypage.myPharmacies.table.views')}</Typography>
+						{searchFilter?.search?.pharmacyStatus === 'ACTIVE' && <Typography className="title-text">{t('mypage.myPharmacies.table.action')}</Typography>}
 					</Stack>
 
 					{agentProperties?.length === 0 ? (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No pharmacy found!</p>
+							<p>{t('mypage.myPharmacies.emptyTitle')}</p>
 						</div>
 					) : (
 						agentProperties.map((property: Property) => {
@@ -226,7 +228,7 @@ const MyPharmacies: NextPage = ({ initialInput, ...props }: any) => {
 								/>
 							</Stack>
 							<Stack className="total-result">
-								<Typography>{total} pharmacies available</Typography>
+								<Typography>{t('mypage.myPharmacies.totalAvailable', { count: total })}</Typography>
 							</Stack>
 						</Stack>
 					)}

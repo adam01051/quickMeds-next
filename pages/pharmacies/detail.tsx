@@ -22,7 +22,6 @@ import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
 import moment from 'moment';
 import { formatDeliveryFeeUZS } from '../../libs/utils';
-import { getPharmacyLocationLabel } from '../../libs/utils/pharmacy-location';
 import { REACT_APP_API_URL } from '../../libs/config';
 import { userVar } from '../../apollo/store';
 import { getJwtToken } from '../../libs/auth';
@@ -30,12 +29,17 @@ import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GET_COMMENTS, GET_PHARMACIES, GET_PHARMACY } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { CREATE_COMMENT, LIKE_TARGET_PHARMACY, START_PHARMACY_CONVERSATION } from '../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { isValidLatLng } from '../../libs/utils/coordinates';
+
+const PharmacyMap = dynamic(() => import('../../libs/components/common/PharmacyMap'), { ssr: false });
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
 	props: {
@@ -55,6 +59,7 @@ const pharmacyImage = (image?: string) => (image ? `${REACT_APP_API_URL}/${image
 
 const PharmacyDetail: NextPage = () => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [pharmacyId, setPharmacyId] = useState<string | null>(null);
 	const [pharmacy, setPharmacy] = useState<Property | null>(null);
@@ -139,8 +144,12 @@ const PharmacyDetail: NextPage = () => {
 	const validCoordinates = useMemo(() => {
 		if (!pharmacy) return false;
 		const { pharmacyLatitude: latitude, pharmacyLongitude: longitude } = pharmacy;
-		return latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180 && !(latitude === 0 && longitude === 0);
+		return isValidLatLng(latitude, longitude);
 	}, [pharmacy]);
+	const pharmacyMarker = useMemo(
+		() => validCoordinates && pharmacy ? { lat: pharmacy.pharmacyLatitude, lng: pharmacy.pharmacyLongitude } : null,
+		[pharmacy, validCoordinates],
+	);
 
 	const relatedPharmacies = nearbyPharmacies.filter((item) => item._id !== pharmacyId).slice(0, 4);
 	const isFavorite = pharmacy?.meLiked?.[0]?.myFavorite === true;
@@ -149,6 +158,7 @@ const PharmacyDetail: NextPage = () => {
 		pharmacy?.hasDelivery ? 'Delivery available' : null,
 		pharmacy?.acceptsInsurance ? 'Insurance accepted' : null,
 	].filter(Boolean) as string[];
+	const pharmacyRegion = pharmacy?.pharmacyLocation ? t(`pharmacyLocation.${pharmacy.pharmacyLocation}`) : '';
 
 	const handleFavorite = async () => {
 		try {
@@ -319,7 +329,7 @@ const PharmacyDetail: NextPage = () => {
 				<header className="pharmacy-detail__header">
 					<div className="pharmacy-detail__identity">
 						<div className="pharmacy-detail__eyebrow">
-							<span>{getPharmacyLocationLabel(pharmacy.pharmacyLocation)}</span>
+							<span>{pharmacyRegion}</span>
 							{pharmacy.verifiedAt && <span className="is-verified"><VerifiedRoundedIcon /> Verified pharmacy</span>}
 						</div>
 						<h1>{pharmacy.pharmacyName}</h1>
@@ -366,7 +376,7 @@ const PharmacyDetail: NextPage = () => {
 								{pharmacy.pharmacyDesc ?? 'This pharmacy has not added a description yet.'}
 							</p>
 							<dl className="pharmacy-detail__facts">
-								<div><dt>Region</dt><dd>{getPharmacyLocationLabel(pharmacy.pharmacyLocation)}</dd></div>
+								<div><dt>{t('locationPicker.region')}</dt><dd>{pharmacyRegion}</dd></div>
 								<div><dt>Pharmacy type</dt><dd>{pharmacy.pharmacyType.toLowerCase()}</dd></div>
 								<div><dt>Established</dt><dd>{pharmacy.openedAt ? moment(pharmacy.openedAt).format('YYYY') : 'Not provided'}</dd></div>
 								{pharmacy.hasDelivery && <div><dt>Delivery fee</dt><dd>{formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee)}</dd></div>}
@@ -405,20 +415,15 @@ const PharmacyDetail: NextPage = () => {
 
 						<section className="pharmacy-detail__section">
 							<div className="pharmacy-detail__section-heading">
-								<span>Location</span>
-								<h2>Find the pharmacy</h2>
+								<span>{t('pharmacyDetail.location.eyebrow')}</span>
+								<h2>{t('pharmacyDetail.location.title')}</h2>
 							</div>
-							<p className="pharmacy-detail__address"><LocationOnOutlinedIcon /> {pharmacy.pharmacyAddress}, {getPharmacyLocationLabel(pharmacy.pharmacyLocation)}</p>
+							<p className="pharmacy-detail__address"><LocationOnOutlinedIcon /> {pharmacy.pharmacyAddress}, {pharmacyRegion}</p>
 							{validCoordinates ? (
 								<div className="pharmacy-detail__map">
-									<iframe
-										title={`${pharmacy.pharmacyName} location`}
-										src={`https://www.google.com/maps?q=${pharmacy.pharmacyLatitude},${pharmacy.pharmacyLongitude}&z=15&output=embed`}
-										loading="lazy"
-										referrerPolicy="no-referrer-when-downgrade"
-									/>
+									<PharmacyMap marker={pharmacyMarker} readOnly />
 								</div>
-							) : <p className="pharmacy-detail__empty-copy">A map location has not been provided yet.</p>}
+							) : <p className="pharmacy-detail__empty-copy">{t('pharmacyDetail.location.noMap')}</p>}
 						</section>
 
 						<section className="pharmacy-detail__section pharmacy-detail__feedback">
@@ -534,7 +539,7 @@ const PharmacyDetail: NextPage = () => {
 				<section className="pharmacy-detail__nearby">
 					<div className="pharmacy-detail__section-heading">
 						<span>Nearby</span>
-						<h2>More pharmacies in {getPharmacyLocationLabel(pharmacy.pharmacyLocation)}</h2>
+						<h2>{t('pharmacyDetail.nearby.title', { region: pharmacyRegion })}</h2>
 					</div>
 					{relatedPharmacies.length ? (
 						<div className="pharmacy-detail__nearby-grid">

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
+import { useTranslation } from 'next-i18next';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -21,6 +22,7 @@ interface MyPageMobileMenuProps {
 
 const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }: MyPageMobileMenuProps) => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [mounted, setMounted] = useState(false);
@@ -50,7 +52,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 	}, [mobileMenuOpen]);
 
 	const logoutHandler = async () => {
-		if (await sweetConfirmAlert('Do you want to logout?')) logOut();
+		if (await sweetConfirmAlert(t('mypage.common.logoutConfirm'))) logOut();
 	};
 
 	const canShowItem = (item: MenuItem) =>
@@ -65,8 +67,8 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 				if (items.length === 0) return null;
 
 				return (
-					<div className="my-page-menu__group" key={`mobile-${group.label}`}>
-						<p>{group.label}</p>
+					<div className="my-page-menu__group" key={`mobile-${group.labelKey}`}>
+						<p>{t(group.labelKey)}</p>
 						<ul>
 							{items.map((item) => {
 								const isActive = category === item.category;
@@ -75,7 +77,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 										{item.href ? (
 											<Link href={item.href} onClick={() => setMobileMenuOpen(false)}>
 												{item.icon}
-												<span>{item.label}</span>
+												<span>{t(item.labelKey)}</span>
 												<ArrowForwardRoundedIcon className="my-page-menu__external" aria-hidden="true" />
 											</Link>
 										) : item.category ? (
@@ -88,7 +90,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 											>
 												<CheckRoundedIcon className="my-page-menu__check" aria-hidden={isActive ? 'false' : 'true'} />
 												{item.icon}
-												<span>{item.label}</span>
+												<span>{t(item.labelKey)}</span>
 											</Link>
 										) : null}
 									</li>
@@ -127,22 +129,22 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 						transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
 					>
 						<div className="my-page-menu__mobile-head">
-							<strong>My Page</strong>
-							<button type="button" aria-label="Close My Page menu" onClick={() => setMobileMenuOpen(false)}>
+							<strong>{t('My Page')}</strong>
+							<button type="button" aria-label={t('mypage.menu.closeMenu')} onClick={() => setMobileMenuOpen(false)}>
 								<CloseRoundedIcon />
 							</button>
 						</div>
-						<nav aria-label="My Page mobile navigation">
+						<nav aria-label={t('mypage.menu.mobileNavigation')}>
 							{renderMenuGroups()}
 							{user.memberType === 'ADMIN' && (
 								<a className="my-page-menu__admin" href="/_admin/users" target="_blank" rel="noreferrer">
 									<AdminPanelSettingsOutlinedIcon />
-									<span>Open Admin</span>
+									<span>{t('mypage.menu.openAdmin')}</span>
 								</a>
 							)}
 							<button className="my-page-menu__logout" type="button" onClick={logoutHandler}>
 								<LogoutOutlinedIcon />
-								<span>Logout</span>
+								<span>{t('mypage.common.logout')}</span>
 							</button>
 						</nav>
 					</motion.div>
@@ -161,7 +163,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 				onClick={() => setMobileMenuOpen(true)}
 			>
 				<MenuOpenRoundedIcon aria-hidden="true" />
-				<span>{activeItem?.label ?? 'My Profile'}</span>
+				<span>{t(activeItem?.labelKey ?? 'mypage.categories.myProfile.title')}</span>
 			</button>
 			{mounted ? createPortal(mobileSheet, document.body) : null}
 		</>

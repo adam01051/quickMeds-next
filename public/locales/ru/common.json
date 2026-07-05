@@ -1,7 +1,7 @@
 {
 	"Home": "Главная",
-	"Pharmacies": "Имущество",
-	"Pharmacy Owners": "Агенты",
+	"Pharmacies": "Аптеки",
+	"Pharmacy Owners": "Владельцы аптек",
 	"Community": "Сообщество",
 	"My Page": "Моя страница",
 	"CS": "Обслуживание",
@@ -12,15 +12,151 @@
 	"Russian": "Русский",
 	"Uzbek": "Узбекский",
 	"Location": "Расположение",
-	"Pharmacy type": "Тип недвижимости",
+	"Pharmacy type": "Тип аптеки",
 	"Rooms": "Services",
 	"Advanced": "Расширенные",
-	"Pharmacy Search": "поиск Имущество",
+	"Pharmacy Search": "Поиск аптек",
 	"We are glad to see you again!": "Мы рады видеть вас снова!",
 	"Home / For Rent": "Home / Pharmacy Marketplace",
-	"Pharmacy Owner Page": "Страница агента",
+	"Pharmacy Owner Page": "Страница владельца аптеки",
 	"my page": "моя страница",
 	"Community Detail": "Детали сообщества",
 	"Login/Signup": "Логин/регистрация",
-	"Member Page": "Страница участника"
+	"Member Page": "Страница участника",
+	"pharmacyLocation": {
+		"TASHKENT_CITY": "Tashkent City",
+		"TASHKENT_REGION": "Tashkent Region",
+		"ANDIJAN": "Andijan",
+		"BUKHARA": "Bukhara",
+		"FERGANA": "Fergana",
+		"JIZZAKH": "Jizzakh",
+		"KARAKALPAKSTAN": "Karakalpakstan",
+		"KASHKADARYA": "Kashkadarya",
+		"KHOREZM": "Khorezm",
+		"NAMANGAN": "Namangan",
+		"NAVOI": "Navoi",
+		"SAMARKAND": "Samarkand",
+		"SIRDARYA": "Sirdarya",
+		"SURKHANDARYA": "Surkhandarya"
+	},
+	"pharmacyDetail": {
+		"location": {
+			"eyebrow": "Location",
+			"title": "Find the pharmacy",
+			"noMap": "A map location has not been provided yet."
+		},
+		"nearby": {
+			"title": "More pharmacies in {{region}}"
+		}
+	},
+	"locationPicker": {
+		"searchLabel": "Search pharmacy address",
+		"searchPlaceholder": "Search by city, district, street, landmark, or pharmacy name",
+		"searching": "Searching address...",
+		"region": "Region",
+		"city": "City",
+		"district": "District",
+		"street": "Street and building",
+		"landmark": "Landmark (optional)",
+		"useCurrentLocation": "Use my current location",
+		"openMap": "Open map and confirm location",
+		"confirmedLocation": "Confirmed location",
+		"selectedPreview": "Selected address preview",
+		"chooseAddress": "Choose an address and confirm the map pin.",
+		"pinSet": "Map pin is set. Confirm it before saving.",
+		"reverseGeocoding": "Updating readable address from map pin...",
+		"mapHelp": "Click the map or drag the pin to the pharmacy entrance.",
+		"confirm": "Confirm pharmacy location",
+		"errors": {
+			"searchUnavailable": "Address search is temporarily unavailable.",
+			"reverseFailed": "Address could not be updated automatically.",
+			"currentLocationUnsupported": "Current location is not supported by this browser.",
+			"permissionDenied": "Location permission was denied or unavailable. Search for the address or set the pin on the map."
+		}
+	},
+	"addPharmacy": {
+		"location": {
+			"eyebrow": "Location",
+			"title": "Address and confirmed map pin",
+			"desktopTitle": "Pharmacy location",
+			"desktopDescription": "Search the address, place the pin at the pharmacy entrance, then confirm the map location."
+		},
+		"actions": {
+			"save": "Save pharmacy",
+			"confirmToSave": "Confirm location to save",
+			"confirmLocation": "Confirm location"
+		},
+		"errors": {
+			"maxImages": "Cannot upload more than 5 images.",
+			"confirmLocation": "Choose an address and confirm the pharmacy map pin before saving."
+		},
+		"success": {
+			"created": "Pharmacy created successfully.",
+			"updated": "Pharmacy updated successfully."
+		}
+	},
+	"mypage": {
+		"common": {
+			"logout": "Logout",
+			"logoutConfirm": "Do you want to logout?",
+			"tryAgain": "Try again"
+		},
+		"menu": {
+			"account": "Account",
+			"connections": "Connections",
+			"community": "Community",
+			"pharmacyOwners": "For Pharmacy Owners",
+			"becomeOwner": "Become a Pharmacy Owner",
+			"exploreOwners": "Explore Pharmacy Owners",
+			"ownerRole": "Pharmacy Owner",
+			"memberRole": "My QuickMeds account",
+			"defaultMember": "QuickMeds member",
+			"openAdmin": "Open Admin",
+			"closeMenu": "Close My Page menu",
+			"mobileNavigation": "My Page mobile navigation"
+		},
+		"categories": {
+			"myProfile": { "eyebrow": "Account", "title": "My Profile", "description": "Keep your QuickMeds account information current." },
+			"myFavorites": { "eyebrow": "Pharmacy discovery", "title": "My Favorites", "description": "Return to the pharmacies you trust and want to remember." },
+			"recentlyVisited": { "eyebrow": "Pharmacy discovery", "title": "Recently Visited", "description": "Continue exploring pharmacies you recently viewed." },
+			"followers": { "eyebrow": "Connections", "title": "Followers", "description": "View members who follow your QuickMeds activity." },
+			"followings": { "eyebrow": "Connections", "title": "Followings", "description": "Manage the QuickMeds members you follow." },
+			"messages": { "eyebrow": "Connections", "title": "Messages", "description": "Continue conversations with Pharmacy Owners." },
+			"myArticles": { "eyebrow": "Community", "title": "My Articles", "description": "Review the articles you have shared with the community." },
+			"writeArticle": { "eyebrow": "Community", "title": "Write Article", "description": "Share a useful experience or update with the QuickMeds community." },
+			"myPharmacies": { "eyebrow": "Pharmacy Owner", "title": "My Pharmacies", "description": "Manage the pharmacies registered to your account." },
+			"addPharmacy": { "eyebrow": "Pharmacy Owner", "title": "Add Pharmacy", "description": "Register a pharmacy and provide accurate service information." }
+		},
+		"myPharmacies": {
+			"filterByStatus": "Filter my pharmacies by status",
+			"loading": "Loading my pharmacies",
+			"countInStatus": "{{count}} pharmacies in {{status}}",
+			"totalAvailable": "{{count}} pharmacies available",
+			"confirmDelete": "Are you sure you want to delete this pharmacy?",
+			"confirmStatus": "Are you sure you want to change this pharmacy to {{status}}?",
+			"loadErrorTitle": "Pharmacies could not be loaded",
+			"loadErrorText": "Please check your connection and try again.",
+			"emptyTitle": "No pharmacy found",
+			"emptyText": "Add a pharmacy or switch status filters to review another list.",
+			"status": { "hold": "Hold", "active": "Active", "closed": "Closed" },
+			"table": { "name": "Pharmacy name", "datePublished": "Date Published", "status": "Status", "views": "View", "action": "Action" },
+			"card": {
+				"open247": "Open 24/7",
+				"hoursNotProvided": "Hours not provided",
+				"openNow": "Open now",
+				"closed": "Closed",
+				"pickupOnly": "Pickup only",
+				"insurance": "Insurance",
+				"noInsurance": "No insurance",
+				"published": "Published",
+				"view": "View",
+				"edit": "Edit",
+				"moreActions": "More actions for {{name}}",
+				"closePharmacy": "Close pharmacy",
+				"deletePharmacy": "Delete pharmacy",
+				"deliveryWithFee": "Delivery: {{fee}}",
+				"close": "Close"
+			}
+		}
+	}
 }

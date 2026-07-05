@@ -222,6 +222,246 @@
 							}
 						}
 					}
+					.pharmacy-location-picker {
+						margin-top: 15px;
+						display: grid;
+						grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+						gap: 18px;
+						padding: 18px;
+						border: 1px solid #dfe8e4;
+						border-radius: 12px;
+						background: #f8fbfa;
+
+						&__panel,
+						&__map-shell {
+							min-width: 0;
+						}
+
+						&__panel {
+							display: flex;
+							flex-direction: column;
+							gap: 13px;
+						}
+
+						&__field {
+							display: flex;
+							flex-direction: column;
+							gap: 7px;
+
+							> span {
+								color: #181a20;
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 700;
+							}
+
+							input,
+							select {
+								width: 100%;
+								height: 44px;
+								padding: 0 13px;
+								border: 1px solid #d1ddd8;
+								border-radius: 8px;
+								background: #fff;
+								color: #181a20;
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 500;
+								outline: 0;
+
+								&:focus {
+									border-color: #08634f;
+									box-shadow: 0 0 0 3px rgba(8, 99, 79, 0.14);
+								}
+							}
+						}
+
+						&__grid {
+							display: grid;
+							grid-template-columns: repeat(2, minmax(0, 1fr));
+							gap: 12px;
+						}
+
+						&__field--wide {
+							grid-column: 1 / -1;
+						}
+
+						&__results {
+							max-height: 190px;
+							overflow: auto;
+							display: flex;
+							flex-direction: column;
+							gap: 6px;
+
+							p,
+							button {
+								margin: 0;
+								padding: 10px 12px;
+								border: 1px solid #dfe8e4;
+								border-radius: 8px;
+								background: #fff;
+								color: #314139;
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 600;
+								line-height: 1.4;
+								text-align: left;
+							}
+
+							button {
+								cursor: pointer;
+
+								&:hover {
+									border-color: #a9d9c4;
+									background: #eefdf8;
+								}
+							}
+						}
+
+						&__actions {
+							display: flex;
+							flex-wrap: wrap;
+							gap: 10px;
+
+							button {
+								min-height: 38px;
+								padding: 8px 14px;
+								border: 1px solid #a9d9c4;
+								border-radius: 999px;
+								background: #fff;
+								color: #08634f;
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 800;
+							}
+						}
+
+						&__preview {
+							display: flex;
+							flex-direction: column;
+							gap: 5px;
+							padding: 12px;
+							border: 1px solid #dfe8e4;
+							border-radius: 10px;
+							background: #fff;
+
+							span {
+								color: #08634f;
+								font-family: $font;
+								font-size: 10px;
+								font-weight: 850;
+								letter-spacing: 0.08em;
+								text-transform: uppercase;
+							}
+
+							strong {
+								color: #181a20;
+								font-family: $font;
+								font-size: 13px;
+								font-weight: 700;
+								line-height: 1.45;
+								white-space: normal;
+							}
+
+							small {
+								color: #66756f;
+								font-family: $font;
+								font-size: 11px;
+								font-weight: 600;
+							}
+
+							&.is-confirmed {
+								border-color: #a9d9c4;
+								background: #eefdf8;
+							}
+						}
+
+						&__error,
+						&__hint {
+							margin: 0;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 700;
+							line-height: 1.4;
+						}
+
+						&__error {
+							color: #b42318;
+						}
+
+						&__hint {
+							color: #66756f;
+						}
+
+						&__map-shell {
+							overflow: hidden;
+							border: 1px solid #d1ddd8;
+							border-radius: 12px;
+							background: #fff;
+						}
+
+						.pharmacy-location-map {
+							width: 100%;
+							height: 410px;
+						}
+
+						.pharmacy-location-map__marker {
+							span {
+								position: relative;
+								display: block;
+								width: 28px;
+								height: 28px;
+								border: 3px solid #fff;
+								border-radius: 50% 50% 50% 0;
+								background: #08634f;
+								box-shadow: 0 8px 20px rgba(8, 99, 79, 0.28);
+								transform: rotate(-45deg);
+
+								&::after {
+									content: '';
+									position: absolute;
+									inset: 7px;
+									border-radius: 50%;
+									background: #fff;
+								}
+							}
+						}
+
+						&__map-footer {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							gap: 12px;
+							padding: 12px;
+							border-top: 1px solid #dfe8e4;
+
+							span {
+								color: #66756f;
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 650;
+								line-height: 1.4;
+								white-space: normal;
+							}
+
+							button {
+								flex: 0 0 auto;
+								min-height: 38px;
+								padding: 8px 14px;
+								border-radius: 999px;
+								background: #08634f;
+								color: #fff;
+								font-family: $font;
+								font-size: 12px;
+								font-weight: 850;
+
+								&:disabled {
+									background: #c1c9c5;
+									color: #fff;
+								}
+							}
+						}
+					}
 				}
 				.upload-title {
 					margin-top: 30px;

@@ -3,6 +3,7 @@ import { Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui/mate
 import axios from 'axios';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { CREATE_PHARMACY, UPDATE_PHARMACY } from '../../../apollo/user/mutation';
 import { GET_PHARMACY } from '../../../apollo/user/query';
 import { userVar } from '../../../apollo/store';
@@ -11,17 +12,20 @@ import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmacyInput } from '../../types/property/property.input';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { REACT_APP_API_URL } from '../../config';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
+import PharmacyLocationPicker from './PharmacyLocationPicker';
+import { isValidLatLng, toPharmacyCoordinateFields } from '../../utils/coordinates';
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [form, setForm] = useState<PharmacyInput>(initialValues);
+	const [locationConfirmed, setLocationConfirmed] = useState(false);
 	const [createPharmacy] = useMutation(CREATE_PHARMACY);
 	const [updatePharmacy] = useMutation(UPDATE_PHARMACY);
 	const { data } = useQuery(GET_PHARMACY, {
@@ -50,16 +54,17 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				operatingHours: pharmacy.operatingHours,
 				openedAt: pharmacy.openedAt,
 			});
+			setLocationConfirmed(isValidLatLng(pharmacy.pharmacyLatitude, pharmacy.pharmacyLongitude));
 		}
 	}, [data]);
 
-	const update = (value: Partial<PharmacyInput>) => setForm({ ...form, ...value });
+	const update = (value: Partial<PharmacyInput>) => setForm((current) => ({ ...current, ...value }));
 
 	const uploadImages = async () => {
 		try {
 			const files = Array.from(inputRef.current?.files ?? []);
 			if (!files.length) return;
-			if (files.length > 5) throw new Error('Cannot upload more than 5 images.');
+			if (files.length > 5) throw new Error(t('addPharmacy.errors.maxImages'));
 			const body = new FormData();
 			body.append(
 				'operations',
@@ -85,10 +90,18 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 	const submit = async () => {
 		try {
+			if (!isValidLatLng(form.pharmacyLatitude, form.pharmacyLongitude) || !locationConfirmed) {
+				await sweetMixinErrorAlert(t('addPharmacy.errors.confirmLocation'));
+				return;
+			}
 			const id = data?.getPharmacy?._id;
-			if (id) await updatePharmacy({ variables: { input: { ...form, _id: id } } });
-			else await createPharmacy({ variables: { input: form } });
-			await sweetMixinSuccessAlert(`Pharmacy ${id ? 'updated' : 'created'} successfully.`);
+			const input = {
+				...form,
+				...toPharmacyCoordinateFields({ lat: form.pharmacyLatitude, lng: form.pharmacyLongitude }),
+			};
+			if (id) await updatePharmacy({ variables: { input: { ...input, _id: id } } });
+			else await createPharmacy({ variables: { input } });
+			await sweetMixinSuccessAlert(t(id ? 'addPharmacy.success.updated' : 'addPharmacy.success.created'));
 			await router.push({ pathname: '/mypage', query: { category: 'myPharmacies' } });
 		} catch (error) {
 			await sweetErrorHandling(error);
@@ -101,7 +114,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	if (user.memberType !== 'AGENT') return null;
 
 	const isEditMode = Boolean(router.query.pharmacyId || router.query.propertyId);
-	const canSave = Boolean(form.pharmacyName && form.pharmacyAddress && form.pharmacyImages.length);
+	const hasConfirmedLocation = locationConfirmed && isValidLatLng(form.pharmacyLatitude, form.pharmacyLongitude);
+	const canSave = Boolean(form.pharmacyName && form.pharmacyAddress && form.pharmacyImages.length && hasConfirmedLocation);
 
 	if (device === 'mobile') {
 		return (
@@ -117,7 +131,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
 						<span>Basics</span>
-						<strong>Name, type, region, and address</strong>
+						<strong>Name and pharmacy type</strong>
 					</div>
 					<label className="add-pharmacy-mobile__field">
 						<span>Pharmacy name</span>
@@ -127,41 +141,18 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 							onChange={(e) => update({ pharmacyName: e.target.value })}
 						/>
 					</label>
-					<div className="add-pharmacy-mobile__grid">
-						<label className="add-pharmacy-mobile__field">
-							<span>Pharmacy type</span>
-							<select
-								value={form.pharmacyType}
-								onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}
-							>
-								{Object.values(PharmacyType).map((value) => (
-									<option key={value} value={value}>
-										{value}
-									</option>
-								))}
-							</select>
-						</label>
-						<label className="add-pharmacy-mobile__field">
-							<span>Region</span>
-							<select
-								value={form.pharmacyLocation}
-								onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}
-							>
-								{Object.values(PharmacyLocation).map((value) => (
-									<option key={value} value={value}>
-										{getPharmacyLocationLabel(value)}
-									</option>
-								))}
-							</select>
-						</label>
-					</div>
 					<label className="add-pharmacy-mobile__field">
-						<span>Address</span>
-						<input
-							placeholder="Full pharmacy address"
-							value={form.pharmacyAddress}
-							onChange={(e) => update({ pharmacyAddress: e.target.value })}
-						/>
+						<span>Pharmacy type</span>
+						<select
+							value={form.pharmacyType}
+							onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}
+						>
+							{Object.values(PharmacyType).map((value) => (
+								<option key={value} value={value}>
+									{value}
+								</option>
+							))}
+						</select>
 					</label>
 				</section>
 
@@ -221,29 +212,17 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Location</span>
-						<strong>Map coordinates</strong>
+						<span>{t('addPharmacy.location.eyebrow')}</span>
+						<strong>{t('addPharmacy.location.title')}</strong>
 					</div>
-					<div className="add-pharmacy-mobile__grid">
-						<label className="add-pharmacy-mobile__field">
-							<span>Latitude</span>
-							<input
-								type="number"
-								step="any"
-								value={form.pharmacyLatitude}
-								onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })}
-							/>
-						</label>
-						<label className="add-pharmacy-mobile__field">
-							<span>Longitude</span>
-							<input
-								type="number"
-								step="any"
-								value={form.pharmacyLongitude}
-								onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })}
-							/>
-						</label>
-					</div>
+					<PharmacyLocationPicker
+						value={form}
+						onChange={update}
+						confirmed={locationConfirmed}
+						onConfirm={() => setLocationConfirmed(true)}
+						onDirtyPin={() => setLocationConfirmed(false)}
+						mode="mobile"
+					/>
 				</section>
 
 				<section className="add-pharmacy-mobile__card">
@@ -366,7 +345,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<div className="add-pharmacy-mobile__save">
 					<Button disabled={!canSave} onClick={submit}>
-						Save pharmacy
+						{hasConfirmedLocation ? t('addPharmacy.actions.save') : t('addPharmacy.actions.confirmToSave')}
 					</Button>
 				</div>
 			</div>
@@ -404,31 +383,20 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 							<div className="divider" />
 							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
 						</Stack>
-						<Stack className="price-year-after-price">
-							<Typography className="title">Region</Typography>
-							<select
-								className="select-description"
-								value={form.pharmacyLocation}
-								onChange={(e) => update({ pharmacyLocation: e.target.value as PharmacyLocation })}
-							>
-								{Object.values(PharmacyLocation).map((value) => (
-									<option key={value} value={value}>
-										{getPharmacyLocationLabel(value)}
-									</option>
-								))}
-							</select>
-							<div className="divider" />
-							<img src="/img/icons/Vector.svg" className="arrow-down" alt="" />
-						</Stack>
 					</Stack>
 
 					<Stack className="config-column">
-						<Typography className="title">Address</Typography>
-						<input
-							className="description-input"
-							placeholder="Full pharmacy address"
-							value={form.pharmacyAddress}
-							onChange={(e) => update({ pharmacyAddress: e.target.value })}
+						<Typography className="property-title">{t('addPharmacy.location.desktopTitle')}</Typography>
+						<Typography className="sub-title">
+							{t('addPharmacy.location.desktopDescription')}
+						</Typography>
+						<PharmacyLocationPicker
+							value={form}
+							onChange={update}
+							confirmed={locationConfirmed}
+							onConfirm={() => setLocationConfirmed(true)}
+							onDirtyPin={() => setLocationConfirmed(false)}
+							mode="desktop"
 						/>
 					</Stack>
 
@@ -453,29 +421,6 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 								type="date"
 								value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''}
 								onChange={(e) => update({ openedAt: e.target.value ? new Date(e.target.value) : undefined })}
-							/>
-						</Stack>
-					</Stack>
-
-					<Stack className="config-row">
-						<Stack className="price-year-after-price">
-							<Typography className="title">Latitude</Typography>
-							<input
-								className="description-input"
-								type="number"
-								step="any"
-								value={form.pharmacyLatitude}
-								onChange={(e) => update({ pharmacyLatitude: Number(e.target.value) })}
-							/>
-						</Stack>
-						<Stack className="price-year-after-price">
-							<Typography className="title">Longitude</Typography>
-							<input
-								className="description-input"
-								type="number"
-								step="any"
-								value={form.pharmacyLongitude}
-								onChange={(e) => update({ pharmacyLongitude: Number(e.target.value) })}
 							/>
 						</Stack>
 					</Stack>
@@ -622,10 +567,10 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 				<Stack className="buttons-row">
 					<Button
 						className="next-button"
-						disabled={!form.pharmacyName || !form.pharmacyAddress || !form.pharmacyImages.length}
+						disabled={!canSave}
 						onClick={submit}
 					>
-						<Typography className="next-button-text">Save pharmacy</Typography>
+						<Typography className="next-button-text">{hasConfirmedLocation ? t('addPharmacy.actions.save') : t('addPharmacy.actions.confirmLocation')}</Typography>
 					</Button>
 				</Stack>
 			</Stack>

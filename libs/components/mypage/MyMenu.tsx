@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
+import { useTranslation } from 'next-i18next';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
@@ -14,12 +15,13 @@ import { MenuItem, menuGroups, normalizeCategory } from './MyPageMenuConfig';
 
 const MyMenu = () => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const category = normalizeCategory(router.query.category);
 	const isPharmacyOwner = user.memberType === 'AGENT';
 
 	const logoutHandler = async () => {
-		if (await sweetConfirmAlert('Do you want to logout?')) logOut();
+		if (await sweetConfirmAlert(t('mypage.common.logoutConfirm'))) logOut();
 	};
 
 	const canShowItem = (item: MenuItem) =>
@@ -31,8 +33,8 @@ const MyMenu = () => {
 				if (items.length === 0) return null;
 
 				return (
-					<div className="my-page-menu__group" key={`desktop-${group.label}`}>
-						<p>{group.label}</p>
+					<div className="my-page-menu__group" key={`desktop-${group.labelKey}`}>
+						<p>{t(group.labelKey)}</p>
 						<ul>
 							{items.map((item) => {
 								const isActive = category === item.category;
@@ -41,7 +43,7 @@ const MyMenu = () => {
 										{item.href ? (
 											<Link href={item.href}>
 												{item.icon}
-												<span>{item.label}</span>
+												<span>{t(item.labelKey)}</span>
 												<ArrowForwardRoundedIcon className="my-page-menu__external" aria-hidden="true" />
 											</Link>
 										) : item.category ? (
@@ -52,7 +54,7 @@ const MyMenu = () => {
 												aria-current={isActive ? 'page' : undefined}
 											>
 												{item.icon}
-												<span>{item.label}</span>
+												<span>{t(item.labelKey)}</span>
 											</Link>
 										) : null}
 									</li>
@@ -73,8 +75,8 @@ const MyMenu = () => {
 					alt={`${user?.memberNick || 'Member'} profile`}
 				/>
 				<div>
-					<strong>{user?.memberNick || 'QuickMeds member'}</strong>
-					<span>{isPharmacyOwner ? 'Pharmacy Owner' : 'My QuickMeds account'}</span>
+					<strong>{user?.memberNick || t('mypage.menu.defaultMember')}</strong>
+					<span>{isPharmacyOwner ? t('mypage.menu.ownerRole') : t('mypage.menu.memberRole')}</span>
 				</div>
 				<MyPageMobileMenu />
 			</div>
@@ -85,13 +87,13 @@ const MyMenu = () => {
 				{user.memberType === 'ADMIN' && (
 					<a className="my-page-menu__admin" href="/_admin/users" target="_blank" rel="noreferrer">
 						<AdminPanelSettingsOutlinedIcon />
-						<span>Open Admin</span>
+						<span>{t('mypage.menu.openAdmin')}</span>
 					</a>
 				)}
 
 				<button className="my-page-menu__logout" type="button" onClick={logoutHandler}>
 					<LogoutOutlinedIcon />
-					<span>Logout</span>
+					<span>{t('mypage.common.logout')}</span>
 				</button>
 			</nav>
 		</aside>

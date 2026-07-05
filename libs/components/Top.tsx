@@ -76,10 +76,10 @@ const Top = () => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		const storedLocale = resolveLocale(localStorage.getItem('locale'));
-		localStorage.setItem('locale', storedLocale);
-		setLang(storedLocale);
-	}, [router]);
+		const nextLocale = resolveLocale(router.locale || localStorage.getItem('locale'));
+		localStorage.setItem('locale', nextLocale);
+		setLang(nextLocale);
+	}, [router.locale]);
 
 	useEffect(() => {
 		const jwt = getJwtToken();

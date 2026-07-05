@@ -26,48 +26,48 @@ export type MenuCategory =
 export interface MenuItem {
 	category?: MenuCategory;
 	href?: string;
-	label: string;
+	labelKey: string;
 	icon: React.ReactNode;
 	ownerOnly?: boolean;
 	nonOwnerOnly?: boolean;
 }
 
-export const menuGroups: Array<{ label: string; items: MenuItem[] }> = [
+export const menuGroups: Array<{ labelKey: string; items: MenuItem[] }> = [
 	{
-		label: 'Account',
+		labelKey: 'mypage.menu.account',
 		items: [
-			{ category: 'myProfile', label: 'My Profile', icon: <AccountCircleOutlinedIcon /> },
-			{ category: 'myFavorites', label: 'My Favorites', icon: <FavoriteBorderOutlinedIcon /> },
-			{ category: 'recentlyVisited', label: 'Recently Visited', icon: <HistoryOutlinedIcon /> },
+			{ category: 'myProfile', labelKey: 'mypage.categories.myProfile.title', icon: <AccountCircleOutlinedIcon /> },
+			{ category: 'myFavorites', labelKey: 'mypage.categories.myFavorites.title', icon: <FavoriteBorderOutlinedIcon /> },
+			{ category: 'recentlyVisited', labelKey: 'mypage.categories.recentlyVisited.title', icon: <HistoryOutlinedIcon /> },
 		],
 	},
 	{
-		label: 'Connections',
+		labelKey: 'mypage.menu.connections',
 		items: [
-			{ category: 'followers', label: 'Followers', icon: <GroupOutlinedIcon /> },
-			{ category: 'followings', label: 'Followings', icon: <PersonAddAltOutlinedIcon /> },
-			{ category: 'messages', label: 'Messages', icon: <MailOutlineRoundedIcon /> },
+			{ category: 'followers', labelKey: 'mypage.categories.followers.title', icon: <GroupOutlinedIcon /> },
+			{ category: 'followings', labelKey: 'mypage.categories.followings.title', icon: <PersonAddAltOutlinedIcon /> },
+			{ category: 'messages', labelKey: 'mypage.categories.messages.title', icon: <MailOutlineRoundedIcon /> },
 		],
 	},
 	{
-		label: 'Community',
+		labelKey: 'mypage.menu.community',
 		items: [
-			{ category: 'myArticles', label: 'My Articles', icon: <ArticleOutlinedIcon /> },
-			{ category: 'writeArticle', label: 'Write Article', icon: <EditNoteOutlinedIcon /> },
+			{ category: 'myArticles', labelKey: 'mypage.categories.myArticles.title', icon: <ArticleOutlinedIcon /> },
+			{ category: 'writeArticle', labelKey: 'mypage.categories.writeArticle.title', icon: <EditNoteOutlinedIcon /> },
 		],
 	},
 	{
-		label: 'For Pharmacy Owners',
+		labelKey: 'mypage.menu.pharmacyOwners',
 		items: [
 			{
 				href: '/account/join?mode=signup',
-				label: 'Become a Pharmacy Owner',
+				labelKey: 'mypage.menu.becomeOwner',
 				icon: <AddBusinessOutlinedIcon />,
 				nonOwnerOnly: true,
 			},
-			{ category: 'myPharmacies', label: 'My Pharmacies', icon: <StorefrontOutlinedIcon />, ownerOnly: true },
-			{ category: 'addPharmacy', label: 'Add Pharmacy', icon: <AddBusinessOutlinedIcon />, ownerOnly: true },
-			{ href: '/agent', label: 'Explore Pharmacy Owners', icon: <TravelExploreOutlinedIcon /> },
+			{ category: 'myPharmacies', labelKey: 'mypage.categories.myPharmacies.title', icon: <StorefrontOutlinedIcon />, ownerOnly: true },
+			{ category: 'addPharmacy', labelKey: 'mypage.categories.addPharmacy.title', icon: <AddBusinessOutlinedIcon />, ownerOnly: true },
+			{ href: '/agent', labelKey: 'mypage.menu.exploreOwners', icon: <TravelExploreOutlinedIcon /> },
 		],
 	},
 ];
