@@ -218,6 +218,20 @@ Validation completed:
 - Reduced hero-compensating top spacing on Pharmacy Owner detail, Community list/detail, CS, Login/Signup, Member, and About pages.
 - Preserved the existing pharmacy catalog directory header and all route, authentication, GraphQL, chat, footer, and page-business behavior.
 
+## Docker Compose Startup Stabilization
+
+- Updated the local frontend `docker-compose.yml` to keep the production-style `yarn build && yarn start` flow while making startup deterministic.
+- Replaced restart-always behavior with `unless-stopped` so install/build failures do not hide behind a restart loop during local debugging.
+- Added explicit QuickMeds backend API environment variables for the Next.js build/runtime.
+- Isolated Linux container dependencies with a named `node_modules` volume so host macOS dependencies and Next/SWC artifacts are not reused inside Docker.
+- Changed install to `yarn install --frozen-lockfile` so Docker startup does not rewrite dependency state.
+
+Validation completed:
+
+- `docker compose config` passed.
+- `yarn typecheck` passed.
+- `docker compose up quickmeds-next` still did not reach `yarn build`; the container was killed during `yarn install` with exit code `137`, indicating Docker memory pressure during the first dependency install.
+
 Validation completed:
 
 - `yarn typecheck --pretty false` passed.

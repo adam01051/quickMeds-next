@@ -162,3 +162,8 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Verify login from a protected user-facing page still returns to that page when it passes the internal return-path guard.
 3. Use `http://localhost:3001` for QuickMeds while `/Users/adam/Desktop/Reja` owns port `3000`.
 4. If a browser tab still requests an old `/_next/static/webpack/*.hot-update.json` hash after this source fix, close that tab or clear the tab's site data because the request is retained by the browser's stale Next.js dev client session.
+
+## Docker Compose Follow-up
+
+1. If the first Docker Compose startup is still killed during `yarn install` with exit code `137`, increase Docker Desktop memory or move to a cached Dockerfile build so dependency installation does not run under the one-shot Compose startup command.
+2. If install/build remains too slow for local use, introduce a small Dockerfile with cached dependency and build layers as a separate approved phase.

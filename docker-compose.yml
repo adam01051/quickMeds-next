@@ -1,0 +1,27 @@
+
+services:
+  quickmeds-next:
+    container_name: quickmeds-next
+    image: node:20.19.6
+    restart: always
+    ports:
+      - 4000:3000
+    environment:
+      - PORT=3000
+    volumes:
+      - ./:/usr/src/quickmeds-next
+    working_dir: /usr/src/quickmeds-next
+
+    networks:
+      - client-network
+
+    #for production, you can use the following command to run the application
+    command: bash -c "yarn   && yarn run build && yarn run start"
+
+    #for development, you can use the following command to run the application
+    #command: bash -c "yarn install && yarn start:dev"
+
+
+networks:
+  client-network:
+    driver: bridge
