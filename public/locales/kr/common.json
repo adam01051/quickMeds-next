@@ -157,6 +157,29 @@
         "deliveryWithFee": "Delivery: {{fee}}",
         "close": "Close"
       }
+    },
+    "collections": {
+      "favoritesAria": "즐겨찾기 약국",
+      "favoritesLoading": "즐겨찾기 약국 불러오는 중",
+      "favoritesLoadError": "즐겨찾기를 불러올 수 없습니다",
+      "favoritesEmptyTitle": "아직 즐겨찾기 약국이 없습니다",
+      "favoritesEmptyText": "나중에 쉽게 찾을 수 있도록 둘러보는 동안 약국을 저장하세요.",
+      "findPharmacies": "약국 찾기",
+      "favoritesCount_one": "{{count}}개 즐겨찾기 약국",
+      "favoritesCount_few": "{{count}}개 즐겨찾기 약국",
+      "favoritesCount_many": "{{count}}개 즐겨찾기 약국",
+      "favoritesCount_other": "{{count}}개 즐겨찾기 약국",
+      "visitedAria": "최근 방문한 약국",
+      "visitedLoading": "최근 방문한 약국 불러오는 중",
+      "visitedLoadError": "최근 방문한 약국을 불러올 수 없습니다",
+      "visitedEmptyTitle": "최근 방문한 약국이 없습니다",
+      "visitedEmptyText": "조회한 약국이 빠른 접근을 위해 여기에 표시됩니다.",
+      "explorePharmacies": "약국 둘러보기",
+      "visitedCount_one": "{{count}}개 최근 방문 약국",
+      "visitedCount_few": "{{count}}개 최근 방문 약국",
+      "visitedCount_many": "{{count}}개 최근 방문 약국",
+      "visitedCount_other": "{{count}}개 최근 방문 약국",
+      "connectionError": "연결을 확인한 뒤 다시 시도하세요."
     }
   },
   "nav": {
@@ -354,6 +377,312 @@
       "noPharmaciesText": "전체 약국을 둘러보거나 다른 지역을 검색해 보세요.",
       "noTrendingTitle": "아직 인기 약국이 없습니다.",
       "noTrendingText": "커뮤니티 활동이 쌓이는 동안 전체 약국을 둘러보세요."
+    }
+  },
+  "pharmacyStatus": {
+    "open247": "24시간 운영",
+    "openNow": "영업 중",
+    "closed": "영업 종료",
+    "hoursNotProvided": "운영시간 미제공",
+    "open24EveryDay": "매일 24시간 운영합니다.",
+    "openNowCloses": "영업 중 · {{time}} 종료",
+    "nextOpens": "다음 영업 시작 {{time}}",
+    "noUpcomingOpening": "예정된 영업 시작 시간이 표시되지 않았습니다."
+  },
+  "pharmacyFilters": {
+    "findYourPharmacy": "약국 찾기",
+    "nameOrAddress": "이름 또는 주소",
+    "region": "지역",
+    "pharmacyType": "약국 유형",
+    "services": "서비스",
+    "deliveryFee": "배달 수수료",
+    "min": "최소",
+    "max": "최대",
+    "showMore": "더 보기",
+    "showLess": "접기",
+    "deliveryAvailable": "배달 가능",
+    "acceptsInsurance": "보험 가능",
+    "openNow": "영업 중",
+    "open247": "24시간 운영",
+    "search": "검색",
+    "reset": "초기화",
+    "filters": "필터",
+    "resetAll": "모두 초기화",
+    "applyFilters": "필터 적용",
+    "openFiltersAria": "필터 열기",
+    "closeFiltersAria": "필터 닫기",
+    "activeFiltersAria": "활성 약국 필터",
+    "allPharmacies": "전체 약국",
+    "moreFilters": "필터 더 보기"
+  },
+  "sort": {
+    "sortBy": "정렬",
+    "new": "신규",
+    "lowestDeliveryFee": "낮은 배달 수수료",
+    "highestDeliveryFee": "높은 배달 수수료",
+    "newest": "최신순",
+    "mostViewed": "조회 많은 순",
+    "mostLiked": "좋아요 많은 순",
+    "sortArticles": "글 정렬"
+  },
+  "sharedPharmacyCard": {
+    "type": "유형",
+    "typeLabel": "{{type}} 약국",
+    "delivery": "배달",
+    "deliveryWithFee": "배달: {{fee}}",
+    "deliveryWithFeeShort": "{{fee}} 배달",
+    "pickupOnly": "픽업만 가능",
+    "insurance": "보험",
+    "insuranceAccepted": "가능",
+    "insuranceNotAccepted": "불가",
+    "verifiedPharmacy": "인증된 약국",
+    "viewPharmacy": "약국 보기",
+    "viewPharmacyAria": "{{name}} 보기",
+    "imageAlt": "{{name}} 약국",
+    "saveFavoriteAria": "{{name}} 저장",
+    "removeFavoriteAria": "즐겨찾기에서 {{name}} 제거",
+    "top": "상위",
+    "medications_one": "{{count}}개 의약품",
+    "medications_few": "{{count}}개 의약품",
+    "medications_many": "{{count}}개 의약품",
+    "medications_other": "{{count}}개 의약품"
+  },
+  "pharmacies": {
+    "hero": {
+      "kicker": "약국 디렉터리",
+      "title": "우즈베키스탄 전역의 약국을 찾아보세요",
+      "description": "방문 전에 지역, 이용 가능한 서비스, 운영시간으로 약국을 필터링하세요."
+    },
+    "results": {
+      "loading": "약국을 불러오는 중...",
+      "available_one": "{{count}}개 약국 이용 가능",
+      "available_few": "{{count}}개 약국 이용 가능",
+      "available_many": "{{count}}개 약국 이용 가능",
+      "available_other": "{{count}}개 약국 이용 가능",
+      "total": "총 {{count}}개 약국 이용 가능",
+      "aria": "약국 결과"
+    },
+    "states": {
+      "loadErrorTitle": "약국을 불러올 수 없습니다",
+      "loadErrorText": "연결을 확인한 뒤 다시 시도하세요.",
+      "emptyTitle": "이 필터와 일치하는 약국이 없습니다",
+      "emptyText": "지역, 서비스 또는 검색어를 변경해 보세요.",
+      "clearFilters": "필터 지우기",
+      "tryAgain": "다시 시도",
+      "loadMore": "약국 더 불러오기"
+    }
+  },
+  "pharmacyDetailPage": {
+    "unavailable": {
+      "eyebrow": "약국을 이용할 수 없습니다",
+      "title": "이 약국을 찾을 수 없습니다.",
+      "description": "이전했거나 폐업했거나 더 이상 공개되지 않을 수 있습니다.",
+      "action": "약국 둘러보기"
+    },
+    "labels": {
+      "about": "소개",
+      "aboutTitle": "이 약국 소개",
+      "pharmacyType": "약국 유형",
+      "established": "개설",
+      "notProvided": "미제공",
+      "services": "서비스",
+      "availableSupport": "이용 가능한 지원",
+      "hours": "운영시간",
+      "workingHours": "영업 시간",
+      "communityFeedback": "커뮤니티 피드백",
+      "pharmacyOwner": "약국 운영자",
+      "contact": "문의",
+      "messagePharmacy": "약국에 메시지 보내기",
+      "secureInbox": "보안 메시지함",
+      "nearby": "주변"
+    },
+    "copy": {
+      "noDescription": "이 약국은 아직 설명을 추가하지 않았습니다.",
+      "deliveryFee": "배달 수수료: {{fee}}",
+      "insuranceHint": "보험 제공자는 약국에 직접 확인하세요.",
+      "noServices": "이 약국에는 추가 서비스가 등록되어 있지 않습니다.",
+      "noComments": "아직 댓글이 없습니다. 유용한 정보를 먼저 공유해 보세요.",
+      "commentsLoadError": "약국 댓글을 불러올 수 없습니다.",
+      "loginToComment": "댓글을 쓰려면 로그인하세요.",
+      "commentLabel": "이 약국에 대한 유용한 정보를 공유하세요",
+      "commentPlaceholder": "댓글을 작성하세요",
+      "loginToMessage": "이용 가능 여부, 배달 또는 서비스에 대해 문의하려면 로그인하세요.",
+      "ownPharmacyMessage": "이 약국은 본인이 운영하는 약국입니다. 고객은 목록을 볼 때 이 카드에서 메시지를 보낼 수 있습니다.",
+      "messagePlaceholder": "안녕하세요, {{name}}에 대해 궁금한 점이 있습니다.",
+      "noNearby": "이 지역에는 현재 다른 약국이 등록되어 있지 않습니다."
+    },
+    "actions": {
+      "saved": "저장됨",
+      "savePharmacy": "약국 저장",
+      "writeComment": "댓글 쓰기",
+      "closeCommentForm": "댓글 양식 닫기",
+      "submitComment": "댓글 제출",
+      "submitting": "제출 중...",
+      "loadMoreComments": "댓글 더 불러오기",
+      "loadingComments": "댓글 불러오는 중...",
+      "loginToMessage": "로그인하고 메시지 보내기",
+      "attachImages": "이미지 첨부",
+      "uploading": "업로드 중...",
+      "sendMessage": "메시지 보내기",
+      "sending": "전송 중...",
+      "remove": "제거",
+      "viewOwnerProfile": "약국 운영자 프로필 보기"
+    },
+    "aria": {
+      "loading": "약국 상세 정보 불러오는 중",
+      "gallery": "{{name}} 갤러리",
+      "viewImage": "{{name}} 이미지 {{count}} 보기",
+      "favoriteSave": "{{name}} 저장",
+      "favoriteRemove": "즐겨찾기에서 {{name}} 제거",
+      "commentsLoading": "약국 댓글 불러오는 중",
+      "attachmentRemove": "메시지 첨부 제거"
+    },
+    "alerts": {
+      "maxAttachments": "이미지는 최대 4개까지 첨부할 수 있습니다.",
+      "ownerCannotMessage": "운영자는 이 페이지에서 본인 약국에 메시지를 보낼 수 없습니다.",
+      "messageRequired": "먼저 메시지를 작성하거나 이미지를 첨부하세요.",
+      "commentSubmitted": "댓글이 제출되었습니다"
+    },
+    "views_one": "{{count}}회 조회",
+    "views_few": "{{count}}회 조회",
+    "views_many": "{{count}}회 조회",
+    "views_other": "{{count}}회 조회"
+  },
+  "community": {
+    "intro": {
+      "eyebrow": "QuickMeds 커뮤니티",
+      "title": "지역에서 나누는 실용적인 지식.",
+      "description": "유용한 약국 정보를 발견하고 우즈베키스탄 전역의 커뮤니티에 도움이 되는 경험을 공유하세요."
+    },
+    "actions": {
+      "writeArticle": "글 작성",
+      "writeFirstArticle": "첫 글 작성",
+      "readArticle": "글 읽기",
+      "likeArticle": "글 좋아요",
+      "unlikeArticle": "글 좋아요 취소",
+      "tryAgain": "다시 시도"
+    },
+    "labels": {
+      "categoriesAria": "커뮤니티 카테고리",
+      "articlePagesAria": "커뮤니티 글 페이지",
+      "articles": "글",
+      "results_one": "{{count}}개 결과",
+      "results_few": "{{count}}개 결과",
+      "results_many": "{{count}}개 결과",
+      "results_other": "{{count}}개 결과",
+      "views": "조회",
+      "comments": "댓글",
+      "engagement": "글 반응",
+      "author": "글 작성자"
+    },
+    "states": {
+      "loadErrorTitle": "커뮤니티 글을 불러올 수 없습니다.",
+      "noResponse": "커뮤니티 서비스가 응답하지 않았습니다.",
+      "apiUnreachable": "커뮤니티 API에 연결할 수 없습니다. 백엔드가 3007 포트에서 실행 중인지 확인한 뒤 다시 시도하세요.",
+      "emptyTitle": "{{category}}에 아직 글이 없습니다.",
+      "emptyText": "이 카테고리의 커뮤니티 글이 여기에 표시됩니다."
+    },
+    "article": {
+      "fallbackTitle": "제목 없는 커뮤니티 글",
+      "fallbackExcerpt": "이 글을 열어 전체 커뮤니티 기여 내용을 읽어보세요.",
+      "fallbackMember": "QuickMeds 회원",
+      "fallbackCategory": "커뮤니티",
+      "imageAlt": "{{title}} 글 이미지",
+      "readAria": "{{title}} 읽기"
+    }
+  },
+  "communityDetail": {
+    "states": {
+      "loadingAria": "글 불러오는 중",
+      "unavailableTitle": "이 커뮤니티 글을 이용할 수 없습니다.",
+      "unavailableText": "삭제되었거나 링크가 올바르지 않을 수 있습니다.",
+      "backToCommunity": "커뮤니티로 돌아가기",
+      "dateUnavailable": "날짜 없음"
+    },
+    "labels": {
+      "backToCategory": "{{category}}로 돌아가기",
+      "published": "{{date}} 게시",
+      "likes": "{{count}} 좋아요",
+      "commentsTitle": "댓글 ({{count}})",
+      "addComment": "댓글 추가",
+      "characterCount": "{{count}}/100",
+      "editComment": "댓글 수정"
+    },
+    "actions": {
+      "liked": "좋아요 완료",
+      "likeThisArticle": "이 글 좋아요",
+      "postComment": "댓글 게시",
+      "posting": "게시 중...",
+      "cancel": "취소",
+      "saveComment": "댓글 저장"
+    },
+    "copy": {
+      "signInToDiscussion": "토론에 참여하려면 로그인하세요.",
+      "commentPlaceholder": "유용하고 존중하는 내용을 공유하세요.",
+      "commentsLoadError": "댓글을 불러올 수 없습니다.",
+      "noCommentsTitle": "아직 댓글이 없습니다.",
+      "noCommentsText": "이 글에 대한 의미 있는 토론을 시작해 보세요."
+    },
+    "alerts": {
+      "signInLike": "이 글에 좋아요를 누르려면 로그인하세요.",
+      "signInComment": "토론에 참여하려면 로그인하세요.",
+      "likeFailed": "이 글을 업데이트할 수 없습니다.",
+      "commentAdded": "댓글이 추가되었습니다.",
+      "commentAddFailed": "댓글을 추가할 수 없습니다.",
+      "commentUpdated": "댓글이 업데이트되었습니다.",
+      "commentUpdateFailed": "댓글을 업데이트할 수 없습니다.",
+      "deleteConfirm": "이 댓글을 삭제하시겠습니까?",
+      "deleteFailed": "댓글을 삭제할 수 없습니다."
+    },
+    "relative": {
+      "minute_one": "{{count}}분 전",
+      "minute_few": "{{count}}분 전",
+      "minute_many": "{{count}}분 전",
+      "minute_other": "{{count}}분 전",
+      "hour_one": "{{count}}시간 전",
+      "hour_few": "{{count}}시간 전",
+      "hour_many": "{{count}}시간 전",
+      "hour_other": "{{count}}시간 전",
+      "day_one": "{{count}}일 전",
+      "day_few": "{{count}}일 전",
+      "day_many": "{{count}}일 전",
+      "day_other": "{{count}}일 전"
+    }
+  },
+  "admin": {
+    "pharmacies": {
+      "loadErrorTitle": "약국을 불러올 수 없습니다",
+      "loadErrorText": "관리자 약국 쿼리를 완료할 수 없습니다. 현재 필터로 다시 시도하세요.",
+      "retry": "다시 시도",
+      "tableAria": "QuickMeds 약국 테이블",
+      "referenceId": "참조 ID",
+      "pharmacy": "약국",
+      "deliveryHours": "배달 및 운영시간",
+      "owner": "약국 운영자",
+      "region": "지역",
+      "type": "유형",
+      "status": "상태",
+      "actions": "작업",
+      "noFoundTitle": "약국을 찾을 수 없습니다",
+      "noFoundText": "상태 또는 지역 필터를 변경해 보세요.",
+      "openAria": "{{name}} 열기",
+      "imageAlt": "{{name}} 이미지",
+      "addressNotProvided": "주소 미제공",
+      "hoursConfigured": "운영시간 설정됨",
+      "hoursMissing": "운영시간 없음",
+      "remove": "제거",
+      "changeStatus": "상태 변경",
+      "changeStatusAria": "{{name}} 상태 변경",
+      "statusHold": "검토 대기",
+      "statusActive": "활성",
+      "statusClosed": "닫힘",
+      "statusDeleted": "삭제됨",
+      "statusAll": "전체",
+      "filterByStatusAria": "상태별 약국 필터",
+      "regionFilter": "지역 필터",
+      "regionFilterHelp": "기존 우즈베키스탄 지역 값을 사용합니다.",
+      "filterByRegionAria": "지역별 약국 필터",
+      "allRegions": "전체 지역"
     }
   },
   "footer": {

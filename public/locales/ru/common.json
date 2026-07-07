@@ -157,6 +157,29 @@
 				"deliveryWithFee": "Delivery: {{fee}}",
 				"close": "Close"
 			}
+		},
+		"collections": {
+			"favoritesAria": "Избранные аптеки",
+			"favoritesLoading": "Загрузка избранных аптек",
+			"favoritesLoadError": "Не удалось загрузить избранное",
+			"favoritesEmptyTitle": "Избранных аптек пока нет",
+			"favoritesEmptyText": "Сохраняйте аптеки во время просмотра, чтобы быстро найти их здесь позже.",
+			"findPharmacies": "Найти аптеки",
+			"favoritesCount_one": "{{count}} избранная аптека",
+			"favoritesCount_few": "{{count}} избранные аптеки",
+			"favoritesCount_many": "{{count}} избранных аптек",
+			"favoritesCount_other": "{{count}} избранные аптеки",
+			"visitedAria": "Недавно просмотренные аптеки",
+			"visitedLoading": "Загрузка недавно просмотренных аптек",
+			"visitedLoadError": "Не удалось загрузить недавно просмотренные аптеки",
+			"visitedEmptyTitle": "Недавно просмотренных аптек нет",
+			"visitedEmptyText": "Аптеки, которые вы откроете, появятся здесь для быстрого доступа.",
+			"explorePharmacies": "Смотреть аптеки",
+			"visitedCount_one": "{{count}} недавно просмотренная аптека",
+			"visitedCount_few": "{{count}} недавно просмотренные аптеки",
+			"visitedCount_many": "{{count}} недавно просмотренных аптек",
+			"visitedCount_other": "{{count}} недавно просмотренные аптеки",
+			"connectionError": "Проверьте соединение и попробуйте снова."
 		}
 	},
 	"nav": {
@@ -354,6 +377,312 @@
 			"noPharmaciesText": "Откройте все аптеки или попробуйте другой район.",
 			"noTrendingTitle": "Популярных аптек пока нет.",
 			"noTrendingText": "Просматривайте все аптеки, пока активность сообщества растет."
+		}
+	},
+	"pharmacyStatus": {
+		"open247": "Открыто 24/7",
+		"openNow": "Открыто сейчас",
+		"closed": "Закрыто",
+		"hoursNotProvided": "Часы работы не указаны",
+		"open24EveryDay": "Открыто круглосуточно каждый день.",
+		"openNowCloses": "Открыто сейчас · закрывается {{time}}",
+		"nextOpens": "Следующее открытие {{time}}",
+		"noUpcomingOpening": "Ближайшее время открытия не указано."
+	},
+	"pharmacyFilters": {
+		"findYourPharmacy": "Найдите аптеку",
+		"nameOrAddress": "Название или адрес",
+		"region": "Регион",
+		"pharmacyType": "Тип аптеки",
+		"services": "Услуги",
+		"deliveryFee": "Стоимость доставки",
+		"min": "Мин.",
+		"max": "Макс.",
+		"showMore": "Показать больше",
+		"showLess": "Показать меньше",
+		"deliveryAvailable": "Есть доставка",
+		"acceptsInsurance": "Принимает страховку",
+		"openNow": "Открыто сейчас",
+		"open247": "Открыто 24/7",
+		"search": "Искать",
+		"reset": "Сбросить",
+		"filters": "Фильтры",
+		"resetAll": "Сбросить все",
+		"applyFilters": "Применить фильтры",
+		"openFiltersAria": "Открыть фильтры",
+		"closeFiltersAria": "Закрыть фильтры",
+		"activeFiltersAria": "Активные фильтры аптек",
+		"allPharmacies": "Все аптеки",
+		"moreFilters": "Еще фильтры"
+	},
+	"sort": {
+		"sortBy": "Сортировать по",
+		"new": "Новые",
+		"lowestDeliveryFee": "Самая низкая доставка",
+		"highestDeliveryFee": "Самая высокая доставка",
+		"newest": "Сначала новые",
+		"mostViewed": "Самые просматриваемые",
+		"mostLiked": "Самые популярные",
+		"sortArticles": "Сортировать статьи"
+	},
+	"sharedPharmacyCard": {
+		"type": "Тип",
+		"typeLabel": "Аптека типа {{type}}",
+		"delivery": "Доставка",
+		"deliveryWithFee": "Доставка: {{fee}}",
+		"deliveryWithFeeShort": "Доставка {{fee}}",
+		"pickupOnly": "Только самовывоз",
+		"insurance": "Страховка",
+		"insuranceAccepted": "Принимается",
+		"insuranceNotAccepted": "Не принимается",
+		"verifiedPharmacy": "Проверенная аптека",
+		"viewPharmacy": "Открыть аптеку",
+		"viewPharmacyAria": "Открыть {{name}}",
+		"imageAlt": "Аптека {{name}}",
+		"saveFavoriteAria": "Сохранить {{name}}",
+		"removeFavoriteAria": "Удалить {{name}} из избранного",
+		"top": "Топ",
+		"medications_one": "{{count}} препарат",
+		"medications_few": "{{count}} препарата",
+		"medications_many": "{{count}} препаратов",
+		"medications_other": "{{count}} препарата"
+	},
+	"pharmacies": {
+		"hero": {
+			"kicker": "Каталог аптек",
+			"title": "Находите аптеки по всему Узбекистану",
+			"description": "Фильтруйте аптеки по региону, доступным услугам и часам работы перед визитом."
+		},
+		"results": {
+			"loading": "Загрузка аптек...",
+			"available_one": "{{count}} аптека доступна",
+			"available_few": "{{count}} аптеки доступны",
+			"available_many": "{{count}} аптек доступно",
+			"available_other": "{{count}} аптеки доступны",
+			"total": "Всего доступно аптек: {{count}}",
+			"aria": "Результаты аптек"
+		},
+		"states": {
+			"loadErrorTitle": "Не удалось загрузить аптеки",
+			"loadErrorText": "Проверьте соединение и попробуйте снова.",
+			"emptyTitle": "По этим фильтрам аптек нет",
+			"emptyText": "Попробуйте изменить регион, услуги или текст поиска.",
+			"clearFilters": "Очистить фильтры",
+			"tryAgain": "Попробовать снова",
+			"loadMore": "Загрузить еще аптеки"
+		}
+	},
+	"pharmacyDetailPage": {
+		"unavailable": {
+			"eyebrow": "Аптека недоступна",
+			"title": "Мы не смогли найти эту аптеку.",
+			"description": "Возможно, она переехала, закрылась или больше не доступна публично.",
+			"action": "Смотреть аптеки"
+		},
+		"labels": {
+			"about": "О аптеке",
+			"aboutTitle": "Об этой аптеке",
+			"pharmacyType": "Тип аптеки",
+			"established": "Открыта",
+			"notProvided": "Не указано",
+			"services": "Услуги",
+			"availableSupport": "Доступная поддержка",
+			"hours": "Часы",
+			"workingHours": "Рабочие часы",
+			"communityFeedback": "Отзывы сообщества",
+			"pharmacyOwner": "Владелец аптеки",
+			"contact": "Связь",
+			"messagePharmacy": "Написать в аптеку",
+			"secureInbox": "Защищенные сообщения",
+			"nearby": "Рядом"
+		},
+		"copy": {
+			"noDescription": "Эта аптека пока не добавила описание.",
+			"deliveryFee": "Стоимость доставки: {{fee}}",
+			"insuranceHint": "Уточните своего провайдера напрямую в аптеке.",
+			"noServices": "Для этой аптеки не указаны дополнительные услуги.",
+			"noComments": "Комментариев пока нет. Поделитесь полезной информацией первым.",
+			"commentsLoadError": "Не удалось загрузить комментарии аптеки.",
+			"loginToComment": "Войдите, чтобы написать комментарий.",
+			"commentLabel": "Поделитесь полезной информацией об этой аптеке",
+			"commentPlaceholder": "Напишите комментарий",
+			"loginToMessage": "Войдите, чтобы спросить владельца аптеки о наличии, доставке или услугах.",
+			"ownPharmacyMessage": "Это ваша аптека. Клиенты смогут писать вам из этой карточки при просмотре объявления.",
+			"messagePlaceholder": "Здравствуйте, у меня есть вопрос об аптеке {{name}}.",
+			"noNearby": "В этом регионе пока нет других аптек."
+		},
+		"actions": {
+			"saved": "Сохранено",
+			"savePharmacy": "Сохранить аптеку",
+			"writeComment": "Написать комментарий",
+			"closeCommentForm": "Закрыть форму комментария",
+			"submitComment": "Отправить комментарий",
+			"submitting": "Отправка...",
+			"loadMoreComments": "Загрузить еще комментарии",
+			"loadingComments": "Загрузка комментариев...",
+			"loginToMessage": "Войти, чтобы написать",
+			"attachImages": "Прикрепить изображения",
+			"uploading": "Загрузка...",
+			"sendMessage": "Отправить сообщение",
+			"sending": "Отправка...",
+			"remove": "Удалить",
+			"viewOwnerProfile": "Открыть профиль владельца аптеки"
+		},
+		"aria": {
+			"loading": "Загрузка деталей аптеки",
+			"gallery": "Галерея {{name}}",
+			"viewImage": "Открыть изображение {{name}} {{count}}",
+			"favoriteSave": "Сохранить {{name}}",
+			"favoriteRemove": "Удалить {{name}} из избранного",
+			"commentsLoading": "Загрузка комментариев аптеки",
+			"attachmentRemove": "Удалить вложение сообщения"
+		},
+		"alerts": {
+			"maxAttachments": "Можно прикрепить до 4 изображений.",
+			"ownerCannotMessage": "Владельцы не могут писать в свою аптеку с этой страницы.",
+			"messageRequired": "Сначала напишите сообщение или прикрепите изображение.",
+			"commentSubmitted": "Комментарий отправлен"
+		},
+		"views_one": "{{count}} просмотр",
+		"views_few": "{{count}} просмотра",
+		"views_many": "{{count}} просмотров",
+		"views_other": "{{count}} просмотра"
+	},
+	"community": {
+		"intro": {
+			"eyebrow": "Сообщество QuickMeds",
+			"title": "Практичные знания от местных людей.",
+			"description": "Находите полезную информацию об аптеках и делитесь опытом, который помогает сообществам по всему Узбекистану."
+		},
+		"actions": {
+			"writeArticle": "Написать статью",
+			"writeFirstArticle": "Написать первую статью",
+			"readArticle": "Читать статью",
+			"likeArticle": "Поставить лайк статье",
+			"unlikeArticle": "Убрать лайк со статьи",
+			"tryAgain": "Попробовать снова"
+		},
+		"labels": {
+			"categoriesAria": "Категории сообщества",
+			"articlePagesAria": "Страницы статей сообщества",
+			"articles": "Статьи",
+			"results_one": "{{count}} результат",
+			"results_few": "{{count}} результата",
+			"results_many": "{{count}} результатов",
+			"results_other": "{{count}} результата",
+			"views": "Просмотры",
+			"comments": "Комментарии",
+			"engagement": "Активность статьи",
+			"author": "Автор статьи"
+		},
+		"states": {
+			"loadErrorTitle": "Не удалось загрузить статьи сообщества.",
+			"noResponse": "Сервис сообщества не вернул ответ.",
+			"apiUnreachable": "API сообщества недоступен. Проверьте, что backend запущен на порту 3007, и повторите попытку.",
+			"emptyTitle": "В категории {{category}} пока нет записей.",
+			"emptyText": "Материалы сообщества в этой категории появятся здесь."
+		},
+		"article": {
+			"fallbackTitle": "Статья сообщества без названия",
+			"fallbackExcerpt": "Откройте статью, чтобы прочитать полный материал сообщества.",
+			"fallbackMember": "Участник QuickMeds",
+			"fallbackCategory": "Сообщество",
+			"imageAlt": "Изображение статьи {{title}}",
+			"readAria": "Читать {{title}}"
+		}
+	},
+	"communityDetail": {
+		"states": {
+			"loadingAria": "Загрузка статьи",
+			"unavailableTitle": "Эта статья сообщества недоступна.",
+			"unavailableText": "Возможно, она была удалена или ссылка неверна.",
+			"backToCommunity": "Назад в сообщество",
+			"dateUnavailable": "дата недоступна"
+		},
+		"labels": {
+			"backToCategory": "Назад к {{category}}",
+			"published": "Опубликовано {{date}}",
+			"likes": "{{count}} лайков",
+			"commentsTitle": "Комментарии ({{count}})",
+			"addComment": "Добавить комментарий",
+			"characterCount": "{{count}}/100",
+			"editComment": "Редактировать комментарий"
+		},
+		"actions": {
+			"liked": "Понравилось",
+			"likeThisArticle": "Поставить лайк статье",
+			"postComment": "Опубликовать комментарий",
+			"posting": "Публикация...",
+			"cancel": "Отмена",
+			"saveComment": "Сохранить комментарий"
+		},
+		"copy": {
+			"signInToDiscussion": "Войдите, чтобы участвовать в обсуждении.",
+			"commentPlaceholder": "Поделитесь полезным и уважительным комментарием.",
+			"commentsLoadError": "Не удалось загрузить комментарии.",
+			"noCommentsTitle": "Комментариев пока нет.",
+			"noCommentsText": "Начните содержательное обсуждение этой статьи."
+		},
+		"alerts": {
+			"signInLike": "Войдите, чтобы поставить лайк статье.",
+			"signInComment": "Войдите, чтобы присоединиться к обсуждению.",
+			"likeFailed": "Не удалось обновить эту статью.",
+			"commentAdded": "Комментарий добавлен.",
+			"commentAddFailed": "Не удалось добавить комментарий.",
+			"commentUpdated": "Комментарий обновлен.",
+			"commentUpdateFailed": "Не удалось обновить комментарий.",
+			"deleteConfirm": "Вы хотите удалить этот комментарий?",
+			"deleteFailed": "Не удалось удалить комментарий."
+		},
+		"relative": {
+			"minute_one": "{{count}} минуту назад",
+			"minute_few": "{{count}} минуты назад",
+			"minute_many": "{{count}} минут назад",
+			"minute_other": "{{count}} минуты назад",
+			"hour_one": "{{count}} час назад",
+			"hour_few": "{{count}} часа назад",
+			"hour_many": "{{count}} часов назад",
+			"hour_other": "{{count}} часа назад",
+			"day_one": "{{count}} день назад",
+			"day_few": "{{count}} дня назад",
+			"day_many": "{{count}} дней назад",
+			"day_other": "{{count}} дня назад"
+		}
+	},
+	"admin": {
+		"pharmacies": {
+			"loadErrorTitle": "Не удалось загрузить аптеки",
+			"loadErrorText": "Административный запрос аптек не завершился. Повторите текущие фильтры.",
+			"retry": "Повторить",
+			"tableAria": "Таблица аптек QuickMeds",
+			"referenceId": "ID",
+			"pharmacy": "Аптека",
+			"deliveryHours": "Доставка и часы",
+			"owner": "Владелец аптеки",
+			"region": "Регион",
+			"type": "Тип",
+			"status": "Статус",
+			"actions": "Действия",
+			"noFoundTitle": "Аптеки не найдены",
+			"noFoundText": "Попробуйте изменить фильтр статуса или региона.",
+			"openAria": "Открыть {{name}}",
+			"imageAlt": "Изображение {{name}}",
+			"addressNotProvided": "Адрес не указан",
+			"hoursConfigured": "Часы настроены",
+			"hoursMissing": "Часы не указаны",
+			"remove": "Удалить",
+			"changeStatus": "Изменить статус",
+			"changeStatusAria": "Изменить статус для {{name}}",
+			"statusHold": "На проверке",
+			"statusActive": "Активна",
+			"statusClosed": "Закрыта",
+			"statusDeleted": "Удалена",
+			"statusAll": "Все",
+			"filterByStatusAria": "Фильтр аптек по статусу",
+			"regionFilter": "Фильтр региона",
+			"regionFilterHelp": "Используйте существующие регионы Узбекистана.",
+			"filterByRegionAria": "Фильтр аптек по региону",
+			"allRegions": "Все регионы"
 		}
 	},
 	"footer": {

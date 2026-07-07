@@ -157,6 +157,29 @@
         "deliveryWithFee": "Delivery: {{fee}}",
         "close": "Close"
       }
+    },
+    "collections": {
+      "favoritesAria": "Favorite pharmacies",
+      "favoritesLoading": "Loading favorite pharmacies",
+      "favoritesLoadError": "Favorites could not be loaded",
+      "favoritesEmptyTitle": "No favorite pharmacies yet",
+      "favoritesEmptyText": "Save pharmacies while browsing to find them here later.",
+      "findPharmacies": "Find pharmacies",
+      "favoritesCount_one": "{{count}} favorite pharmacy",
+      "favoritesCount_few": "{{count}} favorite pharmacies",
+      "favoritesCount_many": "{{count}} favorite pharmacies",
+      "favoritesCount_other": "{{count}} favorite pharmacies",
+      "visitedAria": "Recently visited pharmacies",
+      "visitedLoading": "Loading recently visited pharmacies",
+      "visitedLoadError": "Recently visited pharmacies could not be loaded",
+      "visitedEmptyTitle": "No recently visited pharmacies",
+      "visitedEmptyText": "Pharmacies you view will appear here for quick access.",
+      "explorePharmacies": "Explore pharmacies",
+      "visitedCount_one": "{{count}} recently visited pharmacy",
+      "visitedCount_few": "{{count}} recently visited pharmacies",
+      "visitedCount_many": "{{count}} recently visited pharmacies",
+      "visitedCount_other": "{{count}} recently visited pharmacies",
+      "connectionError": "Please check your connection and try again."
     }
   },
   "nav": {
@@ -354,6 +377,312 @@
       "noPharmaciesText": "Try browsing all pharmacies or searching another area.",
       "noTrendingTitle": "No trending pharmacies are available yet.",
       "noTrendingText": "Browse all pharmacies while community activity builds."
+    }
+  },
+  "pharmacyStatus": {
+    "open247": "Open 24/7",
+    "openNow": "Open now",
+    "closed": "Closed",
+    "hoursNotProvided": "Hours not provided",
+    "open24EveryDay": "Open 24 hours every day.",
+    "openNowCloses": "Open now · closes {{time}}",
+    "nextOpens": "Next opens {{time}}",
+    "noUpcomingOpening": "No upcoming opening time is listed."
+  },
+  "pharmacyFilters": {
+    "findYourPharmacy": "Find your pharmacy",
+    "nameOrAddress": "Name or address",
+    "region": "Region",
+    "pharmacyType": "Pharmacy type",
+    "services": "Services",
+    "deliveryFee": "Delivery fee",
+    "min": "Min",
+    "max": "Max",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "deliveryAvailable": "Delivery available",
+    "acceptsInsurance": "Accepts insurance",
+    "openNow": "Open now",
+    "open247": "Open 24/7",
+    "search": "Search",
+    "reset": "Reset",
+    "filters": "Filters",
+    "resetAll": "Reset all",
+    "applyFilters": "Apply filters",
+    "openFiltersAria": "Open filters",
+    "closeFiltersAria": "Close filters",
+    "activeFiltersAria": "Active pharmacy filters",
+    "allPharmacies": "All pharmacies",
+    "moreFilters": "More filters"
+  },
+  "sort": {
+    "sortBy": "Sort by",
+    "new": "New",
+    "lowestDeliveryFee": "Lowest delivery fee",
+    "highestDeliveryFee": "Highest delivery fee",
+    "newest": "Newest",
+    "mostViewed": "Most viewed",
+    "mostLiked": "Most liked",
+    "sortArticles": "Sort articles"
+  },
+  "sharedPharmacyCard": {
+    "type": "Type",
+    "typeLabel": "{{type}} pharmacy",
+    "delivery": "Delivery",
+    "deliveryWithFee": "Delivery: {{fee}}",
+    "deliveryWithFeeShort": "{{fee}} delivery",
+    "pickupOnly": "Pickup only",
+    "insurance": "Insurance",
+    "insuranceAccepted": "Accepted",
+    "insuranceNotAccepted": "Not accepted",
+    "verifiedPharmacy": "Verified pharmacy",
+    "viewPharmacy": "View pharmacy",
+    "viewPharmacyAria": "View {{name}}",
+    "imageAlt": "{{name}} pharmacy",
+    "saveFavoriteAria": "Save {{name}}",
+    "removeFavoriteAria": "Remove {{name}} from favorites",
+    "top": "Top",
+    "medications_one": "{{count}} medication",
+    "medications_few": "{{count}} medications",
+    "medications_many": "{{count}} medications",
+    "medications_other": "{{count}} medications"
+  },
+  "pharmacies": {
+    "hero": {
+      "kicker": "Pharmacy directory",
+      "title": "Find pharmacies across Uzbekistan",
+      "description": "Filter pharmacies by region, available services, and working hours before you visit."
+    },
+    "results": {
+      "loading": "Loading pharmacies...",
+      "available_one": "{{count}} pharmacy available",
+      "available_few": "{{count}} pharmacies available",
+      "available_many": "{{count}} pharmacies available",
+      "available_other": "{{count}} pharmacies available",
+      "total": "Total {{count}} pharmacies available",
+      "aria": "Pharmacy results"
+    },
+    "states": {
+      "loadErrorTitle": "Pharmacies could not be loaded",
+      "loadErrorText": "Check your connection and try again.",
+      "emptyTitle": "No pharmacies match these filters",
+      "emptyText": "Try changing your region, services, or search text.",
+      "clearFilters": "Clear filters",
+      "tryAgain": "Try again",
+      "loadMore": "Load more pharmacies"
+    }
+  },
+  "pharmacyDetailPage": {
+    "unavailable": {
+      "eyebrow": "Pharmacy unavailable",
+      "title": "We could not find this pharmacy.",
+      "description": "It may have moved, closed, or no longer be publicly available.",
+      "action": "Browse pharmacies"
+    },
+    "labels": {
+      "about": "About",
+      "aboutTitle": "About this pharmacy",
+      "pharmacyType": "Pharmacy type",
+      "established": "Established",
+      "notProvided": "Not provided",
+      "services": "Services",
+      "availableSupport": "Available support",
+      "hours": "Hours",
+      "workingHours": "Working hours",
+      "communityFeedback": "Community Feedback",
+      "pharmacyOwner": "Pharmacy Owner",
+      "contact": "Contact",
+      "messagePharmacy": "Message the pharmacy",
+      "secureInbox": "Secure inbox",
+      "nearby": "Nearby"
+    },
+    "copy": {
+      "noDescription": "This pharmacy has not added a description yet.",
+      "deliveryFee": "Delivery fee: {{fee}}",
+      "insuranceHint": "Confirm your provider directly with the pharmacy.",
+      "noServices": "No additional services are listed for this pharmacy.",
+      "noComments": "No comments yet. Be the first to share useful information.",
+      "commentsLoadError": "We could not load pharmacy comments.",
+      "loginToComment": "Log in to write a comment.",
+      "commentLabel": "Share helpful information about this pharmacy",
+      "commentPlaceholder": "Write your comment",
+      "loginToMessage": "Log in to ask this Pharmacy Owner about availability, delivery, or services.",
+      "ownPharmacyMessage": "You own this pharmacy. Customers can message you from this card when they view the listing.",
+      "messagePlaceholder": "Hello, I have a question about {{name}}.",
+      "noNearby": "No other pharmacies are currently listed in this region."
+    },
+    "actions": {
+      "saved": "Saved",
+      "savePharmacy": "Save pharmacy",
+      "writeComment": "Write a comment",
+      "closeCommentForm": "Close comment form",
+      "submitComment": "Submit comment",
+      "submitting": "Submitting...",
+      "loadMoreComments": "Load More Comments",
+      "loadingComments": "Loading comments...",
+      "loginToMessage": "Login to message",
+      "attachImages": "Attach images",
+      "uploading": "Uploading...",
+      "sendMessage": "Send message",
+      "sending": "Sending...",
+      "remove": "Remove",
+      "viewOwnerProfile": "View Pharmacy Owner profile"
+    },
+    "aria": {
+      "loading": "Loading pharmacy details",
+      "gallery": "{{name}} gallery",
+      "viewImage": "View {{name}} image {{count}}",
+      "favoriteSave": "Save {{name}}",
+      "favoriteRemove": "Remove {{name}} from favorites",
+      "commentsLoading": "Loading pharmacy comments",
+      "attachmentRemove": "Remove message attachment"
+    },
+    "alerts": {
+      "maxAttachments": "You can attach up to 4 images.",
+      "ownerCannotMessage": "Owners cannot message their own pharmacy from this page.",
+      "messageRequired": "Write a message or attach an image first.",
+      "commentSubmitted": "Comment submitted"
+    },
+    "views_one": "{{count}} view",
+    "views_few": "{{count}} views",
+    "views_many": "{{count}} views",
+    "views_other": "{{count}} views"
+  },
+  "community": {
+    "intro": {
+      "eyebrow": "QuickMeds Community",
+      "title": "Practical knowledge, shared locally.",
+      "description": "Discover useful pharmacy information and share experiences that help communities across Uzbekistan."
+    },
+    "actions": {
+      "writeArticle": "Write an article",
+      "writeFirstArticle": "Write the first article",
+      "readArticle": "Read article",
+      "likeArticle": "Like article",
+      "unlikeArticle": "Unlike article",
+      "tryAgain": "Try again"
+    },
+    "labels": {
+      "categoriesAria": "Community categories",
+      "articlePagesAria": "Community article pages",
+      "articles": "Articles",
+      "results_one": "{{count}} result",
+      "results_few": "{{count}} results",
+      "results_many": "{{count}} results",
+      "results_other": "{{count}} results",
+      "views": "Views",
+      "comments": "Comments",
+      "engagement": "Article engagement",
+      "author": "Article author"
+    },
+    "states": {
+      "loadErrorTitle": "We could not load the community articles.",
+      "noResponse": "The Community service did not return a response.",
+      "apiUnreachable": "The Community API is unreachable. Please confirm the backend is running on port 3007 and retry.",
+      "emptyTitle": "No {{category}} yet.",
+      "emptyText": "Community contributions in this category will appear here."
+    },
+    "article": {
+      "fallbackTitle": "Untitled community article",
+      "fallbackExcerpt": "Open this article to read the full community contribution.",
+      "fallbackMember": "QuickMeds member",
+      "fallbackCategory": "Community",
+      "imageAlt": "Article image for {{title}}",
+      "readAria": "Read {{title}}"
+    }
+  },
+  "communityDetail": {
+    "states": {
+      "loadingAria": "Loading article",
+      "unavailableTitle": "This community article is unavailable.",
+      "unavailableText": "It may have been removed, or the link may be incorrect.",
+      "backToCommunity": "Back to Community",
+      "dateUnavailable": "date unavailable"
+    },
+    "labels": {
+      "backToCategory": "Back to {{category}}",
+      "published": "Published {{date}}",
+      "likes": "{{count}} Likes",
+      "commentsTitle": "Comments ({{count}})",
+      "addComment": "Add a comment",
+      "characterCount": "{{count}}/100",
+      "editComment": "Edit comment"
+    },
+    "actions": {
+      "liked": "Liked",
+      "likeThisArticle": "Like this article",
+      "postComment": "Post comment",
+      "posting": "Posting...",
+      "cancel": "Cancel",
+      "saveComment": "Save comment"
+    },
+    "copy": {
+      "signInToDiscussion": "Sign in to join this discussion.",
+      "commentPlaceholder": "Share a useful, respectful contribution.",
+      "commentsLoadError": "Comments could not be loaded.",
+      "noCommentsTitle": "No comments yet.",
+      "noCommentsText": "Start a thoughtful discussion about this article."
+    },
+    "alerts": {
+      "signInLike": "Please sign in to like this article.",
+      "signInComment": "Please sign in to join the discussion.",
+      "likeFailed": "Unable to update this article.",
+      "commentAdded": "Comment added.",
+      "commentAddFailed": "Unable to add your comment.",
+      "commentUpdated": "Comment updated.",
+      "commentUpdateFailed": "Unable to update your comment.",
+      "deleteConfirm": "Do you want to delete this comment?",
+      "deleteFailed": "Unable to delete your comment."
+    },
+    "relative": {
+      "minute_one": "{{count}} minute ago",
+      "minute_few": "{{count}} minutes ago",
+      "minute_many": "{{count}} minutes ago",
+      "minute_other": "{{count}} minutes ago",
+      "hour_one": "{{count}} hour ago",
+      "hour_few": "{{count}} hours ago",
+      "hour_many": "{{count}} hours ago",
+      "hour_other": "{{count}} hours ago",
+      "day_one": "{{count}} day ago",
+      "day_few": "{{count}} days ago",
+      "day_many": "{{count}} days ago",
+      "day_other": "{{count}} days ago"
+    }
+  },
+  "admin": {
+    "pharmacies": {
+      "loadErrorTitle": "Unable to load pharmacies",
+      "loadErrorText": "The admin pharmacy query could not be completed. Please retry the current filters.",
+      "retry": "Retry",
+      "tableAria": "QuickMeds pharmacies table",
+      "referenceId": "Reference ID",
+      "pharmacy": "Pharmacy",
+      "deliveryHours": "Delivery & Hours",
+      "owner": "Pharmacy Owner",
+      "region": "Region",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions",
+      "noFoundTitle": "No pharmacies found",
+      "noFoundText": "Try changing the status or region filter.",
+      "openAria": "Open {{name}}",
+      "imageAlt": "{{name}} image",
+      "addressNotProvided": "Address not provided",
+      "hoursConfigured": "Hours configured",
+      "hoursMissing": "Hours missing",
+      "remove": "Remove",
+      "changeStatus": "Change status",
+      "changeStatusAria": "Change status for {{name}}",
+      "statusHold": "Pending review",
+      "statusActive": "Active",
+      "statusClosed": "Closed",
+      "statusDeleted": "Deleted"
+      ,"statusAll": "All",
+      "filterByStatusAria": "Filter pharmacies by status",
+      "regionFilter": "Region filter",
+      "regionFilterHelp": "Use existing Uzbekistan region values.",
+      "filterByRegionAria": "Filter pharmacies by region",
+      "allRegions": "All regions"
     }
   },
   "footer": {

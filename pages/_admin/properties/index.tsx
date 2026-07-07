@@ -12,17 +12,10 @@ import { useMutation, useQuery } from '@apollo/client';
 import { REMOVE_PHARMACY_BY_ADMIN, UPDATE_PHARMACY_BY_ADMIN } from '../../../apollo/admin/mutation';
 import { GET_ALL_PHARMACIES_BY_ADMIN } from '../../../apollo/admin/query';
 import { T } from '../../../libs/types/common';
-import { getPharmacyLocationLabel } from '../../../libs/utils/pharmacy-location';
-
-const statusTabs = [
-	{ label: 'Pending review', value: PharmacyStatus.HOLD },
-	{ label: 'All', value: 'ALL' },
-	{ label: 'Active', value: PharmacyStatus.ACTIVE },
-	{ label: 'Closed', value: PharmacyStatus.CLOSED },
-	{ label: 'Deleted', value: PharmacyStatus.DELETE },
-];
+import { useTranslation } from 'next-i18next';
 
 const AdminProperties: NextPage = ({ initialInquiry, ...props }: any) => {
+	const { t } = useTranslation('common');
 	const [anchorEl, setAnchorEl] = useState<HTMLElement[]>([]);
 	const [propertiesInquiry, setPharmaciesInquiry] = useState<AllPharmaciesInquiry>(initialInquiry);
 	const [properties, setProperties] = useState<Property[]>([]);
@@ -31,6 +24,13 @@ const AdminProperties: NextPage = ({ initialInquiry, ...props }: any) => {
 		propertiesInquiry?.search?.pharmacyStatus ? propertiesInquiry?.search?.pharmacyStatus : 'ALL',
 	);
 	const [searchType, setSearchType] = useState('ALL');
+	const statusTabs = [
+		{ label: t('admin.pharmacies.statusHold'), value: PharmacyStatus.HOLD },
+		{ label: t('admin.pharmacies.statusAll'), value: 'ALL' },
+		{ label: t('admin.pharmacies.statusActive'), value: PharmacyStatus.ACTIVE },
+		{ label: t('admin.pharmacies.statusClosed'), value: PharmacyStatus.CLOSED },
+		{ label: t('admin.pharmacies.statusDeleted'), value: PharmacyStatus.DELETE },
+	];
 
 	/** APOLLO REQUESTS **/
 const [updatePharmacyByAdmin] = useMutation(UPDATE_PHARMACY_BY_ADMIN);
@@ -159,7 +159,7 @@ const {
 			</div>
 
 			<div className="table-wrap admin-management-panel">
-				<div className="admin-filter-tabs" role="tablist" aria-label="Filter pharmacies by status">
+				<div className="admin-filter-tabs" role="tablist" aria-label={t('admin.pharmacies.filterByStatusAria')}>
 					{statusTabs.map((tab) => (
 						<button
 							type="button"
@@ -177,19 +177,19 @@ const {
 
 				<div className="admin-toolbar">
 					<div className="admin-toolbar__context">
-						<strong>Region filter</strong>
-						<span>Use existing Uzbekistan region values.</span>
+						<strong>{t('admin.pharmacies.regionFilter')}</strong>
+						<span>{t('admin.pharmacies.regionFilterHelp')}</span>
 					</div>
 					<Select
 						className="admin-select-control"
 						value={searchType}
 						onChange={(event) => searchTypeHandler(event.target.value)}
-						inputProps={{ 'aria-label': 'Filter pharmacies by region' }}
+						inputProps={{ 'aria-label': t('admin.pharmacies.filterByRegionAria') }}
 					>
-						<MenuItem value="ALL">All regions</MenuItem>
+						<MenuItem value="ALL">{t('admin.pharmacies.allRegions')}</MenuItem>
 						{Object.values(PharmacyLocation).map((location) => (
 							<MenuItem value={location} key={location}>
-								{getPharmacyLocationLabel(location)}
+								{t(`pharmacyLocation.${location}`)}
 							</MenuItem>
 						))}
 					</Select>

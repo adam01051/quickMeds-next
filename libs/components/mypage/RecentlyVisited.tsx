@@ -6,8 +6,10 @@ import { GET_VISITED } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import { Property } from '../../types/property/property';
 import MyPagePharmacyCard from './MyPagePharmacyCard';
+import { useTranslation } from 'next-i18next';
 
 const RecentlyVisited: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [recentlyVisited, setRecentlyVisited] = useState<Property[]>([]);
 	const [total, setTotal] = useState(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -23,16 +25,16 @@ const RecentlyVisited: NextPage = () => {
 	});
 
 	return (
-		<section id="recently-visited-page" className="my-page-pharmacy-collection" aria-label="Recently visited pharmacies">
+		<section id="recently-visited-page" className="my-page-pharmacy-collection" aria-label={t('mypage.collections.visitedAria')}>
 			{loading && !recentlyVisited.length ? (
-				<div className="my-page-pharmacy-grid" aria-label="Loading recently visited pharmacies">
+				<div className="my-page-pharmacy-grid" aria-label={t('mypage.collections.visitedLoading')}>
 					{Array.from({ length: 3 }).map((_, index) => <div className="my-page-pharmacy-card-skeleton" key={index} />)}
 				</div>
 			) : error ? (
 				<div className="my-page-collection-state" role="alert">
-					<h2>Recently visited pharmacies could not be loaded</h2>
-					<p>Please check your connection and try again.</p>
-					<button type="button" onClick={() => refetch({ input: searchVisited })}>Try again</button>
+					<h2>{t('mypage.collections.visitedLoadError')}</h2>
+					<p>{t('mypage.collections.connectionError')}</p>
+					<button type="button" onClick={() => refetch({ input: searchVisited })}>{t('pharmacies.states.tryAgain')}</button>
 				</div>
 			) : recentlyVisited.length ? (
 				<div className="my-page-pharmacy-grid">
@@ -40,9 +42,9 @@ const RecentlyVisited: NextPage = () => {
 				</div>
 			) : (
 				<div className="my-page-collection-state">
-					<h2>No recently visited pharmacies</h2>
-					<p>Pharmacies you view will appear here for quick access.</p>
-					<a href="/pharmacies">Explore pharmacies</a>
+					<h2>{t('mypage.collections.visitedEmptyTitle')}</h2>
+					<p>{t('mypage.collections.visitedEmptyText')}</p>
+					<a href="/pharmacies">{t('mypage.collections.explorePharmacies')}</a>
 				</div>
 			)}
 
@@ -54,7 +56,7 @@ const RecentlyVisited: NextPage = () => {
 						shape="rounded"
 						onChange={(_, page) => setSearchVisited({ ...searchVisited, page })}
 					/>
-					<p>{total} recently visited {total === 1 ? 'pharmacy' : 'pharmacies'}</p>
+					<p>{t('mypage.collections.visitedCount', { count: total })}</p>
 				</div>
 			)}
 		</section>

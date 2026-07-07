@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { topPropertyRank } from '../../config';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import { formatDeliveryFeeUZS } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface PopularPropertyCardProps {
 	property: Property;
@@ -19,6 +19,7 @@ interface PopularPropertyCardProps {
 const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 	const { property } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
@@ -42,13 +43,13 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 					{property?.pharmacyRank && property?.pharmacyRank >= topPropertyRank ? (
 						<div className={'status'}>
 							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
+							<span>{t('sharedPharmacyCard.top')}</span>
 						</div>
 					) : (
 						''
 					)}
 
-					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
+					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : t('sharedPharmacyCard.pickupOnly')}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong
@@ -63,20 +64,20 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{t('sharedPharmacyCard.medications', { count: property?.pharmacyMedicationCount ?? 0 })}</span>
 						</div>
 						<div>
 							<img src="/img/icons/securePayment.svg" alt="" />
-							<span>{property?.pharmacyType} type</span>
+							<span>{property?.pharmacyType ? t('sharedPharmacyCard.typeLabel', { type: t(`pharmacyType.${property.pharmacyType}`) }) : ''}</span>
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{getPharmacyLocationLabel(property?.pharmacyLocation)}</span>
+							<span>{property?.pharmacyLocation ? t(`pharmacyLocation.${property.pharmacyLocation}`) : ''}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<p>{property?.hasDelivery ? 'delivery' : 'pickup'}</p>
+						<p>{property?.hasDelivery ? t('sharedPharmacyCard.delivery') : t('sharedPharmacyCard.pickupOnly')}</p>
 						<div className="view-like-box">
 							<IconButton color={'default'}>
 								<RemoveRedEyeIcon />
@@ -101,13 +102,13 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 					{property?.pharmacyRank && property?.pharmacyRank >= topPropertyRank ? (
 						<div className={'status'}>
 							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
+							<span>{t('sharedPharmacyCard.top')}</span>
 						</div>
 					) : (
 						''
 					)}
 
-					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</div>
+					<div className={'price'}>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : t('sharedPharmacyCard.pickupOnly')}</div>
 				</Box>
 				<Box component={'div'} className={'info'}>
 					<strong className={'title'} 	onClick={() => {
@@ -117,20 +118,20 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 					<div className={'options'}>
 						<div>
 							<img src="/img/icons/discovery.svg" alt="" />
-							<span>{property?.pharmacyMedicationCount} medications</span>
+							<span>{t('sharedPharmacyCard.medications', { count: property?.pharmacyMedicationCount ?? 0 })}</span>
 						</div>
 						<div>
 							<img src="/img/icons/securePayment.svg" alt="" />
-							<span>{property?.pharmacyType} type</span>
+							<span>{property?.pharmacyType ? t('sharedPharmacyCard.typeLabel', { type: t(`pharmacyType.${property.pharmacyType}`) }) : ''}</span>
 						</div>
 						<div>
 							<img src="/img/icons/home.svg" alt="" />
-							<span>{getPharmacyLocationLabel(property?.pharmacyLocation)}</span>
+							<span>{property?.pharmacyLocation ? t(`pharmacyLocation.${property.pharmacyLocation}`) : ''}</span>
 						</div>
 					</div>
 					<Divider sx={{ mt: '15px', mb: '17px' }} />
 					<div className={'bott'}>
-						<p>{property?.hasDelivery ? 'delivery' : 'pickup'}</p>
+						<p>{property?.hasDelivery ? t('sharedPharmacyCard.delivery') : t('sharedPharmacyCard.pickupOnly')}</p>
 						<div className="view-like-box">
 							<IconButton color={'default'}>
 								<RemoveRedEyeIcon />

@@ -1194,3 +1194,25 @@ Remaining verification:
 - Added `.gitignore` coverage for local AI/agent tooling: `AGENTS.md`, `SKILL.md`, `.agents/`, `.codex/`, `skills/`, `.claude/`, and `.cursor/`.
 - Removed already-tracked local agent/skill files from the Git index with `git rm --cached`, leaving the files available on disk for local Codex usage.
 - Confirmed `git check-ignore` matches representative `AGENTS.md`, `.agents`, `.codex`, and `skills` paths.
+
+## Pharmacies And Community Translation Sweep
+
+- Extended the nested `common.json` translation approach to active Pharmacies and Community routes, detail fallback states, shared pharmacy cards, My Page favorite/recent pharmacy collections, and admin pharmacy list/filter labels.
+- Replaced remaining UI-facing pharmacy region labels with `pharmacyLocation.*` translations while preserving enum values, URL payloads, GraphQL input shape, and backend records.
+- Added shared dictionaries for pharmacy statuses, filters, card labels, sorting, Community list/detail copy, pharmacy detail copy, My Page pharmacy collections, and admin pharmacy table labels.
+- Kept dynamic pharmacy names, addresses, descriptions, owner/member data, article titles/content, comments, uploaded media, and backend-owned records untranslated.
+
+Validation completed:
+
+- Locale JSON parse and strict key-parity check passed for `en`, `ru`, `uz`, and `kr`.
+- Targeted code search found no remaining `getPharmacyLocationLabel` usage in `pages` or `libs/components`.
+- Targeted hardcoded-string sweep passed for active Pharmacies/Community route and shared card surfaces.
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 94 current locale-expanded pages; the existing `react-i18next` static-generation warning was observed but did not fail the build.
+- Production smoke checks passed for `/pharmacies`, `/ru/pharmacies`, `/uz/pharmacies`, `/kr/pharmacies`, `/community?articleCategory=FREE`, `/ru/community?articleCategory=FREE`, `/uz/community?articleCategory=FREE`, and `/kr/community?articleCategory=FREE`.
+- Detail fallback smoke checks passed for localized `/pharmacies/detail?id=missing` and `/community/detail?id=missing` routes.
+
+Remaining verification:
+
+- Smoke checks with real pharmacy/article detail records remain pending until a backend dataset is available.
+- Broader member profile and message fallbacks still contain some English account/member copy and remain part of the full-app translation sweep.

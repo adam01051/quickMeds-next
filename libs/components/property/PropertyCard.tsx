@@ -11,11 +11,11 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useTranslation } from 'next-i18next';
 
 
 
 import {topPropertyRank} from "../../config"
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 
 interface PropertyCardType {
 	property: Property;
@@ -27,6 +27,7 @@ interface PropertyCardType {
 const PropertyCard = (props: PropertyCardType) => {
 	const { property, likePropertyHandler, myFavorites, recentlyVisited } = props;
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const imagePath: string = property?.pharmacyImages[0]
 		? `${REACT_APP_API_URL}/${property?.pharmacyImages[0]}`
@@ -53,7 +54,7 @@ const PropertyCard = (props: PropertyCardType) => {
 						</Box>
 					)}
 					<Box component={'div'} className={'price-box'}>
-						<Typography>{property.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(property.pharmacyDeliveryFee)}` : 'Pickup only'}</Typography>
+						<Typography>{property.hasDelivery ? t('sharedPharmacyCard.deliveryWithFee', { fee: formatDeliveryFeeUZS(property.pharmacyDeliveryFee) }) : t('sharedPharmacyCard.pickupOnly')}</Typography>
 					</Box>
 				</Stack>
 				<Stack className="bottom">
@@ -70,38 +71,38 @@ const PropertyCard = (props: PropertyCardType) => {
 						</Stack>
 						<Stack className="address">
 							<Typography>
-								{property.pharmacyAddress}, {getPharmacyLocationLabel(property.pharmacyLocation)}
+								{property.pharmacyAddress}, {t(`pharmacyLocation.${property.pharmacyLocation}`)}
 							</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="options">
 						<Stack className="option">
-							<img src="/img/icons/discovery.svg" alt="" /> <Typography>{property.pharmacyMedicationCount} medications</Typography>
+							<img src="/img/icons/discovery.svg" alt="" /> <Typography>{t('sharedPharmacyCard.medications', { count: property.pharmacyMedicationCount })}</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{property.pharmacyType} type</Typography>
+							<img src="/img/icons/securePayment.svg" alt="" /> <Typography>{t('sharedPharmacyCard.typeLabel', { type: t(`pharmacyType.${property.pharmacyType}`) })}</Typography>
 						</Stack>
 						<Stack className="option">
-							<img src="/img/icons/home.svg" alt="" /> <Typography>{getPharmacyLocationLabel(property.pharmacyLocation)}</Typography>
+							<img src="/img/icons/home.svg" alt="" /> <Typography>{t(`pharmacyLocation.${property.pharmacyLocation}`)}</Typography>
 						</Stack>
 					</Stack>
 					<Stack className="divider"></Stack>
 					<Stack className="type-buttons">
 						<Stack className="type">
 							<Typography sx={{ fontWeight: 500, fontSize: '13px' }}>
-								{property.open24Hours ? 'Open 24/7' : property.hoursConfigured ? (property.isOpenNow ? 'Open now' : 'Closed') : 'Hours not provided'}
+								{property.open24Hours ? t('pharmacyStatus.open247') : property.hoursConfigured ? (property.isOpenNow ? t('pharmacyStatus.openNow') : t('pharmacyStatus.closed')) : t('pharmacyStatus.hoursNotProvided')}
 							</Typography>
 							<Typography
 								sx={{ fontWeight: 500, fontSize: '13px' }}
 								className={property.hasDelivery ? '' : 'disabled-type'}
 							>
-								Delivery
+								{t('sharedPharmacyCard.delivery')}
 							</Typography>
 							<Typography
 								sx={{ fontWeight: 500, fontSize: '13px' }}
 								className={property.acceptsInsurance ? '' : 'disabled-type'}
 							>
-								Insurance
+								{t('sharedPharmacyCard.insurance')}
 							</Typography>
 						</Stack>
 						{!recentlyVisited && (

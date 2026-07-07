@@ -174,3 +174,5 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 2. Complete native-speaker review for Russian, Uzbek, and Korean homepage copy before treating translations as production final.
 3. Decide whether to split translations into route namespaces after the next translation phase; homepage v1 intentionally remains in nested `common.json`.
 4. Add automated locale parity checking to the regular validation workflow so future keys stay aligned across `en`, `ru`, `uz`, and `kr`.
+5. Continue the remaining full-app sweep for member profile pages, message fallbacks, CS/admin support screens, owner Add/Edit pharmacy form leftovers, and auth/account surfaces not covered by the Pharmacies/Community pass.
+6. Smoke test localized pharmacy and Community detail pages with real backend records, including comments, likes, owner messaging, image attachments, and localized operating-hour states.

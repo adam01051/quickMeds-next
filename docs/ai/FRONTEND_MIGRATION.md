@@ -397,3 +397,12 @@ Deferred compatibility work:
 - Homepage like counts and community article view counts use i18next pluralization keys with `{{count}}` interpolation.
 - Pharmacy names, addresses, article titles/content, and other backend-owned records remain runtime data and are not translated by the frontend dictionary.
 - No GraphQL contracts, Apollo behavior, SCSS architecture, or backend migration behavior changed in this phase.
+
+## Pharmacies And Community Translation Migration
+
+- Pharmacies and Community translation continues using nested keys in the existing `common` namespace; no route namespace split was added.
+- `/pharmacies`, `/pharmacies/detail`, `/community`, `/community/detail`, shared pharmacy cards, My Page pharmacy collections, and admin pharmacy list/filter labels now read static UI copy from `next-i18next`.
+- Region display now uses `pharmacyLocation.*` for all checked UI-rendering paths while preserving `PharmacyLocation` enum values in queries, URL input payloads, and backend data.
+- Pharmacy type display uses `pharmacyType.*`; board category display uses `boardCategory.*`.
+- Dynamic pharmacy names, addresses, owner/member data, article titles/content, comments, and uploaded records remain backend/user data and are not translated by dictionaries.
+- No backend schema, GraphQL query, Apollo cache, route contract, or SCSS layout behavior changed.

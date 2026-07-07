@@ -157,6 +157,29 @@
         "deliveryWithFee": "Yetkazib berish: {{fee}}",
         "close": "Yopish"
       }
+    },
+    "collections": {
+      "favoritesAria": "Sevimli dorixonalar",
+      "favoritesLoading": "Sevimli dorixonalar yuklanmoqda",
+      "favoritesLoadError": "Sevimlilar yuklanmadi",
+      "favoritesEmptyTitle": "Hali sevimli dorixonalar yo'q",
+      "favoritesEmptyText": "Keyinroq topish uchun ko'rish vaqtida dorixonalarni saqlang.",
+      "findPharmacies": "Dorixonalarni topish",
+      "favoritesCount_one": "{{count}} sevimli dorixona",
+      "favoritesCount_few": "{{count}} sevimli dorixona",
+      "favoritesCount_many": "{{count}} sevimli dorixona",
+      "favoritesCount_other": "{{count}} sevimli dorixona",
+      "visitedAria": "Yaqinda ko'rilgan dorixonalar",
+      "visitedLoading": "Yaqinda ko'rilgan dorixonalar yuklanmoqda",
+      "visitedLoadError": "Yaqinda ko'rilgan dorixonalar yuklanmadi",
+      "visitedEmptyTitle": "Yaqinda ko'rilgan dorixonalar yo'q",
+      "visitedEmptyText": "Siz ko'rgan dorixonalar tez kirish uchun shu yerda paydo bo'ladi.",
+      "explorePharmacies": "Dorixonalarni ko'rish",
+      "visitedCount_one": "{{count}} yaqinda ko'rilgan dorixona",
+      "visitedCount_few": "{{count}} yaqinda ko'rilgan dorixona",
+      "visitedCount_many": "{{count}} yaqinda ko'rilgan dorixona",
+      "visitedCount_other": "{{count}} yaqinda ko'rilgan dorixona",
+      "connectionError": "Ulanishni tekshirib, qayta urinib ko'ring."
     }
   },
   "nav": {
@@ -354,6 +377,312 @@
       "noPharmaciesText": "Barcha dorixonalarni ko'ring yoki boshqa hududni qidiring.",
       "noTrendingTitle": "Hozircha ommabop dorixonalar yo'q.",
       "noTrendingText": "Hamjamiyat faolligi shakllanayotganda barcha dorixonalarni ko'ring."
+    }
+  },
+  "pharmacyStatus": {
+    "open247": "24/7 ochiq",
+    "openNow": "Hozir ochiq",
+    "closed": "Yopiq",
+    "hoursNotProvided": "Ish vaqti kiritilmagan",
+    "open24EveryDay": "Har kuni 24 soat ochiq.",
+    "openNowCloses": "Hozir ochiq · {{time}} da yopiladi",
+    "nextOpens": "Keyingi ochilish {{time}}",
+    "noUpcomingOpening": "Keyingi ochilish vaqti ko'rsatilmagan."
+  },
+  "pharmacyFilters": {
+    "findYourPharmacy": "Dorixonangizni toping",
+    "nameOrAddress": "Nomi yoki manzili",
+    "region": "Hudud",
+    "pharmacyType": "Dorixona turi",
+    "services": "Xizmatlar",
+    "deliveryFee": "Yetkazib berish narxi",
+    "min": "Min",
+    "max": "Maks",
+    "showMore": "Ko'proq ko'rsatish",
+    "showLess": "Kamroq ko'rsatish",
+    "deliveryAvailable": "Yetkazib berish bor",
+    "acceptsInsurance": "Sug'urta qabul qiladi",
+    "openNow": "Hozir ochiq",
+    "open247": "24/7 ochiq",
+    "search": "Qidirish",
+    "reset": "Tiklash",
+    "filters": "Filtrlar",
+    "resetAll": "Hammasini tiklash",
+    "applyFilters": "Filtrlarni qo'llash",
+    "openFiltersAria": "Filtrlarni ochish",
+    "closeFiltersAria": "Filtrlarni yopish",
+    "activeFiltersAria": "Faol dorixona filtrlari",
+    "allPharmacies": "Barcha dorixonalar",
+    "moreFilters": "Ko'proq filtrlar"
+  },
+  "sort": {
+    "sortBy": "Saralash",
+    "new": "Yangi",
+    "lowestDeliveryFee": "Eng arzon yetkazib berish",
+    "highestDeliveryFee": "Eng qimmat yetkazib berish",
+    "newest": "Eng yangi",
+    "mostViewed": "Eng ko'p ko'rilgan",
+    "mostLiked": "Eng ko'p yoqtirilgan",
+    "sortArticles": "Maqolalarni saralash"
+  },
+  "sharedPharmacyCard": {
+    "type": "Tur",
+    "typeLabel": "{{type}} dorixonasi",
+    "delivery": "Yetkazib berish",
+    "deliveryWithFee": "Yetkazib berish: {{fee}}",
+    "deliveryWithFeeShort": "{{fee}} yetkazib berish",
+    "pickupOnly": "Faqat olib ketish",
+    "insurance": "Sug'urta",
+    "insuranceAccepted": "Qabul qilinadi",
+    "insuranceNotAccepted": "Qabul qilinmaydi",
+    "verifiedPharmacy": "Tasdiqlangan dorixona",
+    "viewPharmacy": "Dorixonani ko'rish",
+    "viewPharmacyAria": "{{name}} ni ko'rish",
+    "imageAlt": "{{name}} dorixonasi",
+    "saveFavoriteAria": "{{name}} ni saqlash",
+    "removeFavoriteAria": "{{name}} ni sevimlilardan olib tashlash",
+    "top": "Top",
+    "medications_one": "{{count}} dori",
+    "medications_few": "{{count}} dori",
+    "medications_many": "{{count}} dori",
+    "medications_other": "{{count}} dori"
+  },
+  "pharmacies": {
+    "hero": {
+      "kicker": "Dorixonalar katalogi",
+      "title": "O'zbekiston bo'ylab dorixonalarni toping",
+      "description": "Borishdan oldin dorixonalarni hudud, mavjud xizmatlar va ish vaqti bo'yicha filtrlang."
+    },
+    "results": {
+      "loading": "Dorixonalar yuklanmoqda...",
+      "available_one": "{{count}} dorixona mavjud",
+      "available_few": "{{count}} dorixona mavjud",
+      "available_many": "{{count}} dorixona mavjud",
+      "available_other": "{{count}} dorixona mavjud",
+      "total": "Jami {{count}} dorixona mavjud",
+      "aria": "Dorixona natijalari"
+    },
+    "states": {
+      "loadErrorTitle": "Dorixonalar yuklanmadi",
+      "loadErrorText": "Ulanishni tekshirib, qayta urinib ko'ring.",
+      "emptyTitle": "Bu filtrlarga mos dorixona yo'q",
+      "emptyText": "Hudud, xizmatlar yoki qidiruv matnini o'zgartirib ko'ring.",
+      "clearFilters": "Filtrlarni tozalash",
+      "tryAgain": "Qayta urinish",
+      "loadMore": "Ko'proq dorixona yuklash"
+    }
+  },
+  "pharmacyDetailPage": {
+    "unavailable": {
+      "eyebrow": "Dorixona mavjud emas",
+      "title": "Bu dorixonani topa olmadik.",
+      "description": "U ko'chgan, yopilgan yoki endi ommaviy ko'rinmasligi mumkin.",
+      "action": "Dorixonalarni ko'rish"
+    },
+    "labels": {
+      "about": "Haqida",
+      "aboutTitle": "Bu dorixona haqida",
+      "pharmacyType": "Dorixona turi",
+      "established": "Ochilgan",
+      "notProvided": "Kiritilmagan",
+      "services": "Xizmatlar",
+      "availableSupport": "Mavjud yordam",
+      "hours": "Soatlar",
+      "workingHours": "Ish vaqti",
+      "communityFeedback": "Hamjamiyat fikrlari",
+      "pharmacyOwner": "Dorixona egasi",
+      "contact": "Aloqa",
+      "messagePharmacy": "Dorixonaga xabar yozish",
+      "secureInbox": "Xavfsiz xabarlar",
+      "nearby": "Yaqin atrofda"
+    },
+    "copy": {
+      "noDescription": "Bu dorixona hali tavsif qo'shmagan.",
+      "deliveryFee": "Yetkazib berish narxi: {{fee}}",
+      "insuranceHint": "Sug'urta provayderingizni dorixona bilan bevosita tasdiqlang.",
+      "noServices": "Bu dorixona uchun qo'shimcha xizmatlar ko'rsatilmagan.",
+      "noComments": "Hali izohlar yo'q. Birinchi bo'lib foydali ma'lumot ulashing.",
+      "commentsLoadError": "Dorixona izohlari yuklanmadi.",
+      "loginToComment": "Izoh yozish uchun tizimga kiring.",
+      "commentLabel": "Bu dorixona haqida foydali ma'lumot ulashing",
+      "commentPlaceholder": "Izohingizni yozing",
+      "loginToMessage": "Mavjudlik, yetkazib berish yoki xizmatlar haqida so'rash uchun tizimga kiring.",
+      "ownPharmacyMessage": "Bu sizning dorixonangiz. Mijozlar e'lonni ko'rganda shu karta orqali sizga yozishi mumkin.",
+      "messagePlaceholder": "Salom, {{name}} haqida savolim bor.",
+      "noNearby": "Bu hududda hozircha boshqa dorixonalar ro'yxatda yo'q."
+    },
+    "actions": {
+      "saved": "Saqlangan",
+      "savePharmacy": "Dorixonani saqlash",
+      "writeComment": "Izoh yozish",
+      "closeCommentForm": "Izoh formasini yopish",
+      "submitComment": "Izoh yuborish",
+      "submitting": "Yuborilmoqda...",
+      "loadMoreComments": "Ko'proq izoh yuklash",
+      "loadingComments": "Izohlar yuklanmoqda...",
+      "loginToMessage": "Xabar yozish uchun kirish",
+      "attachImages": "Rasmlar biriktirish",
+      "uploading": "Yuklanmoqda...",
+      "sendMessage": "Xabar yuborish",
+      "sending": "Yuborilmoqda...",
+      "remove": "Olib tashlash",
+      "viewOwnerProfile": "Dorixona egasi profilini ko'rish"
+    },
+    "aria": {
+      "loading": "Dorixona tafsilotlari yuklanmoqda",
+      "gallery": "{{name}} galereyasi",
+      "viewImage": "{{name}} rasmi {{count}} ni ko'rish",
+      "favoriteSave": "{{name}} ni saqlash",
+      "favoriteRemove": "{{name}} ni sevimlilardan olib tashlash",
+      "commentsLoading": "Dorixona izohlari yuklanmoqda",
+      "attachmentRemove": "Xabar biriktirmasini olib tashlash"
+    },
+    "alerts": {
+      "maxAttachments": "4 tagacha rasm biriktirish mumkin.",
+      "ownerCannotMessage": "Egalari bu sahifadan o'z dorixonasiga xabar yoza olmaydi.",
+      "messageRequired": "Avval xabar yozing yoki rasm biriktiring.",
+      "commentSubmitted": "Izoh yuborildi"
+    },
+    "views_one": "{{count}} ko'rish",
+    "views_few": "{{count}} ko'rish",
+    "views_many": "{{count}} ko'rish",
+    "views_other": "{{count}} ko'rish"
+  },
+  "community": {
+    "intro": {
+      "eyebrow": "QuickMeds hamjamiyati",
+      "title": "Mahalliy tajribadan amaliy bilim.",
+      "description": "Foydali dorixona ma'lumotlarini toping va O'zbekiston bo'ylab hamjamiyatlarga yordam beradigan tajribalarni ulashing."
+    },
+    "actions": {
+      "writeArticle": "Maqola yozish",
+      "writeFirstArticle": "Birinchi maqolani yozish",
+      "readArticle": "Maqolani o'qish",
+      "likeArticle": "Maqolani yoqtirish",
+      "unlikeArticle": "Maqola laykini olib tashlash",
+      "tryAgain": "Qayta urinish"
+    },
+    "labels": {
+      "categoriesAria": "Hamjamiyat kategoriyalari",
+      "articlePagesAria": "Hamjamiyat maqolalari sahifalari",
+      "articles": "Maqolalar",
+      "results_one": "{{count}} natija",
+      "results_few": "{{count}} natija",
+      "results_many": "{{count}} natija",
+      "results_other": "{{count}} natija",
+      "views": "Ko'rishlar",
+      "comments": "Izohlar",
+      "engagement": "Maqola faolligi",
+      "author": "Maqola muallifi"
+    },
+    "states": {
+      "loadErrorTitle": "Hamjamiyat maqolalari yuklanmadi.",
+      "noResponse": "Hamjamiyat xizmati javob qaytarmadi.",
+      "apiUnreachable": "Hamjamiyat API ishlamayapti. Backend 3007-portda ishlayotganini tekshirib, qayta urining.",
+      "emptyTitle": "{{category}} kategoriyasida hali yozuv yo'q.",
+      "emptyText": "Bu kategoriyadagi hamjamiyat hissalari shu yerda ko'rinadi."
+    },
+    "article": {
+      "fallbackTitle": "Nomsiz hamjamiyat maqolasi",
+      "fallbackExcerpt": "Hamjamiyat hissasini to'liq o'qish uchun maqolani oching.",
+      "fallbackMember": "QuickMeds a'zosi",
+      "fallbackCategory": "Hamjamiyat",
+      "imageAlt": "{{title}} maqolasi rasmi",
+      "readAria": "{{title}} ni o'qish"
+    }
+  },
+  "communityDetail": {
+    "states": {
+      "loadingAria": "Maqola yuklanmoqda",
+      "unavailableTitle": "Bu hamjamiyat maqolasi mavjud emas.",
+      "unavailableText": "U olib tashlangan bo'lishi yoki havola noto'g'ri bo'lishi mumkin.",
+      "backToCommunity": "Hamjamiyatga qaytish",
+      "dateUnavailable": "sana mavjud emas"
+    },
+    "labels": {
+      "backToCategory": "{{category}} ga qaytish",
+      "published": "{{date}} chop etilgan",
+      "likes": "{{count}} layk",
+      "commentsTitle": "Izohlar ({{count}})",
+      "addComment": "Izoh qo'shish",
+      "characterCount": "{{count}}/100",
+      "editComment": "Izohni tahrirlash"
+    },
+    "actions": {
+      "liked": "Yoqtirildi",
+      "likeThisArticle": "Maqolani yoqtirish",
+      "postComment": "Izoh qoldirish",
+      "posting": "Joylanmoqda...",
+      "cancel": "Bekor qilish",
+      "saveComment": "Izohni saqlash"
+    },
+    "copy": {
+      "signInToDiscussion": "Muhokamaga qo'shilish uchun tizimga kiring.",
+      "commentPlaceholder": "Foydali va hurmatli fikr ulashing.",
+      "commentsLoadError": "Izohlar yuklanmadi.",
+      "noCommentsTitle": "Hali izohlar yo'q.",
+      "noCommentsText": "Bu maqola haqida mazmunli muhokama boshlang."
+    },
+    "alerts": {
+      "signInLike": "Maqolani yoqtirish uchun tizimga kiring.",
+      "signInComment": "Muhokamaga qo'shilish uchun tizimga kiring.",
+      "likeFailed": "Bu maqolani yangilab bo'lmadi.",
+      "commentAdded": "Izoh qo'shildi.",
+      "commentAddFailed": "Izohingizni qo'shib bo'lmadi.",
+      "commentUpdated": "Izoh yangilandi.",
+      "commentUpdateFailed": "Izohingizni yangilab bo'lmadi.",
+      "deleteConfirm": "Bu izohni o'chirmoqchimisiz?",
+      "deleteFailed": "Izohingizni o'chirib bo'lmadi."
+    },
+    "relative": {
+      "minute_one": "{{count}} daqiqa oldin",
+      "minute_few": "{{count}} daqiqa oldin",
+      "minute_many": "{{count}} daqiqa oldin",
+      "minute_other": "{{count}} daqiqa oldin",
+      "hour_one": "{{count}} soat oldin",
+      "hour_few": "{{count}} soat oldin",
+      "hour_many": "{{count}} soat oldin",
+      "hour_other": "{{count}} soat oldin",
+      "day_one": "{{count}} kun oldin",
+      "day_few": "{{count}} kun oldin",
+      "day_many": "{{count}} kun oldin",
+      "day_other": "{{count}} kun oldin"
+    }
+  },
+  "admin": {
+    "pharmacies": {
+      "loadErrorTitle": "Dorixonalar yuklanmadi",
+      "loadErrorText": "Admin dorixona so'rovi yakunlanmadi. Joriy filtrlarni qayta urinib ko'ring.",
+      "retry": "Qayta urinish",
+      "tableAria": "QuickMeds dorixonalari jadvali",
+      "referenceId": "ID",
+      "pharmacy": "Dorixona",
+      "deliveryHours": "Yetkazib berish va ish vaqti",
+      "owner": "Dorixona egasi",
+      "region": "Hudud",
+      "type": "Tur",
+      "status": "Holat",
+      "actions": "Amallar",
+      "noFoundTitle": "Dorixonalar topilmadi",
+      "noFoundText": "Holat yoki hudud filtrini o'zgartirib ko'ring.",
+      "openAria": "{{name}} ni ochish",
+      "imageAlt": "{{name}} rasmi",
+      "addressNotProvided": "Manzil kiritilmagan",
+      "hoursConfigured": "Ish vaqti sozlangan",
+      "hoursMissing": "Ish vaqti kiritilmagan",
+      "remove": "O'chirish",
+      "changeStatus": "Holatni o'zgartirish",
+      "changeStatusAria": "{{name}} holatini o'zgartirish",
+      "statusHold": "Tekshiruvda",
+      "statusActive": "Faol",
+      "statusClosed": "Yopiq",
+      "statusDeleted": "O'chirilgan",
+      "statusAll": "Hammasi",
+      "filterByStatusAria": "Dorixonalarni holat bo'yicha filtrlash",
+      "regionFilter": "Hudud filtri",
+      "regionFilterHelp": "Mavjud O'zbekiston hudud qiymatlaridan foydalaning.",
+      "filterByRegionAria": "Dorixonalarni hudud bo'yicha filtrlash",
+      "allRegions": "Barcha hududlar"
     }
   },
   "footer": {

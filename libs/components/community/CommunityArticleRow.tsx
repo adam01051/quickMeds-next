@@ -7,13 +7,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-
-const CATEGORY_LABELS = {
-	FREE: 'Discussions',
-	RECOMMEND: 'Recommendations',
-	NEWS: 'News',
-	HUMOR: 'Community Corner',
-};
+import { useTranslation } from 'next-i18next';
 
 interface CommunityArticleRowProps {
 	article: BoardArticle;
@@ -21,8 +15,8 @@ interface CommunityArticleRowProps {
 	onLike: (articleId: string) => Promise<void>;
 }
 
-const getExcerpt = (content: string) => {
-	if (!content) return 'Open this article to read the full community contribution.';
+const getExcerpt = (content: string, fallback: string) => {
+	if (!content) return fallback;
 
 	const plainText =
 		typeof document === 'undefined'
@@ -38,18 +32,19 @@ const getExcerpt = (content: string) => {
 };
 
 const CommunityArticleRow = ({ article, likeLoading, onLike }: CommunityArticleRowProps) => {
+	const { t, i18n } = useTranslation('common');
 	const articleHref = `/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`;
 	const articleImage = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : null;
-	const title = article.articleTitle?.trim() || 'Untitled community article';
+	const title = article.articleTitle?.trim() || t('community.article.fallbackTitle');
 	const categoryClass = String(article.articleCategory || 'community').toLowerCase();
-	const categoryLabel = CATEGORY_LABELS[article.articleCategory] ?? 'Community';
+	const categoryLabel = article.articleCategory ? t(`boardCategory.${article.articleCategory}`) : t('community.article.fallbackCategory');
 	const createdAt = article.createdAt ? new Date(article.createdAt) : null;
 	const hasValidDate = createdAt !== null && !Number.isNaN(createdAt.getTime());
 	const memberImage = article.memberData?.memberImage
 		? `${REACT_APP_API_URL}/${article.memberData.memberImage}`
 		: '/img/profile/defaultUser.svg';
 	const memberId = article.memberData?._id;
-	const memberName = article.memberData?.memberNick ?? 'QuickMeds member';
+	const memberName = article.memberData?.memberNick ?? t('community.article.fallbackMember');
 	const isLiked = Boolean(article.meLiked?.[0]?.myFavorite);
 
 	return (
@@ -61,7 +56,7 @@ const CommunityArticleRow = ({ article, likeLoading, onLike }: CommunityArticleR
 					</span>
 					{hasValidDate && (
 						<time dateTime={createdAt.toISOString()}>
-							{new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(createdAt)}
+							{new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' }).format(createdAt)}
 						</time>
 					)}
 				</div>
@@ -69,7 +64,7 @@ const CommunityArticleRow = ({ article, likeLoading, onLike }: CommunityArticleR
 				<Link href={articleHref} className="community-article-row__title">
 					{title}
 				</Link>
-				<p className="community-article-row__excerpt">{getExcerpt(article.articleContent)}</p>
+				<p className="community-article-row__excerpt">{getExcerpt(article.articleContent, t('community.article.fallbackExcerpt'))}</p>
 
 				<div className="community-article-row__footer">
 					{memberId ? (
@@ -78,14 +73,14 @@ const CommunityArticleRow = ({ article, likeLoading, onLike }: CommunityArticleR
 							<span>{memberName}</span>
 						</Link>
 					) : (
-						<div className="community-article-row__author" aria-label="Article author">
+						<div className="community-article-row__author" aria-label={t('community.labels.author')}>
 							<img src={memberImage} alt="" />
 							<span>{memberName}</span>
 						</div>
 					)}
 
-					<div className="community-article-row__metrics" aria-label="Article engagement">
-						<span title="Views">
+					<div className="community-article-row__metrics" aria-label={t('community.labels.engagement')}>
+						<span title={t('community.labels.views')}>
 							<VisibilityOutlinedIcon aria-hidden="true" />
 							{article.articleViews ?? 0}
 						</span>
@@ -93,27 +88,27 @@ const CommunityArticleRow = ({ article, likeLoading, onLike }: CommunityArticleR
 							type="button"
 							onClick={() => onLike(article._id)}
 							disabled={likeLoading}
-							aria-label={isLiked ? 'Unlike article' : 'Like article'}
+							aria-label={isLiked ? t('community.actions.unlikeArticle') : t('community.actions.likeArticle')}
 							aria-pressed={isLiked}
 						>
 							{isLiked ? <FavoriteRoundedIcon aria-hidden="true" /> : <FavoriteBorderRoundedIcon aria-hidden="true" />}
 							{article.articleLikes ?? 0}
 						</button>
-						<span title="Comments">
+						<span title={t('community.labels.comments')}>
 							<ChatBubbleOutlineRoundedIcon aria-hidden="true" />
 							{article.articleComments ?? 0}
 						</span>
 					</div>
 
 					<Link href={articleHref} className="community-article-row__read">
-						Read article <ArrowForwardRoundedIcon aria-hidden="true" />
+						{t('community.actions.readArticle')} <ArrowForwardRoundedIcon aria-hidden="true" />
 					</Link>
 				</div>
 			</div>
 
 			{articleImage && (
-				<Link href={articleHref} className="community-article-row__image" aria-label={`Read ${title}`}>
-					<img src={articleImage} alt={`Article image for ${title}`} loading="lazy" />
+				<Link href={articleHref} className="community-article-row__image" aria-label={t('community.article.readAria', { title })}>
+					<img src={articleImage} alt={t('community.article.imageAlt', { title })} loading="lazy" />
 				</Link>
 			)}
 		</article>

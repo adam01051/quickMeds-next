@@ -20,8 +20,8 @@ import { CaretDown } from 'phosphor-react';
 import { Property } from '../../../types/property/property';
 import { REACT_APP_API_URL } from '../../../config';
 import { PharmacyStatus } from '../../../enums/property.enum';
-import { getPharmacyLocationLabel } from '../../../utils/pharmacy-location';
 import { formatDeliveryFeeUZS } from '../../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface PropertyPanelListType {
 	properties: Property[];
@@ -35,13 +35,6 @@ interface PropertyPanelListType {
 	retryHandler: () => void;
 }
 
-const statusLabels: Record<PharmacyStatus, string> = {
-	[PharmacyStatus.HOLD]: 'Pending review',
-	[PharmacyStatus.ACTIVE]: 'Active',
-	[PharmacyStatus.CLOSED]: 'Closed',
-	[PharmacyStatus.DELETE]: 'Deleted',
-};
-
 const getStatusClass = (status: PharmacyStatus) => {
 	if (status === PharmacyStatus.ACTIVE) return 'is-active';
 	if (status === PharmacyStatus.CLOSED || status === PharmacyStatus.HOLD) return 'is-blocked';
@@ -53,10 +46,10 @@ const getPharmacyImage = (pharmacy: Property) => {
 	return firstImage ? `${REACT_APP_API_URL}/${firstImage}` : '/img/homepage/pharmacy-hero.webp';
 };
 
-const getHoursLabel = (pharmacy: Property) => {
-	if (pharmacy.open24Hours) return 'Open 24/7';
-	if (pharmacy.hoursConfigured) return 'Hours configured';
-	return 'Hours missing';
+const getHoursLabel = (pharmacy: Property, t: any) => {
+	if (pharmacy.open24Hours) return t('pharmacyStatus.open247');
+	if (pharmacy.hoursConfigured) return t('admin.pharmacies.hoursConfigured');
+	return t('admin.pharmacies.hoursMissing');
 };
 
 const AdminPharmacySkeletonRows = () => (
@@ -85,6 +78,7 @@ const AdminPharmacySkeletonRows = () => (
 );
 
 export const PropertyPanelList = (props: PropertyPanelListType) => {
+	const { t } = useTranslation('common');
 	const {
 		properties,
 		loading,
@@ -96,30 +90,36 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 		removePropertyHandler,
 		retryHandler,
 	} = props;
+	const statusLabels: Record<PharmacyStatus, string> = {
+		[PharmacyStatus.HOLD]: t('admin.pharmacies.statusHold'),
+		[PharmacyStatus.ACTIVE]: t('admin.pharmacies.statusActive'),
+		[PharmacyStatus.CLOSED]: t('admin.pharmacies.statusClosed'),
+		[PharmacyStatus.DELETE]: t('admin.pharmacies.statusDeleted'),
+	};
 
 	if (error) {
 		return (
 			<div className="admin-table-state admin-table-state--error" role="alert">
-				<Typography component="strong">Unable to load pharmacies</Typography>
-				<Typography component="p">The admin pharmacy query could not be completed. Please retry the current filters.</Typography>
-				<Button onClick={retryHandler}>Retry</Button>
+				<Typography component="strong">{t('admin.pharmacies.loadErrorTitle')}</Typography>
+				<Typography component="p">{t('admin.pharmacies.loadErrorText')}</Typography>
+				<Button onClick={retryHandler}>{t('admin.pharmacies.retry')}</Button>
 			</div>
 		);
 	}
 
 	return (
 		<TableContainer className="admin-users-table admin-pharmacies-table">
-			<Table aria-label="QuickMeds pharmacies table">
+			<Table aria-label={t('admin.pharmacies.tableAria')}>
 				<TableHead>
 					<TableRow>
-						<TableCell>Reference ID</TableCell>
-						<TableCell>Pharmacy</TableCell>
-						<TableCell>Delivery & Hours</TableCell>
-						<TableCell>Pharmacy Owner</TableCell>
-						<TableCell>Region</TableCell>
-						<TableCell>Type</TableCell>
-						<TableCell>Status</TableCell>
-						<TableCell align="right">Actions</TableCell>
+						<TableCell>{t('admin.pharmacies.referenceId')}</TableCell>
+						<TableCell>{t('admin.pharmacies.pharmacy')}</TableCell>
+						<TableCell>{t('admin.pharmacies.deliveryHours')}</TableCell>
+						<TableCell>{t('admin.pharmacies.owner')}</TableCell>
+						<TableCell>{t('admin.pharmacies.region')}</TableCell>
+						<TableCell>{t('admin.pharmacies.type')}</TableCell>
+						<TableCell>{t('admin.pharmacies.status')}</TableCell>
+						<TableCell align="right">{t('admin.pharmacies.actions')}</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -128,8 +128,8 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 						<TableRow>
 							<TableCell align="center" colSpan={8}>
 								<div className="admin-table-state">
-									<Typography component="strong">No pharmacies found</Typography>
-									<Typography component="p">Try changing the status or region filter.</Typography>
+									<Typography component="strong">{t('admin.pharmacies.noFoundTitle')}</Typography>
+									<Typography component="p">{t('admin.pharmacies.noFoundText')}</Typography>
 								</div>
 							</TableCell>
 						</TableRow>
@@ -142,24 +142,24 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 								</TableCell>
 								<TableCell>
 									<div className="admin-pharmacy-cell">
-										<Link href={`/pharmacies/detail?id=${property._id}`} aria-label={`Open ${property.pharmacyName}`}>
-											<Avatar alt={`${property.pharmacyName} image`} src={getPharmacyImage(property)} />
+										<Link href={`/pharmacies/detail?id=${property._id}`} aria-label={t('admin.pharmacies.openAria', { name: property.pharmacyName })}>
+											<Avatar alt={t('admin.pharmacies.imageAlt', { name: property.pharmacyName })} src={getPharmacyImage(property)} />
 										</Link>
 										<div>
 											<Link href={`/pharmacies/detail?id=${property._id}`}>{property.pharmacyName}</Link>
-											<span>{property.pharmacyAddress || 'Address not provided'}</span>
+											<span>{property.pharmacyAddress || t('admin.pharmacies.addressNotProvided')}</span>
 										</div>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div className="admin-stacked-cell">
-										<strong>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : 'Pickup only'}</strong>
-										<span>{getHoursLabel(property)}</span>
+										<strong>{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : t('sharedPharmacyCard.pickupOnly')}</strong>
+										<span>{getHoursLabel(property, t)}</span>
 									</div>
 								</TableCell>
 								<TableCell>{property.memberData?.memberNick || '-'}</TableCell>
-								<TableCell>{getPharmacyLocationLabel(property.pharmacyLocation)}</TableCell>
-								<TableCell>{property.pharmacyType}</TableCell>
+								<TableCell>{t(`pharmacyLocation.${property.pharmacyLocation}`)}</TableCell>
+								<TableCell>{t(`pharmacyType.${property.pharmacyType}`)}</TableCell>
 								<TableCell>
 									<span className={`admin-status-chip ${getStatusClass(property.pharmacyStatus)}`}>
 										{statusLabels[property.pharmacyStatus]}
@@ -172,17 +172,17 @@ export const PropertyPanelList = (props: PropertyPanelListType) => {
 											onClick={() => removePropertyHandler(property._id)}
 											startIcon={<DeleteIcon fontSize="small" />}
 										>
-											Remove
+											{t('admin.pharmacies.remove')}
 										</Button>
 									) : (
 										<>
 											<Button
 												className="admin-action-button"
 												onClick={(event) => menuIconClickHandler(event, index)}
-												aria-label={`Change status for ${property.pharmacyName}`}
+												aria-label={t('admin.pharmacies.changeStatusAria', { name: property.pharmacyName })}
 												endIcon={<CaretDown size={14} />}
 											>
-												Change status
+												{t('admin.pharmacies.changeStatus')}
 											</Button>
 											<Menu
 												className="admin-action-menu"

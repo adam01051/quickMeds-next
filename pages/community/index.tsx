@@ -17,6 +17,7 @@ import { userVar } from '../../apollo/store';
 import { LIKE_TARGET_BOARD_ARTICLE } from '../../apollo/user/mutation';
 import { GET_BOARD_ARTICLES } from '../../apollo/user/query';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: T) => ({
 	props: {
@@ -24,17 +25,17 @@ export const getStaticProps = async ({ locale }: T) => ({
 	},
 });
 
-const CATEGORIES: Array<{ value: BoardArticleCategory; label: string }> = [
-	{ value: BoardArticleCategory.FREE, label: 'Discussions' },
-	{ value: BoardArticleCategory.RECOMMEND, label: 'Recommendations' },
-	{ value: BoardArticleCategory.NEWS, label: 'News' },
-	{ value: BoardArticleCategory.HUMOR, label: 'Community Corner' },
+const CATEGORIES: Array<{ value: BoardArticleCategory }> = [
+	{ value: BoardArticleCategory.FREE },
+	{ value: BoardArticleCategory.RECOMMEND },
+	{ value: BoardArticleCategory.NEWS },
+	{ value: BoardArticleCategory.HUMOR },
 ];
 
 const SORTS = [
-	{ value: 'createdAt', label: 'Newest' },
-	{ value: 'articleViews', label: 'Most viewed' },
-	{ value: 'articleLikes', label: 'Most liked' },
+	{ value: 'createdAt', labelKey: 'newest' },
+	{ value: 'articleViews', labelKey: 'mostViewed' },
+	{ value: 'articleLikes', labelKey: 'mostLiked' },
 ];
 
 const getRouteCategory = (articleCategory: string | string[] | undefined): BoardArticleCategory | null => {
@@ -42,16 +43,17 @@ const getRouteCategory = (articleCategory: string | string[] | undefined): Board
 	return CATEGORIES.some((category) => category.value === value) ? (value as BoardArticleCategory) : null;
 };
 
-const getCommunityErrorMessage = (message?: string) => {
-	if (!message) return 'The Community service did not return a response.';
+const getCommunityErrorMessage = (message: string | undefined, t: any) => {
+	if (!message) return t('community.states.noResponse');
 	if (/failed to fetch|network|econnrefused|socket|connect/i.test(message)) {
-		return 'The Community API is unreachable. Please confirm the backend is running on port 3007 and retry.';
+		return t('community.states.apiUnreachable');
 	}
 	return message;
 };
 
 const Community: NextPage = ({ initialInput }: T) => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const routeCategory = getRouteCategory(router.query.articleCategory);
 	const [searchCommunity, setSearchCommunity] = useState<BoardArticlesInquiry>(initialInput);
@@ -67,8 +69,8 @@ const Community: NextPage = ({ initialInput }: T) => {
 	const boardArticles: BoardArticle[] = data?.getBoardArticles?.list ?? [];
 	const totalCount = data?.getBoardArticles?.metaCounter?.[0]?.total ?? 0;
 	const activeCategory = searchCommunity.search.articleCategory;
-	const activeCategoryLabel = CATEGORIES.find(({ value }) => value === activeCategory)?.label ?? 'Articles';
-	const errorMessage = getCommunityErrorMessage(error?.message);
+	const activeCategoryLabel = activeCategory ? t(`boardCategory.${activeCategory}`) : t('community.labels.articles');
+	const errorMessage = getCommunityErrorMessage(error?.message, t);
 
 	useEffect(() => {
 		if (!router.isReady) return;
@@ -96,13 +98,13 @@ const Community: NextPage = ({ initialInput }: T) => {
 
 	const likeArticle = async (articleId: string) => {
 		try {
-			if (!user?._id) throw new Error('Please sign in to like an article.');
+			if (!user?._id) throw new Error(t('communityDetail.alerts.signInLike'));
 			if (likeLoadingId) return;
 			setLikeLoadingId(articleId);
 			await likeTargetBoardArticle({ variables: { input: articleId } });
 			await refetch({ input: searchCommunity });
 		} catch (likeError) {
-			const message = likeError instanceof Error ? likeError.message : 'Unable to update this article.';
+			const message = likeError instanceof Error ? likeError.message : t('communityDetail.alerts.likeFailed');
 			await sweetMixinErrorAlert(message);
 		} finally {
 			setLikeLoadingId(null);
@@ -114,19 +116,19 @@ const Community: NextPage = ({ initialInput }: T) => {
 			<div className="container community-shell">
 				<header className="community-intro">
 					<div>
-						<p className="community-intro__eyebrow">QuickMeds Community</p>
-						<h1>Practical knowledge, shared locally.</h1>
-						<p>Discover useful pharmacy information and share experiences that help communities across Uzbekistan.</p>
+						<p className="community-intro__eyebrow">{t('community.intro.eyebrow')}</p>
+						<h1>{t('community.intro.title')}</h1>
+						<p>{t('community.intro.description')}</p>
 					</div>
 					{user?._id && (
 						<Link href="/mypage?category=writeArticle" className="community-write-action">
-							<EditOutlinedIcon aria-hidden="true" /> Write an article
+							<EditOutlinedIcon aria-hidden="true" /> {t('community.actions.writeArticle')}
 						</Link>
 					)}
 				</header>
 
-				<nav className="community-tabs" aria-label="Community categories">
-					{CATEGORIES.map(({ value, label }) => (
+				<nav className="community-tabs" aria-label={t('community.labels.categoriesAria')}>
+					{CATEGORIES.map(({ value }) => (
 						<button
 							type="button"
 							key={value}
@@ -134,7 +136,7 @@ const Community: NextPage = ({ initialInput }: T) => {
 							className={activeCategory === value ? 'active' : ''}
 							aria-current={activeCategory === value ? 'page' : undefined}
 						>
-							{label}
+							{t(`boardCategory.${value}`)}
 						</button>
 					))}
 				</nav>
@@ -142,19 +144,19 @@ const Community: NextPage = ({ initialInput }: T) => {
 				<section className="community-feed" aria-labelledby="community-feed-heading">
 					<div className="community-feed__toolbar">
 						<h2 id="community-feed-heading">
-							{activeCategoryLabel} <span>({totalCount} results)</span>
+							{activeCategoryLabel} <span>({t('community.labels.results', { count: totalCount })})</span>
 						</h2>
 						<label>
-							<span className="sr-only">Sort articles</span>
+							<span className="sr-only">{t('sort.sortArticles')}</span>
 							<select
 								value={searchCommunity.sort}
 								onChange={(event) =>
 									setSearchCommunity((current) => ({ ...current, page: 1, sort: event.target.value }))
 								}
 							>
-								{SORTS.map(({ value, label }) => (
+								{SORTS.map(({ value, labelKey }) => (
 									<option value={value} key={value}>
-										{label}
+										{t(`sort.${labelKey}`)}
 									</option>
 								))}
 							</select>
@@ -177,19 +179,19 @@ const Community: NextPage = ({ initialInput }: T) => {
 
 						{!loading && error && (
 							<div className="community-state" role="alert">
-								<h3>We could not load the community articles.</h3>
+								<h3>{t('community.states.loadErrorTitle')}</h3>
 								<p>{errorMessage}</p>
 								<button type="button" onClick={() => refetch({ input: searchCommunity })}>
-									Try again
+									{t('community.actions.tryAgain')}
 								</button>
 							</div>
 						)}
 
 						{!loading && !error && boardArticles.length === 0 && (
 							<div className="community-state">
-								<h3>No {activeCategoryLabel.toLowerCase()} yet.</h3>
-								<p>Community contributions in this category will appear here.</p>
-								{user?._id && <Link href="/mypage?category=writeArticle">Write the first article</Link>}
+								<h3>{t('community.states.emptyTitle', { category: activeCategoryLabel.toLowerCase() })}</h3>
+								<p>{t('community.states.emptyText')}</p>
+								{user?._id && <Link href="/mypage?category=writeArticle">{t('community.actions.writeFirstArticle')}</Link>}
 							</div>
 						)}
 
@@ -207,7 +209,7 @@ const Community: NextPage = ({ initialInput }: T) => {
 				</section>
 
 				{totalCount > searchCommunity.limit && (
-					<div className="community-pagination" aria-label="Community article pages">
+					<div className="community-pagination" aria-label={t('community.labels.articlePagesAria')}>
 						<Pagination
 							count={Math.ceil(totalCount / searchCommunity.limit)}
 							page={searchCommunity.page}

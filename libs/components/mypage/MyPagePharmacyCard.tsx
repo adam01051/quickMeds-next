@@ -12,6 +12,7 @@ import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { REACT_APP_API_URL } from '../../config';
 import { Property } from '../../types/property/property';
 import { formatDeliveryFeeUZS } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface MyPagePharmacyCardProps {
 	pharmacy: Property;
@@ -19,23 +20,18 @@ interface MyPagePharmacyCardProps {
 	removingFavorite?: boolean;
 }
 
-const formatPharmacyType = (value: string) =>
-	value
-		.toLowerCase()
-		.replace(/_/g, ' ')
-		.replace(/\b\w/g, (letter) => letter.toUpperCase());
-
 const MyPagePharmacyCard = ({ pharmacy, onRemoveFavorite, removingFavorite = false }: MyPagePharmacyCardProps) => {
+	const { t } = useTranslation('common');
 	const image = pharmacy.pharmacyImages?.[0]
 		? `${REACT_APP_API_URL}/${pharmacy.pharmacyImages[0]}`
 		: '/img/homepage/pharmacy-hero.webp';
 	const status = pharmacy.open24Hours
-		? 'Open 24/7'
+		? t('pharmacyStatus.open247')
 		: pharmacy.hoursConfigured
 			? pharmacy.isOpenNow
-				? 'Open now'
-				: 'Closed'
-			: 'Hours not provided';
+				? t('pharmacyStatus.openNow')
+				: t('pharmacyStatus.closed')
+			: t('pharmacyStatus.hoursNotProvided');
 	const statusClass = pharmacy.open24Hours || pharmacy.isOpenNow ? 'is-open' : pharmacy.hoursConfigured ? 'is-closed' : 'is-unknown';
 
 	const useFallbackImage = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -46,7 +42,7 @@ const MyPagePharmacyCard = ({ pharmacy, onRemoveFavorite, removingFavorite = fal
 	return (
 		<article className="my-page-pharmacy-card">
 			<div className="my-page-pharmacy-card__media">
-				<img src={image} alt={`${pharmacy.pharmacyName} pharmacy`} onError={useFallbackImage} />
+				<img src={image} alt={t('sharedPharmacyCard.imageAlt', { name: pharmacy.pharmacyName })} onError={useFallbackImage} />
 				<span className={`my-page-pharmacy-card__status ${statusClass}`}>
 					<AccessTimeRoundedIcon />
 					{status}
@@ -54,7 +50,7 @@ const MyPagePharmacyCard = ({ pharmacy, onRemoveFavorite, removingFavorite = fal
 				{onRemoveFavorite && (
 					<IconButton
 						className="my-page-pharmacy-card__favorite"
-						aria-label={`Remove ${pharmacy.pharmacyName} from favorites`}
+						aria-label={t('sharedPharmacyCard.removeFavoriteAria', { name: pharmacy.pharmacyName })}
 						disabled={removingFavorite}
 						onClick={() => onRemoveFavorite(pharmacy._id)}
 					>
@@ -67,7 +63,7 @@ const MyPagePharmacyCard = ({ pharmacy, onRemoveFavorite, removingFavorite = fal
 				<div className="my-page-pharmacy-card__heading">
 					<Link href={`/pharmacies/detail?id=${pharmacy._id}`}>{pharmacy.pharmacyName}</Link>
 					{pharmacy.verifiedAt && (
-						<span title="Verified pharmacy" aria-label="Verified pharmacy">
+						<span title={t('sharedPharmacyCard.verifiedPharmacy')} aria-label={t('sharedPharmacyCard.verifiedPharmacy')}>
 							<VerifiedRoundedIcon />
 						</span>
 					)}
@@ -81,20 +77,20 @@ const MyPagePharmacyCard = ({ pharmacy, onRemoveFavorite, removingFavorite = fal
 				<div className="my-page-pharmacy-card__services">
 					<span>
 						<StorefrontOutlinedIcon />
-						{formatPharmacyType(pharmacy.pharmacyType)}
+						{t(`pharmacyType.${pharmacy.pharmacyType}`)}
 					</span>
 					<span>
 						<LocalShippingOutlinedIcon />
-						{pharmacy.hasDelivery ? `Delivery: ${formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee)}` : 'Pickup only'}
+						{pharmacy.hasDelivery ? t('sharedPharmacyCard.deliveryWithFee', { fee: formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee) }) : t('sharedPharmacyCard.pickupOnly')}
 					</span>
 					<span>
 						<HealthAndSafetyOutlinedIcon />
-						{pharmacy.acceptsInsurance ? 'Insurance accepted' : 'Insurance not accepted'}
+						{pharmacy.acceptsInsurance ? t('sharedPharmacyCard.insuranceAccepted') : t('sharedPharmacyCard.insuranceNotAccepted')}
 					</span>
 				</div>
 
 				<Link className="my-page-pharmacy-card__action" href={`/pharmacies/detail?id=${pharmacy._id}`}>
-					View pharmacy
+					{t('sharedPharmacyCard.viewPharmacy')}
 					<ArrowForwardRoundedIcon />
 				</Link>
 			</div>

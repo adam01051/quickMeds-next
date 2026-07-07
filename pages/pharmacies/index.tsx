@@ -23,8 +23,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { T } from '../../libs/types/common';
 import { LIKE_TARGET_PHARMACY } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
-import { getPharmacyLocationLabel } from '../../libs/utils/pharmacy-location';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -34,38 +34,33 @@ export const getStaticProps = async ({ locale }: any) => ({
 
 const mobileMotionEase = [0.22, 1, 0.36, 1] as const;
 
-const formatTypeLabel = (type: PharmacyType | string) =>
-	String(type)
-		.toLowerCase()
-		.replace(/_/g, ' ')
-		.replace(/\b\w/g, (letter) => letter.toUpperCase());
-
-const getActiveFilterChips = (input: PharmaciesInquiry) => {
+const getActiveFilterChips = (input: PharmaciesInquiry, t: any) => {
 	const chips: Array<{ key: string; label: string; remove: Partial<PharmaciesInquiry['search']> }> = [];
 	input.search.locationList?.forEach((location) => {
 		chips.push({
 			key: `location-${location}`,
-			label: getPharmacyLocationLabel(location),
+			label: t(`pharmacyLocation.${location}`),
 			remove: { locationList: input.search.locationList?.filter((item) => item !== location) },
 		});
 	});
 	input.search.typeList?.forEach((type) => {
 		chips.push({
 			key: `type-${type}`,
-			label: formatTypeLabel(type),
+			label: t(`pharmacyType.${type}`),
 			remove: { typeList: input.search.typeList?.filter((item) => item !== type) },
 		});
 	});
-	if (input.search.openNow) chips.push({ key: 'openNow', label: 'Open now', remove: { openNow: undefined } });
-	if (input.search.open24Hours) chips.push({ key: 'open24Hours', label: '24/7', remove: { open24Hours: undefined } });
-	if (input.search.hasDelivery) chips.push({ key: 'hasDelivery', label: 'Delivery', remove: { hasDelivery: undefined } });
-	if (input.search.acceptsInsurance) chips.push({ key: 'acceptsInsurance', label: 'Insurance', remove: { acceptsInsurance: undefined } });
+	if (input.search.openNow) chips.push({ key: 'openNow', label: t('pharmacyFilters.openNow'), remove: { openNow: undefined } });
+	if (input.search.open24Hours) chips.push({ key: 'open24Hours', label: t('pharmacyFilters.open247'), remove: { open24Hours: undefined } });
+	if (input.search.hasDelivery) chips.push({ key: 'hasDelivery', label: t('sharedPharmacyCard.delivery'), remove: { hasDelivery: undefined } });
+	if (input.search.acceptsInsurance) chips.push({ key: 'acceptsInsurance', label: t('sharedPharmacyCard.insurance'), remove: { acceptsInsurance: undefined } });
 	return chips;
 };
 
 const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const reduceMotion = useReducedMotion();
 	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
@@ -80,7 +75,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
-	const [filterSortName, setFilterSortName] = useState('New');
+	const [filterSortKey, setFilterSortKey] = useState('new');
 	const [likeTargetPharmacy] = useMutation(LIKE_TARGET_PHARMACY);
 	/** APOLLO REQUESTS **/
 	const {
@@ -222,15 +217,15 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 		switch (e.currentTarget.id) {
 			case 'new':
 				nextFilter = { ...searchFilter, page: 1, sort: 'createdAt', direction: Direction.DESC };
-				setFilterSortName('New');
+				setFilterSortKey('new');
 				break;
 			case 'lowest':
 				nextFilter = { ...searchFilter, page: 1, sort: 'pharmacyDeliveryFee', direction: Direction.ASC, search: { ...searchFilter.search, hasDelivery: true } };
-				setFilterSortName('Lowest delivery fee');
+				setFilterSortKey('lowestDeliveryFee');
 				break;
 			case 'highest':
 				nextFilter = { ...searchFilter, page: 1, sort: 'pharmacyDeliveryFee', direction: Direction.DESC, search: { ...searchFilter.search, hasDelivery: true } };
-				setFilterSortName('Highest delivery fee');
+				setFilterSortKey('highestDeliveryFee');
 		}
 		setSortingOpen(false);
 		setAnchorEl(null);
@@ -248,7 +243,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 		await router.push(`/pharmacies?input=${JSON.stringify(initialInput)}`, undefined, { scroll: false });
 	};
 
-	const activeFilterChips = useMemo(() => getActiveFilterChips(searchFilter), [searchFilter]);
+	const activeFilterChips = useMemo(() => getActiveFilterChips(searchFilter, t), [searchFilter, t]);
 	const mobileListVariants = {
 		hidden: { opacity: 1 },
 		visible: {
@@ -268,27 +263,27 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 		return (
 			<main id="catalog-mobile-page" className="catalog-mobile-page">
 				<section className="catalog-mobile-hero">
-					<span>Pharmacy directory</span>
-					<h1>Find pharmacies across Uzbekistan</h1>
-					<p>Filter pharmacies by region, available services, and working hours before you visit.</p>
+					<span>{t('pharmacies.hero.kicker')}</span>
+					<h1>{t('pharmacies.hero.title')}</h1>
+					<p>{t('pharmacies.hero.description')}</p>
 					<div className="catalog-mobile-hero__meta">
 						<strong aria-live="polite">
-							{getPharmaciesLoading && !properties.length ? 'Loading pharmacies...' : `${total} ${total === 1 ? 'pharmacy' : 'pharmacies'} available`}
+							{getPharmaciesLoading && !properties.length ? t('pharmacies.results.loading') : t('pharmacies.results.available', { count: total })}
 						</strong>
 						<button type="button" onClick={sortingClickHandler} aria-haspopup="menu" aria-expanded={sortingOpen}>
-							Sort by: <b>{filterSortName}</b>
+							{t('sort.sortBy')}: <b>{t(`sort.${filterSortKey}`)}</b>
 							<KeyboardArrowDownRoundedIcon />
 						</button>
 					</div>
 				</section>
 
-				<section className="catalog-mobile-search" aria-label="Search and filters">
+				<section className="catalog-mobile-search" aria-label={t('pharmacyFilters.filters')}>
 					<div className="catalog-mobile-search__row">
 						<label className="catalog-mobile-search__input">
 							<SearchRoundedIcon />
 							<input
 								value={mobileSearchText}
-								placeholder="Name or address"
+								placeholder={t('pharmacyFilters.nameOrAddress')}
 								onChange={(event) => setMobileSearchText(event.target.value)}
 								onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => event.key === 'Enter' && applyMobileSearch()}
 							/>
@@ -298,12 +293,12 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 							className="catalog-mobile-search__filter"
 							onClick={openMobileFilters}
 							whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-							aria-label="Open filters"
+							aria-label={t('pharmacyFilters.openFiltersAria')}
 						>
 							<TuneRoundedIcon />
 						</motion.button>
 					</div>
-					<div className="catalog-mobile-chip-row" aria-label="Active pharmacy filters">
+					<div className="catalog-mobile-chip-row" aria-label={t('pharmacyFilters.activeFiltersAria')}>
 						{activeFilterChips.length ? (
 							activeFilterChips.map((chip) => (
 								<motion.button
@@ -318,31 +313,31 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 								</motion.button>
 							))
 						) : (
-							<span className="catalog-mobile-chip">All pharmacies</span>
+							<span className="catalog-mobile-chip">{t('pharmacyFilters.allPharmacies')}</span>
 						)}
 						<button type="button" className="catalog-mobile-chip" onClick={openMobileFilters}>
-							More filters
+							{t('pharmacyFilters.moreFilters')}
 							<KeyboardArrowDownRoundedIcon />
 						</button>
 					</div>
 				</section>
 
-				<section className="catalog-mobile-list" aria-label="Pharmacy results">
+				<section className="catalog-mobile-list" aria-label={t('pharmacies.results.aria')}>
 					{getPharmaciesLoading && properties.length === 0 ? (
-						<div className="catalog-mobile-list__skeletons" aria-label="Loading pharmacies">
+						<div className="catalog-mobile-list__skeletons" aria-label={t('pharmacies.results.loading')}>
 							{Array.from({ length: 4 }).map((_, index) => <div className="catalog-pharmacy-skeleton" aria-hidden="true" key={index}><div /><span /><span /><span /><span /></div>)}
 						</div>
 					) : getPharmacyError ? (
 						<div className="catalog-pharmacy-state" role="alert">
-							<strong>Pharmacies could not be loaded</strong>
-							<p>Check your connection and try again.</p>
-							<Button variant="outlined" onClick={() => getPharmaciesRefetch({ input: searchFilter })}>Try again</Button>
+							<strong>{t('pharmacies.states.loadErrorTitle')}</strong>
+							<p>{t('pharmacies.states.loadErrorText')}</p>
+							<Button variant="outlined" onClick={() => getPharmaciesRefetch({ input: searchFilter })}>{t('pharmacies.states.tryAgain')}</Button>
 						</div>
 					) : properties?.length === 0 ? (
 						<div className="catalog-pharmacy-state">
-							<strong>No pharmacies match these filters</strong>
-							<p>Try changing your region, services, or search text.</p>
-							<Button variant="outlined" onClick={clearFilters}>Clear filters</Button>
+							<strong>{t('pharmacies.states.emptyTitle')}</strong>
+							<p>{t('pharmacies.states.emptyText')}</p>
+							<Button variant="outlined" onClick={clearFilters}>{t('pharmacies.states.clearFilters')}</Button>
 						</div>
 					) : (
 						<>
@@ -365,7 +360,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 							</motion.div>
 							{properties.length < total && (
 								<button type="button" className="catalog-mobile-load-more" onClick={loadMoreMobile}>
-									Load more pharmacies
+									{t('pharmacies.states.loadMore')}
 								</button>
 							)}
 						</>
@@ -378,7 +373,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 							<motion.button
 								type="button"
 								className="catalog-mobile-filter-backdrop"
-								aria-label="Close filters"
+								aria-label={t('pharmacyFilters.closeFiltersAria')}
 								onClick={() => setMobileFiltersOpen(false)}
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
@@ -398,77 +393,77 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 								<div className="catalog-mobile-filter-sheet__handle" />
 								<header>
 									<div>
-										<button type="button" onClick={() => setMobileFiltersOpen(false)} aria-label="Close filters">
+										<button type="button" onClick={() => setMobileFiltersOpen(false)} aria-label={t('pharmacyFilters.closeFiltersAria')}>
 											<ArrowBackRoundedIcon />
 										</button>
-										<h2 id="catalog-mobile-filter-title">Filters</h2>
+										<h2 id="catalog-mobile-filter-title">{t('pharmacyFilters.filters')}</h2>
 									</div>
-									<button type="button" onClick={() => setMobileDraftFilter(initialInput)}>Reset all</button>
+									<button type="button" onClick={() => setMobileDraftFilter(initialInput)}>{t('pharmacyFilters.resetAll')}</button>
 								</header>
 								<div className="catalog-mobile-filter-sheet__body">
 									<section>
-										<h3>Region</h3>
+										<h3>{t('pharmacyFilters.region')}</h3>
 										<div className="catalog-mobile-filter-grid">
 											{Object.values(PharmacyLocation).slice(0, 8).map((location) => {
 												const checked = mobileDraftFilter.search.locationList?.includes(location) ?? false;
 												return (
 													<button type="button" className={checked ? 'is-selected' : ''} onClick={() => toggleDraftList('locationList', location)} key={location}>
 														{checked ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-														{getPharmacyLocationLabel(location)}
+														{t(`pharmacyLocation.${location}`)}
 													</button>
 												);
 											})}
 										</div>
 									</section>
 									<section>
-										<h3>Pharmacy type</h3>
+										<h3>{t('pharmacyFilters.pharmacyType')}</h3>
 										<div className="catalog-mobile-filter-stack">
 											{Object.values(PharmacyType).map((type) => {
 												const checked = mobileDraftFilter.search.typeList?.includes(type) ?? false;
 												return (
 													<button type="button" className={checked ? 'is-selected' : ''} onClick={() => toggleDraftList('typeList', type)} key={type}>
 														{checked ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-														{formatTypeLabel(type)}
+														{t(`pharmacyType.${type}`)}
 													</button>
 												);
 											})}
 										</div>
 									</section>
 									<section>
-										<h3>Services</h3>
+										<h3>{t('pharmacyFilters.services')}</h3>
 										<div className="catalog-mobile-filter-stack">
 											<button type="button" className={mobileDraftFilter.search.openNow ? 'is-selected' : ''} onClick={() => updateDraftSearch({ openNow: mobileDraftFilter.search.openNow ? undefined : true })}>
 												{mobileDraftFilter.search.openNow ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-												Open now
+												{t('pharmacyFilters.openNow')}
 											</button>
 											<button type="button" className={mobileDraftFilter.search.open24Hours ? 'is-selected' : ''} onClick={() => updateDraftSearch({ open24Hours: mobileDraftFilter.search.open24Hours ? undefined : true })}>
 												{mobileDraftFilter.search.open24Hours ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-												Open 24/7
+												{t('pharmacyFilters.open247')}
 											</button>
 											<button type="button" className={mobileDraftFilter.search.hasDelivery ? 'is-selected' : ''} onClick={() => updateDraftSearch({ hasDelivery: mobileDraftFilter.search.hasDelivery ? undefined : true })}>
 												{mobileDraftFilter.search.hasDelivery ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-												Delivery available
+												{t('pharmacyFilters.deliveryAvailable')}
 											</button>
 											<button type="button" className={mobileDraftFilter.search.acceptsInsurance ? 'is-selected' : ''} onClick={() => updateDraftSearch({ acceptsInsurance: mobileDraftFilter.search.acceptsInsurance ? undefined : true })}>
 												{mobileDraftFilter.search.acceptsInsurance ? <CheckBoxRoundedIcon /> : <CheckBoxOutlineBlankRoundedIcon />}
-												Accepts insurance
+												{t('pharmacyFilters.acceptsInsurance')}
 											</button>
 										</div>
 									</section>
 									<section>
-										<h3>Delivery fee</h3>
+										<h3>{t('pharmacyFilters.deliveryFee')}</h3>
 										<div className="catalog-mobile-fee-row">
 											<input
 												type="number"
 												inputMode="numeric"
-												placeholder="Min"
+												placeholder={t('pharmacyFilters.min')}
 												value={mobileDraftFilter.search.deliveryFeeRange?.start ?? ''}
 												onChange={(event) => updateDraftSearch({ deliveryFeeRange: { start: Number(event.target.value) || 0, end: mobileDraftFilter.search.deliveryFeeRange?.end ?? 100000 } })}
 											/>
 											<input
 												type="number"
 												inputMode="numeric"
-												placeholder="Max"
+												placeholder={t('pharmacyFilters.max')}
 												value={mobileDraftFilter.search.deliveryFeeRange?.end ?? ''}
 												onChange={(event) => updateDraftSearch({ deliveryFeeRange: { start: mobileDraftFilter.search.deliveryFeeRange?.start ?? 0, end: Number(event.target.value) || 100000 } })}
 											/>
@@ -476,7 +471,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 									</section>
 								</div>
 								<footer>
-									<button type="button" onClick={() => applyInquiry(mobileDraftFilter)}>Apply filters</button>
+									<button type="button" onClick={() => applyInquiry(mobileDraftFilter)}>{t('pharmacyFilters.applyFilters')}</button>
 								</footer>
 							</motion.aside>
 						</>
@@ -484,9 +479,9 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 				</AnimatePresence>
 
 				<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-					<MenuItem onClick={sortingHandler} id="new" disableRipple>New</MenuItem>
-					<MenuItem onClick={sortingHandler} id="lowest" disableRipple>Lowest delivery fee</MenuItem>
-					<MenuItem onClick={sortingHandler} id="highest" disableRipple>Highest delivery fee</MenuItem>
+					<MenuItem onClick={sortingHandler} id="new" disableRipple>{t('sort.new')}</MenuItem>
+					<MenuItem onClick={sortingHandler} id="lowest" disableRipple>{t('sort.lowestDeliveryFee')}</MenuItem>
+					<MenuItem onClick={sortingHandler} id="highest" disableRipple>{t('sort.highestDeliveryFee')}</MenuItem>
 				</Menu>
 			</main>
 		);
@@ -496,30 +491,27 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 				<header className="catalog-directory-header">
 					<div className="container">
 						<div className="catalog-directory-header__copy">
-							<span>Pharmacy directory</span>
-							<h1>Find pharmacies across Uzbekistan</h1>
-							<p>Filter pharmacies by region, available services, and working hours before you visit.</p>
+							<span>{t('pharmacies.hero.kicker')}</span>
+							<h1>{t('pharmacies.hero.title')}</h1>
+							<p>{t('pharmacies.hero.description')}</p>
 						</div>
 						<div className="catalog-directory-header__utilities">
 							<p aria-live="polite">
 								{getPharmaciesLoading && properties.length === 0 ? (
-									<span>Loading pharmacies…</span>
+									<span>{t('pharmacies.results.loading')}</span>
 								) : (
-									<>
-										<strong>{total}</strong>
-										<span>{total === 1 ? ' pharmacy available' : ' pharmacies available'}</span>
-									</>
+									<span>{t('pharmacies.results.available', { count: total })}</span>
 								)}
 							</p>
 							<Box component="div" className="catalog-directory-header__sort">
-								<span>Sort by</span>
+								<span>{t('sort.sortBy')}</span>
 								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />} aria-haspopup="menu" aria-expanded={sortingOpen}>
-									{filterSortName}
+									{t(`sort.${filterSortKey}`)}
 								</Button>
 								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-									<MenuItem onClick={sortingHandler} id="new" disableRipple>New</MenuItem>
-									<MenuItem onClick={sortingHandler} id="lowest" disableRipple>Lowest delivery fee</MenuItem>
-									<MenuItem onClick={sortingHandler} id="highest" disableRipple>Highest delivery fee</MenuItem>
+									<MenuItem onClick={sortingHandler} id="new" disableRipple>{t('sort.new')}</MenuItem>
+									<MenuItem onClick={sortingHandler} id="lowest" disableRipple>{t('sort.lowestDeliveryFee')}</MenuItem>
+									<MenuItem onClick={sortingHandler} id="highest" disableRipple>{t('sort.highestDeliveryFee')}</MenuItem>
 								</Menu>
 							</Box>
 						</div>
@@ -545,15 +537,15 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 									))
 								) : getPharmacyError ? (
 									<div className="catalog-pharmacy-state" role="alert">
-										<strong>Pharmacies could not be loaded</strong>
-										<p>Check your connection and try again.</p>
-										<Button variant="outlined" onClick={() => getPharmaciesRefetch({ input: searchFilter })}>Try again</Button>
+										<strong>{t('pharmacies.states.loadErrorTitle')}</strong>
+										<p>{t('pharmacies.states.loadErrorText')}</p>
+										<Button variant="outlined" onClick={() => getPharmaciesRefetch({ input: searchFilter })}>{t('pharmacies.states.tryAgain')}</Button>
 									</div>
 								) : properties?.length === 0 ? (
 									<div className="catalog-pharmacy-state">
-										<strong>No pharmacies match these filters</strong>
-										<p>Try changing your region, services, or search text.</p>
-										<Button variant="outlined" onClick={clearFilters}>Clear filters</Button>
+										<strong>{t('pharmacies.states.emptyTitle')}</strong>
+										<p>{t('pharmacies.states.emptyText')}</p>
+										<Button variant="outlined" onClick={clearFilters}>{t('pharmacies.states.clearFilters')}</Button>
 									</div>
 								) : (
 									properties.map((property: Property) => {
@@ -577,7 +569,7 @@ const PharmacyList: NextPage = ({ initialInput, ...props }: any) => {
 								{properties.length !== 0 && (
 									<Stack className="total-result">
 										<Typography>
-											Total {total} pharmacies available
+											{t('pharmacies.results.total', { count: total })}
 										</Typography>
 									</Stack>
 								)}

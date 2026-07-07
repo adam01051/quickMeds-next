@@ -176,3 +176,10 @@
 
 - Local Codex/agent skill bundles are developer-machine tooling and must not be committed to the QuickMeds application repository.
 - Keep `AGENTS.md`, `SKILL.md`, `.agents/`, `.codex/`, `skills/`, `.claude/`, and `.cursor/` ignored unless a future team decision promotes a specific file into maintained project documentation.
+
+# Pharmacies And Community Translation Decision
+
+- Pharmacies and Community translation remains in nested `common.json` keys for this phase; do not introduce new namespaces until the full-app sweep justifies splitting route dictionaries.
+- `pharmacyLocation.*`, `pharmacyType.*`, and `boardCategory.*` are the canonical frontend label keys for enum-backed UI display.
+- Enum values, serialized `input` query payloads, GraphQL contracts, and backend-owned records must remain untranslated.
+- Pharmacy and Community translated copy must stay within pharmacy-discovery and community-experience scope and must not introduce medicine inventory, prescription, rating, price-comparison, or unsupported service claims.

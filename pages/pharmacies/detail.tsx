@@ -155,10 +155,18 @@ const PharmacyDetail: NextPage = () => {
 	const isFavorite = pharmacy?.meLiked?.[0]?.myFavorite === true;
 	const isOwnPharmacy = !!pharmacy?.memberId && pharmacy.memberId === user?._id;
 	const services = [
-		pharmacy?.hasDelivery ? 'Delivery available' : null,
-		pharmacy?.acceptsInsurance ? 'Insurance accepted' : null,
+		pharmacy?.hasDelivery ? t('pharmacyFilters.deliveryAvailable') : null,
+		pharmacy?.acceptsInsurance ? t('sharedPharmacyCard.insuranceAccepted') : null,
 	].filter(Boolean) as string[];
 	const pharmacyRegion = pharmacy?.pharmacyLocation ? t(`pharmacyLocation.${pharmacy.pharmacyLocation}`) : '';
+	const pharmacyTypeLabel = pharmacy?.pharmacyType ? t(`pharmacyType.${pharmacy.pharmacyType}`) : '';
+	const pharmacyStatus = pharmacy?.open24Hours
+		? t('pharmacyStatus.open247')
+		: pharmacy?.hoursConfigured
+			? pharmacy.isOpenNow
+				? t('pharmacyStatus.openNow')
+				: t('pharmacyStatus.closed')
+			: t('pharmacyStatus.hoursNotProvided');
 
 	const handleFavorite = async () => {
 		try {
@@ -208,7 +216,7 @@ const PharmacyDetail: NextPage = () => {
 			setComments((current) => [createdComment, ...current.filter((comment) => comment._id !== createdComment._id)]);
 			setCommentTotal((current) => current + 1);
 			setInsertCommentData((current) => ({ ...current, commentContent: '' }));
-			await sweetTopSmallSuccessAlert('Comment submitted', 1000);
+			await sweetTopSmallSuccessAlert(t('pharmacyDetailPage.alerts.commentSubmitted'), 1000);
 		} catch (error: unknown) {
 			setInsertCommentData((current) => ({ ...current, commentContent: draft }));
 			setIsCommentFormOpen(true);
@@ -245,7 +253,7 @@ const PharmacyDetail: NextPage = () => {
 		try {
 			const files = Array.from(event.target.files ?? []);
 			if (!files.length) return;
-			if (messageImages.length + files.length > 4) throw new Error('You can attach up to 4 images.');
+			if (messageImages.length + files.length > 4) throw new Error(t('pharmacyDetailPage.alerts.maxAttachments'));
 			setIsUploadingMessageImage(true);
 
 			const body = new FormData();
@@ -275,8 +283,8 @@ const PharmacyDetail: NextPage = () => {
 		try {
 			if (!pharmacy?._id) return;
 			if (!user?._id) throw new Error(Message.NOT_AUTHENTICATED);
-			if (isOwnPharmacy) throw new Error('Owners cannot message their own pharmacy from this page.');
-			if (!messageText.trim() && !messageImages.length) throw new Error('Write a message or attach an image first.');
+			if (isOwnPharmacy) throw new Error(t('pharmacyDetailPage.alerts.ownerCannotMessage'));
+			if (!messageText.trim() && !messageImages.length) throw new Error(t('pharmacyDetailPage.alerts.messageRequired'));
 			setIsStartingConversation(true);
 
 			const response = await startPharmacyConversation({
@@ -302,7 +310,7 @@ const PharmacyDetail: NextPage = () => {
 
 	if (pharmacyLoading && !pharmacy) {
 		return (
-			<main className="pharmacy-detail-state" aria-label="Loading pharmacy details">
+			<main className="pharmacy-detail-state" aria-label={t('pharmacyDetailPage.aria.loading')}>
 				<div className="pharmacy-detail-state__skeleton pharmacy-detail-state__skeleton--heading" />
 				<div className="pharmacy-detail-state__skeleton pharmacy-detail-state__skeleton--gallery" />
 				<div className="pharmacy-detail-state__skeleton pharmacy-detail-state__skeleton--content" />
@@ -313,10 +321,10 @@ const PharmacyDetail: NextPage = () => {
 	if (pharmacyError || (!pharmacyLoading && pharmacyId && !pharmacy)) {
 		return (
 			<main className="pharmacy-detail-state pharmacy-detail-state--message">
-				<span>Pharmacy unavailable</span>
-				<h1>We could not find this pharmacy.</h1>
-				<p>It may have moved, closed, or no longer be publicly available.</p>
-				<Link href="/pharmacies">Browse pharmacies <ArrowForwardRoundedIcon /></Link>
+				<span>{t('pharmacyDetailPage.unavailable.eyebrow')}</span>
+				<h1>{t('pharmacyDetailPage.unavailable.title')}</h1>
+				<p>{t('pharmacyDetailPage.unavailable.description')}</p>
+				<Link href="/pharmacies">{t('pharmacyDetailPage.unavailable.action')} <ArrowForwardRoundedIcon /></Link>
 			</main>
 		);
 	}
@@ -330,34 +338,34 @@ const PharmacyDetail: NextPage = () => {
 					<div className="pharmacy-detail__identity">
 						<div className="pharmacy-detail__eyebrow">
 							<span>{pharmacyRegion}</span>
-							{pharmacy.verifiedAt && <span className="is-verified"><VerifiedRoundedIcon /> Verified pharmacy</span>}
+							{pharmacy.verifiedAt && <span className="is-verified"><VerifiedRoundedIcon /> {t('sharedPharmacyCard.verifiedPharmacy')}</span>}
 						</div>
 						<h1>{pharmacy.pharmacyName}</h1>
 						<p><LocationOnOutlinedIcon /> {pharmacy.pharmacyAddress}</p>
 						<div className="pharmacy-detail__services">
-							<span><StorefrontOutlinedIcon /> {pharmacy.pharmacyType.toLowerCase()} pharmacy</span>
-							{pharmacy.hasDelivery && <span><LocalShippingOutlinedIcon /> Delivery available</span>}
-							{pharmacy.acceptsInsurance && <span><HealthAndSafetyOutlinedIcon /> Insurance accepted</span>}
-							<span><CalendarMonthOutlinedIcon /> {pharmacy.open24Hours ? 'Open 24/7' : pharmacy.hoursConfigured ? (pharmacy.isOpenNow ? 'Open now' : 'Closed') : 'Hours not provided'}</span>
+							<span><StorefrontOutlinedIcon /> {t('sharedPharmacyCard.typeLabel', { type: pharmacyTypeLabel })}</span>
+							{pharmacy.hasDelivery && <span><LocalShippingOutlinedIcon /> {t('pharmacyFilters.deliveryAvailable')}</span>}
+							{pharmacy.acceptsInsurance && <span><HealthAndSafetyOutlinedIcon /> {t('sharedPharmacyCard.insuranceAccepted')}</span>}
+							<span><CalendarMonthOutlinedIcon /> {pharmacyStatus}</span>
 						</div>
 					</div>
 					<div className="pharmacy-detail__header-actions">
-						<div><VisibilityOutlinedIcon /><span>{pharmacy.pharmacyViews} views</span></div>
-						<button type="button" onClick={handleFavorite} aria-label={isFavorite ? `Remove ${pharmacy.pharmacyName} from favorites` : `Save ${pharmacy.pharmacyName}`}>
+						<div><VisibilityOutlinedIcon /><span>{t('pharmacyDetailPage.views', { count: pharmacy.pharmacyViews })}</span></div>
+						<button type="button" onClick={handleFavorite} aria-label={isFavorite ? t('pharmacyDetailPage.aria.favoriteRemove', { name: pharmacy.pharmacyName }) : t('pharmacyDetailPage.aria.favoriteSave', { name: pharmacy.pharmacyName })}>
 							{isFavorite ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
-							<span>{isFavorite ? 'Saved' : 'Save pharmacy'}</span>
+							<span>{isFavorite ? t('pharmacyDetailPage.actions.saved') : t('pharmacyDetailPage.actions.savePharmacy')}</span>
 						</button>
 					</div>
 				</header>
 
-				<section className="pharmacy-detail__gallery" aria-label={`${pharmacy.pharmacyName} gallery`}>
+				<section className="pharmacy-detail__gallery" aria-label={t('pharmacyDetailPage.aria.gallery', { name: pharmacy.pharmacyName })}>
 					<div className="pharmacy-detail__main-image">
-						<img src={pharmacyImage(selectedImage)} alt={`${pharmacy.pharmacyName} pharmacy`} />
+						<img src={pharmacyImage(selectedImage)} alt={t('sharedPharmacyCard.imageAlt', { name: pharmacy.pharmacyName })} />
 					</div>
 					{pharmacy.pharmacyImages.length > 1 && (
 						<div className="pharmacy-detail__thumbnails">
 							{pharmacy.pharmacyImages.map((image, index) => (
-								<button type="button" key={image} className={image === selectedImage ? 'is-active' : ''} onClick={() => setSelectedImage(image)} aria-label={`View ${pharmacy.pharmacyName} image ${index + 1}`}>
+								<button type="button" key={image} className={image === selectedImage ? 'is-active' : ''} onClick={() => setSelectedImage(image)} aria-label={t('pharmacyDetailPage.aria.viewImage', { name: pharmacy.pharmacyName, count: index + 1 })}>
 									<img src={pharmacyImage(image)} alt="" />
 								</button>
 							))}
@@ -369,46 +377,46 @@ const PharmacyDetail: NextPage = () => {
 					<div className="pharmacy-detail__content">
 						<section className="pharmacy-detail__section">
 							<div className="pharmacy-detail__section-heading">
-								<span>About</span>
-								<h2>About this pharmacy</h2>
+								<span>{t('pharmacyDetailPage.labels.about')}</span>
+								<h2>{t('pharmacyDetailPage.labels.aboutTitle')}</h2>
 							</div>
 							<p className={pharmacy.pharmacyDesc ? '' : 'pharmacy-detail__empty-copy'}>
-								{pharmacy.pharmacyDesc ?? 'This pharmacy has not added a description yet.'}
+								{pharmacy.pharmacyDesc ?? t('pharmacyDetailPage.copy.noDescription')}
 							</p>
 							<dl className="pharmacy-detail__facts">
 								<div><dt>{t('locationPicker.region')}</dt><dd>{pharmacyRegion}</dd></div>
-								<div><dt>Pharmacy type</dt><dd>{pharmacy.pharmacyType.toLowerCase()}</dd></div>
-								<div><dt>Established</dt><dd>{pharmacy.openedAt ? moment(pharmacy.openedAt).format('YYYY') : 'Not provided'}</dd></div>
-								{pharmacy.hasDelivery && <div><dt>Delivery fee</dt><dd>{formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee)}</dd></div>}
+								<div><dt>{t('pharmacyDetailPage.labels.pharmacyType')}</dt><dd>{pharmacyTypeLabel}</dd></div>
+								<div><dt>{t('pharmacyDetailPage.labels.established')}</dt><dd>{pharmacy.openedAt ? moment(pharmacy.openedAt).format('YYYY') : t('pharmacyDetailPage.labels.notProvided')}</dd></div>
+								{pharmacy.hasDelivery && <div><dt>{t('pharmacyFilters.deliveryFee')}</dt><dd>{formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee)}</dd></div>}
 							</dl>
 						</section>
 
 						<section className="pharmacy-detail__section">
 							<div className="pharmacy-detail__section-heading">
-								<span>Services</span>
-								<h2>Available support</h2>
+								<span>{t('pharmacyDetailPage.labels.services')}</span>
+								<h2>{t('pharmacyDetailPage.labels.availableSupport')}</h2>
 							</div>
 							{services.length ? (
 								<div className="pharmacy-detail__service-list">
-									{pharmacy.hasDelivery && <div><LocalShippingOutlinedIcon /><span><strong>Delivery available</strong><small>Delivery fee: {formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee)}</small></span></div>}
-									{pharmacy.acceptsInsurance && <div><HealthAndSafetyOutlinedIcon /><span><strong>Insurance accepted</strong><small>Confirm your provider directly with the pharmacy.</small></span></div>}
+									{pharmacy.hasDelivery && <div><LocalShippingOutlinedIcon /><span><strong>{t('pharmacyFilters.deliveryAvailable')}</strong><small>{t('pharmacyDetailPage.copy.deliveryFee', { fee: formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee) })}</small></span></div>}
+									{pharmacy.acceptsInsurance && <div><HealthAndSafetyOutlinedIcon /><span><strong>{t('sharedPharmacyCard.insuranceAccepted')}</strong><small>{t('pharmacyDetailPage.copy.insuranceHint')}</small></span></div>}
 								</div>
-							) : <p className="pharmacy-detail__empty-copy">No additional services are listed for this pharmacy.</p>}
+							) : <p className="pharmacy-detail__empty-copy">{t('pharmacyDetailPage.copy.noServices')}</p>}
 						</section>
 
 						<section className="pharmacy-detail__section">
 							<div className="pharmacy-detail__section-heading">
-								<span>Hours</span>
-								<h2>Working hours</h2>
+								<span>{t('pharmacyDetailPage.labels.hours')}</span>
+								<h2>{t('pharmacyDetailPage.labels.workingHours')}</h2>
 							</div>
-							{pharmacy.open24Hours ? <p>Open 24 hours every day.</p> : pharmacy.operatingHours?.length ? (
+							{pharmacy.open24Hours ? <p>{t('pharmacyStatus.open24EveryDay')}</p> : pharmacy.operatingHours?.length ? (
 								<dl className="pharmacy-detail__facts">
-									{pharmacy.operatingHours.map((day) => <div key={day.dayOfWeek}><dt>{['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][day.dayOfWeek - 1]}</dt><dd>{day.isClosed ? 'Closed' : `${day.opensAt}–${day.closesAt}`}</dd></div>)}
+									{pharmacy.operatingHours.map((day) => <div key={day.dayOfWeek}><dt>{new Intl.DateTimeFormat(router.locale ?? 'en', { weekday: 'long' }).format(new Date(Date.UTC(2024, 0, day.dayOfWeek)))}</dt><dd>{day.isClosed ? t('pharmacyStatus.closed') : `${day.opensAt}–${day.closesAt}`}</dd></div>)}
 								</dl>
-							) : <p className="pharmacy-detail__empty-copy">Hours not provided.</p>}
+							) : <p className="pharmacy-detail__empty-copy">{t('pharmacyStatus.hoursNotProvided')}.</p>}
 							{pharmacy.hoursConfigured && !pharmacy.open24Hours && (
 								<p className="pharmacy-detail__address">
-									{pharmacy.isOpenNow && pharmacy.nextClosingAt ? `Open now · closes ${moment(pharmacy.nextClosingAt).format('ddd HH:mm')}` : pharmacy.nextOpeningAt ? `Next opens ${moment(pharmacy.nextOpeningAt).format('ddd HH:mm')}` : 'No upcoming opening time is listed.'}
+									{pharmacy.isOpenNow && pharmacy.nextClosingAt ? t('pharmacyStatus.openNowCloses', { time: moment(pharmacy.nextClosingAt).format('ddd HH:mm') }) : pharmacy.nextOpeningAt ? t('pharmacyStatus.nextOpens', { time: moment(pharmacy.nextOpeningAt).format('ddd HH:mm') }) : t('pharmacyStatus.noUpcomingOpening')}
 								</p>
 							)}
 						</section>
@@ -427,27 +435,27 @@ const PharmacyDetail: NextPage = () => {
 						</section>
 
 						<section className="pharmacy-detail__section pharmacy-detail__feedback">
-							<h2>Community Feedback</h2>
+							<h2>{t('pharmacyDetailPage.labels.communityFeedback')}</h2>
 							{commentsLoading && !comments.length ? (
-								<div className="pharmacy-detail__comments-loading" aria-label="Loading pharmacy comments">
+								<div className="pharmacy-detail__comments-loading" aria-label={t('pharmacyDetailPage.aria.commentsLoading')}>
 									<div />
 									<div />
 								</div>
 							) : commentsError && !comments.length ? (
 								<div className="pharmacy-detail__comments-state" role="alert">
-									<p>We could not load pharmacy comments.</p>
-									<button type="button" onClick={handleRetryComments}>Try again</button>
+									<p>{t('pharmacyDetailPage.copy.commentsLoadError')}</p>
+									<button type="button" onClick={handleRetryComments}>{t('pharmacies.states.tryAgain')}</button>
 								</div>
 							) : comments.length ? (
 								<div className="pharmacy-detail__comments">
 									{comments.map((comment) => <Review comment={comment} key={comment._id} />)}
 									{comments.length < commentTotal && (
 										<button className="pharmacy-detail__load-comments" type="button" onClick={handleLoadMoreComments} disabled={isLoadingMoreComments}>
-											{isLoadingMoreComments ? 'Loading comments…' : 'Load More Comments'}
+											{isLoadingMoreComments ? t('pharmacyDetailPage.actions.loadingComments') : t('pharmacyDetailPage.actions.loadMoreComments')}
 										</button>
 									)}
 								</div>
-							) : <p className="pharmacy-detail__empty-copy">No comments yet. Be the first to share useful information.</p>}
+							) : <p className="pharmacy-detail__empty-copy">{t('pharmacyDetailPage.copy.noComments')}</p>}
 							<button
 								className="pharmacy-detail__comment-toggle"
 								type="button"
@@ -455,15 +463,15 @@ const PharmacyDetail: NextPage = () => {
 								aria-controls="pharmacy-comment-form"
 								onClick={() => setIsCommentFormOpen((current) => !current)}
 							>
-								{isCommentFormOpen ? 'Close comment form' : 'Write a comment'}
+								{isCommentFormOpen ? t('pharmacyDetailPage.actions.closeCommentForm') : t('pharmacyDetailPage.actions.writeComment')}
 							</button>
 							{isCommentFormOpen && (
 								<div className="pharmacy-detail__comment-form" id="pharmacy-comment-form">
-									<label htmlFor="pharmacy-comment">Share helpful information about this pharmacy</label>
-									{!user?._id && <p className="pharmacy-detail__comment-auth">Log in to write a comment.</p>}
-									<textarea id="pharmacy-comment" value={insertCommentData.commentContent} onChange={(event) => setInsertCommentData({ ...insertCommentData, commentContent: event.target.value })} placeholder="Write your comment" disabled={!user?._id || isCreatingComment} />
+									<label htmlFor="pharmacy-comment">{t('pharmacyDetailPage.copy.commentLabel')}</label>
+									{!user?._id && <p className="pharmacy-detail__comment-auth">{t('pharmacyDetailPage.copy.loginToComment')}</p>}
+									<textarea id="pharmacy-comment" value={insertCommentData.commentContent} onChange={(event) => setInsertCommentData({ ...insertCommentData, commentContent: event.target.value })} placeholder={t('pharmacyDetailPage.copy.commentPlaceholder')} disabled={!user?._id || isCreatingComment} />
 									<Button disabled={!insertCommentData.commentContent.trim() || !user?._id || isCreatingComment} onClick={handleCreateComment}>
-										{isCreatingComment ? 'Submitting…' : 'Submit comment'}
+										{isCreatingComment ? t('pharmacyDetailPage.actions.submitting') : t('pharmacyDetailPage.actions.submitComment')}
 									</Button>
 								</div>
 							)}
@@ -472,36 +480,36 @@ const PharmacyDetail: NextPage = () => {
 
 					<aside className="pharmacy-detail__sidebar">
 						<div className="pharmacy-detail__owner-card">
-							<span className="pharmacy-detail__card-label">Pharmacy Owner</span>
+							<span className="pharmacy-detail__card-label">{t('pharmacyDetailPage.labels.pharmacyOwner')}</span>
 							<div className="pharmacy-detail__owner">
-								<img src={pharmacy.memberData?.memberImage ? `${REACT_APP_API_URL}/${pharmacy.memberData.memberImage}` : '/img/profile/defaultUser.svg'} alt={`${pharmacy.memberData?.memberNick ?? 'Pharmacy Owner'} profile`} />
+								<img src={pharmacy.memberData?.memberImage ? `${REACT_APP_API_URL}/${pharmacy.memberData.memberImage}` : '/img/profile/defaultUser.svg'} alt={`${pharmacy.memberData?.memberNick ?? t('pharmacyDetailPage.labels.pharmacyOwner')} profile`} />
 								<div>
 									<strong>{pharmacy.memberData?.memberFullName ?? pharmacy.memberData?.memberNick ?? 'Pharmacy Owner'}</strong>
 									{pharmacy.memberData?.memberPhone && <a href={`tel:${pharmacy.memberData.memberPhone}`}><PhoneOutlinedIcon /> {pharmacy.memberData.memberPhone}</a>}
 								</div>
 							</div>
-							{pharmacy.memberData?._id && <Link href={`/member?memberId=${pharmacy.memberData._id}`}>View Pharmacy Owner profile <ArrowForwardRoundedIcon /></Link>}
+							{pharmacy.memberData?._id && <Link href={`/member?memberId=${pharmacy.memberData._id}`}>{t('pharmacyDetailPage.actions.viewOwnerProfile')} <ArrowForwardRoundedIcon /></Link>}
 						</div>
 						<div className="pharmacy-detail__message-card">
 							<div className="pharmacy-detail__message-heading">
-								<div><span>Contact</span><h2>Message the pharmacy</h2></div>
-								<em>Secure inbox</em>
+								<div><span>{t('pharmacyDetailPage.labels.contact')}</span><h2>{t('pharmacyDetailPage.labels.messagePharmacy')}</h2></div>
+								<em>{t('pharmacyDetailPage.labels.secureInbox')}</em>
 							</div>
 							{!user?._id ? (
 								<div className="pharmacy-detail__message-state">
-									<p>Log in to ask this Pharmacy Owner about availability, delivery, or services.</p>
-									<Link href="/account/join">Login to message <ArrowForwardRoundedIcon /></Link>
+									<p>{t('pharmacyDetailPage.copy.loginToMessage')}</p>
+									<Link href="/account/join">{t('pharmacyDetailPage.actions.loginToMessage')} <ArrowForwardRoundedIcon /></Link>
 								</div>
 							) : isOwnPharmacy ? (
 								<div className="pharmacy-detail__message-state">
-									<p>You own this pharmacy. Customers can message you from this card when they view the listing.</p>
+									<p>{t('pharmacyDetailPage.copy.ownPharmacyMessage')}</p>
 								</div>
 							) : (
 								<div className="pharmacy-detail__message-form">
-									<label htmlFor="pharmacy-owner-message">Message</label>
+									<label htmlFor="pharmacy-owner-message">{t('nav.messages')}</label>
 									<textarea
 										id="pharmacy-owner-message"
-										placeholder={`Hello, I have a question about ${pharmacy.pharmacyName}.`}
+										placeholder={t('pharmacyDetailPage.copy.messagePlaceholder', { name: pharmacy.pharmacyName })}
 										value={messageText}
 										onChange={(event) => setMessageText(event.target.value)}
 										maxLength={1200}
@@ -511,8 +519,8 @@ const PharmacyDetail: NextPage = () => {
 										<div className="pharmacy-detail__message-preview">
 											{messageImages.map((image) => (
 												<button type="button" key={image} onClick={() => setMessageImages((current) => current.filter((item) => item !== image))}>
-													<img src={`${REACT_APP_API_URL}/${image}`} alt="Remove message attachment" />
-													<span>Remove</span>
+													<img src={`${REACT_APP_API_URL}/${image}`} alt={t('pharmacyDetailPage.aria.attachmentRemove')} />
+													<span>{t('pharmacyDetailPage.actions.remove')}</span>
 												</button>
 											))}
 										</div>
@@ -520,14 +528,14 @@ const PharmacyDetail: NextPage = () => {
 									<div className="pharmacy-detail__message-actions">
 										<input ref={messageFileRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadMessageImages} />
 										<Button type="button" onClick={() => messageFileRef.current?.click()} disabled={isUploadingMessageImage || isStartingConversation}>
-											<AttachFileRoundedIcon /> {isUploadingMessageImage ? 'Uploading…' : 'Attach images'}
+											<AttachFileRoundedIcon /> {isUploadingMessageImage ? t('pharmacyDetailPage.actions.uploading') : t('pharmacyDetailPage.actions.attachImages')}
 										</Button>
 										<Button
 											type="button"
 											onClick={handleStartConversation}
 											disabled={isStartingConversation || (!messageText.trim() && !messageImages.length)}
 										>
-											{isStartingConversation ? 'Sending…' : 'Send message'} <SendRoundedIcon />
+											{isStartingConversation ? t('pharmacyDetailPage.actions.sending') : t('pharmacyDetailPage.actions.sendMessage')} <SendRoundedIcon />
 										</Button>
 									</div>
 								</div>
@@ -538,19 +546,19 @@ const PharmacyDetail: NextPage = () => {
 
 				<section className="pharmacy-detail__nearby">
 					<div className="pharmacy-detail__section-heading">
-						<span>Nearby</span>
+						<span>{t('pharmacyDetailPage.labels.nearby')}</span>
 						<h2>{t('pharmacyDetail.nearby.title', { region: pharmacyRegion })}</h2>
 					</div>
 					{relatedPharmacies.length ? (
 						<div className="pharmacy-detail__nearby-grid">
 							{relatedPharmacies.map((item) => (
 								<article className="pharmacy-detail__nearby-card" key={item._id}>
-									<Link href={`/pharmacies/detail?id=${item._id}`}><img src={pharmacyImage(item.pharmacyImages?.[0])} alt={`${item.pharmacyName} pharmacy`} /></Link>
-									<div><span>{item.pharmacyType.toLowerCase()}</span><h3>{item.pharmacyName}</h3><p>{item.pharmacyAddress}</p><Link href={`/pharmacies/detail?id=${item._id}`}>View pharmacy <ArrowForwardRoundedIcon /></Link></div>
+									<Link href={`/pharmacies/detail?id=${item._id}`}><img src={pharmacyImage(item.pharmacyImages?.[0])} alt={t('sharedPharmacyCard.imageAlt', { name: item.pharmacyName })} /></Link>
+									<div><span>{t(`pharmacyType.${item.pharmacyType}`)}</span><h3>{item.pharmacyName}</h3><p>{item.pharmacyAddress}</p><Link href={`/pharmacies/detail?id=${item._id}`}>{t('sharedPharmacyCard.viewPharmacy')} <ArrowForwardRoundedIcon /></Link></div>
 								</article>
 							))}
 						</div>
-					) : <p className="pharmacy-detail__empty-copy">No other pharmacies are currently listed in this region.</p>}
+					) : <p className="pharmacy-detail__empty-copy">{t('pharmacyDetailPage.copy.noNearby')}</p>}
 				</section>
 			</div>
 		</main>

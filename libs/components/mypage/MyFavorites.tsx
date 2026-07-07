@@ -10,8 +10,10 @@ import { T } from '../../types/common';
 import { Property } from '../../types/property/property';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
 import MyPagePharmacyCard from './MyPagePharmacyCard';
+import { useTranslation } from 'next-i18next';
 
 const MyFavorites: NextPage = () => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [myFavorites, setMyFavorites] = useState<Property[]>([]);
 	const [total, setTotal] = useState(0);
@@ -43,16 +45,16 @@ const MyFavorites: NextPage = () => {
 	};
 
 	return (
-		<section id="my-favorites-page" className="my-page-pharmacy-collection" aria-label="Favorite pharmacies">
+		<section id="my-favorites-page" className="my-page-pharmacy-collection" aria-label={t('mypage.collections.favoritesAria')}>
 			{loading && !myFavorites.length ? (
-				<div className="my-page-pharmacy-grid" aria-label="Loading favorite pharmacies">
+				<div className="my-page-pharmacy-grid" aria-label={t('mypage.collections.favoritesLoading')}>
 					{Array.from({ length: 3 }).map((_, index) => <div className="my-page-pharmacy-card-skeleton" key={index} />)}
 				</div>
 			) : error ? (
 				<div className="my-page-collection-state" role="alert">
-					<h2>Favorites could not be loaded</h2>
-					<p>Please check your connection and try again.</p>
-					<button type="button" onClick={() => refetch({ input: searchFavorites })}>Try again</button>
+					<h2>{t('mypage.collections.favoritesLoadError')}</h2>
+					<p>{t('mypage.collections.connectionError')}</p>
+					<button type="button" onClick={() => refetch({ input: searchFavorites })}>{t('pharmacies.states.tryAgain')}</button>
 				</div>
 			) : myFavorites.length ? (
 				<div className="my-page-pharmacy-grid">
@@ -67,9 +69,9 @@ const MyFavorites: NextPage = () => {
 				</div>
 			) : (
 				<div className="my-page-collection-state">
-					<h2>No favorite pharmacies yet</h2>
-					<p>Save pharmacies while browsing to find them here later.</p>
-					<a href="/pharmacies">Find pharmacies</a>
+					<h2>{t('mypage.collections.favoritesEmptyTitle')}</h2>
+					<p>{t('mypage.collections.favoritesEmptyText')}</p>
+					<a href="/pharmacies">{t('mypage.collections.findPharmacies')}</a>
 				</div>
 			)}
 
@@ -81,7 +83,7 @@ const MyFavorites: NextPage = () => {
 						shape="rounded"
 						onChange={(_, page) => setSearchFavorites({ ...searchFavorites, page })}
 					/>
-					<p>{total} favorite {total === 1 ? 'pharmacy' : 'pharmacies'}</p>
+					<p>{t('mypage.collections.favoritesCount', { count: total })}</p>
 				</div>
 			)}
 		</section>

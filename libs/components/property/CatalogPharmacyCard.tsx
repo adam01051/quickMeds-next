@@ -14,30 +14,26 @@ import { REACT_APP_API_URL } from '../../config';
 import { Property } from '../../types/property/property';
 import { T } from '../../types/common';
 import { formatDeliveryFeeUZS } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface CatalogPharmacyCardProps {
 	pharmacy: Property;
 	onFavorite: (user: T, pharmacyId: string) => void;
 }
 
-const formatPharmacyType = (type: string) =>
-	type
-		.toLowerCase()
-		.replace(/_/g, ' ')
-		.replace(/\b\w/g, (letter) => letter.toUpperCase());
-
 const CatalogPharmacyCard = ({ pharmacy, onFavorite }: CatalogPharmacyCardProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const isFavorite = pharmacy.meLiked?.[0]?.myFavorite === true;
 	const status = pharmacy.open24Hours
-		? 'Open 24/7'
+		? t('pharmacyStatus.open247')
 		: pharmacy.hoursConfigured
 			? pharmacy.isOpenNow
-				? 'Open now'
-				: 'Closed'
-			: 'Hours not provided';
+				? t('pharmacyStatus.openNow')
+				: t('pharmacyStatus.closed')
+			: t('pharmacyStatus.hoursNotProvided');
 	const statusClass = pharmacy.open24Hours || pharmacy.isOpenNow ? 'is-open' : pharmacy.hoursConfigured ? 'is-closed' : 'is-unknown';
-	const delivery = pharmacy.hasDelivery ? formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee) : 'Pickup only';
+	const delivery = pharmacy.hasDelivery ? formatDeliveryFeeUZS(pharmacy.pharmacyDeliveryFee) : t('sharedPharmacyCard.pickupOnly');
 	const image = pharmacy.pharmacyImages?.[0]
 		? `${REACT_APP_API_URL}/${pharmacy.pharmacyImages[0]}`
 		: '/img/homepage/pharmacy-hero.webp';
@@ -50,8 +46,8 @@ const CatalogPharmacyCard = ({ pharmacy, onFavorite }: CatalogPharmacyCardProps)
 	return (
 		<article className="catalog-pharmacy-card">
 			<div className="catalog-pharmacy-card__media">
-				<Link href={`/pharmacies/detail?id=${pharmacy._id}`} aria-label={`View ${pharmacy.pharmacyName}`}>
-					<img src={image} alt={`${pharmacy.pharmacyName} pharmacy`} onError={useFallbackImage} />
+				<Link href={`/pharmacies/detail?id=${pharmacy._id}`} aria-label={t('sharedPharmacyCard.viewPharmacyAria', { name: pharmacy.pharmacyName })}>
+					<img src={image} alt={t('sharedPharmacyCard.imageAlt', { name: pharmacy.pharmacyName })} onError={useFallbackImage} />
 				</Link>
 				<span className={`catalog-pharmacy-card__status ${statusClass}`}>
 					<AccessTimeRoundedIcon />
@@ -59,7 +55,7 @@ const CatalogPharmacyCard = ({ pharmacy, onFavorite }: CatalogPharmacyCardProps)
 				</span>
 				<IconButton
 					className="catalog-pharmacy-card__favorite"
-					aria-label={isFavorite ? `Remove ${pharmacy.pharmacyName} from favorites` : `Save ${pharmacy.pharmacyName}`}
+					aria-label={isFavorite ? t('sharedPharmacyCard.removeFavoriteAria', { name: pharmacy.pharmacyName }) : t('sharedPharmacyCard.saveFavoriteAria', { name: pharmacy.pharmacyName })}
 					onClick={() => onFavorite(user, pharmacy._id)}
 				>
 					{isFavorite ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
@@ -70,7 +66,7 @@ const CatalogPharmacyCard = ({ pharmacy, onFavorite }: CatalogPharmacyCardProps)
 				<div className="catalog-pharmacy-card__heading">
 					<h2>{pharmacy.pharmacyName}</h2>
 					{pharmacy.verifiedAt && (
-						<span title="Verified pharmacy" aria-label="Verified pharmacy">
+						<span title={t('sharedPharmacyCard.verifiedPharmacy')} aria-label={t('sharedPharmacyCard.verifiedPharmacy')}>
 							<VerifiedRoundedIcon />
 						</span>
 					)}
@@ -83,24 +79,24 @@ const CatalogPharmacyCard = ({ pharmacy, onFavorite }: CatalogPharmacyCardProps)
 
 				<dl className="catalog-pharmacy-card__facts">
 					<div>
-						<dt>Type</dt>
-						<dd>{formatPharmacyType(pharmacy.pharmacyType)}</dd>
+						<dt>{t('sharedPharmacyCard.type')}</dt>
+						<dd>{t(`pharmacyType.${pharmacy.pharmacyType}`)}</dd>
 					</div>
 					<div>
-						<dt>Delivery</dt>
+						<dt>{t('sharedPharmacyCard.delivery')}</dt>
 						<dd>{delivery}</dd>
 					</div>
 					<div>
-						<dt>Insurance</dt>
+						<dt>{t('sharedPharmacyCard.insurance')}</dt>
 						<dd>
 							<HealthAndSafetyOutlinedIcon />
-							{pharmacy.acceptsInsurance ? 'Accepted' : 'Not accepted'}
+							{pharmacy.acceptsInsurance ? t('sharedPharmacyCard.insuranceAccepted') : t('sharedPharmacyCard.insuranceNotAccepted')}
 						</dd>
 					</div>
 				</dl>
 
 				<Link className="catalog-pharmacy-card__action" href={`/pharmacies/detail?id=${pharmacy._id}`}>
-					View pharmacy
+					{t('sharedPharmacyCard.viewPharmacy')}
 					<ArrowForwardRoundedIcon />
 				</Link>
 			</div>

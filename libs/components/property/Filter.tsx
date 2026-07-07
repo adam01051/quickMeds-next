@@ -4,7 +4,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useRouter } from 'next/router';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import { useTranslation } from 'next-i18next';
 
 interface FilterProps {
 	searchFilter: PharmaciesInquiry;
@@ -14,6 +14,7 @@ interface FilterProps {
 
 const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const [showMore, setShowMore] = useState(false);
 
 	const apply = async (next: PharmaciesInquiry) => {
@@ -33,19 +34,19 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 	return (
 		<Stack className="filter-main">
 			<Stack className="find-your-home">
-				<Typography className="title-main">Find your pharmacy</Typography>
+				<Typography className="title-main">{t('pharmacyFilters.findYourPharmacy')}</Typography>
 				<Stack className="input-box">
 					<img src="/img/icons/search.svg" alt="" />
 					<input
 						className="search-input"
-						placeholder="Name or address"
+						placeholder={t('pharmacyFilters.nameOrAddress')}
 						value={searchFilter.search.text ?? ''}
 						onChange={(event) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, text: event.target.value || undefined } })}
 						onKeyDown={(event) => event.key === 'Enter' && apply(searchFilter)}
 					/>
 				</Stack>
 
-				<Typography className="title">Region</Typography>
+				<Typography className="title">{t('pharmacyFilters.region')}</Typography>
 				<Stack className="property-location" sx={{ height: showMore ? 'auto !important' : undefined }}>
 					{Object.values(PharmacyLocation).map((location) => (
 						<Stack className="input-box" key={location}>
@@ -54,15 +55,15 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 								checked={searchFilter.search.locationList?.includes(location) ?? false}
 								onChange={() => toggleList('locationList', location)}
 							/>
-							<Typography className="property-type">{getPharmacyLocationLabel(location)}</Typography>
+							<Typography className="property-type">{t(`pharmacyLocation.${location}`)}</Typography>
 						</Stack>
 					))}
 				</Stack>
 				<Button className="show-more-filter" onClick={() => setShowMore(!showMore)}>
-					{showMore ? 'Show less' : 'Show more'}
+					{showMore ? t('pharmacyFilters.showLess') : t('pharmacyFilters.showMore')}
 				</Button>
 
-				<Typography className="title">Pharmacy type</Typography>
+				<Typography className="title">{t('pharmacyFilters.pharmacyType')}</Typography>
 				{Object.values(PharmacyType).map((type) => (
 					<Stack className="input-box" key={type}>
 						<Checkbox
@@ -70,48 +71,48 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterProps) =>
 							checked={searchFilter.search.typeList?.includes(type) ?? false}
 							onChange={() => toggleList('typeList', type)}
 						/>
-						<Typography className="property-type">{type}</Typography>
+						<Typography className="property-type">{t(`pharmacyType.${type}`)}</Typography>
 					</Stack>
 				))}
 
-				<Typography className="title">Services</Typography>
+				<Typography className="title">{t('pharmacyFilters.services')}</Typography>
 				<Stack className="input-box">
 					<Checkbox className="property-checkbox" checked={searchFilter.search.hasDelivery === true} onChange={(e) => updateSearch({ hasDelivery: e.target.checked || undefined })} />
-					<Typography className="property-type">Delivery available</Typography>
+					<Typography className="property-type">{t('pharmacyFilters.deliveryAvailable')}</Typography>
 				</Stack>
 				<Stack className="input-box">
 					<Checkbox className="property-checkbox" checked={searchFilter.search.acceptsInsurance === true} onChange={(e) => updateSearch({ acceptsInsurance: e.target.checked || undefined })} />
-					<Typography className="property-type">Accepts insurance</Typography>
+					<Typography className="property-type">{t('pharmacyFilters.acceptsInsurance')}</Typography>
 				</Stack>
 				<Stack className="input-box">
 					<Checkbox className="property-checkbox" checked={searchFilter.search.openNow === true} onChange={(e) => updateSearch({ openNow: e.target.checked || undefined })} />
-					<Typography className="property-type">Open now</Typography>
+					<Typography className="property-type">{t('pharmacyFilters.openNow')}</Typography>
 				</Stack>
 				<Stack className="input-box">
 					<Checkbox className="property-checkbox" checked={searchFilter.search.open24Hours === true} onChange={(e) => updateSearch({ open24Hours: e.target.checked || undefined })} />
-					<Typography className="property-type">Open 24/7</Typography>
+					<Typography className="property-type">{t('pharmacyFilters.open247')}</Typography>
 				</Stack>
 
-				<Typography className="title">Delivery fee</Typography>
+				<Typography className="title">{t('pharmacyFilters.deliveryFee')}</Typography>
 				<Stack className="square-year-input">
 					<input
 						type="number"
-						placeholder="Min"
+						placeholder={t('pharmacyFilters.min')}
 						value={searchFilter.search.deliveryFeeRange?.start ?? ''}
 						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 100000 } } })}
 					/>
 					<div className="central-divider" />
 					<input
 						type="number"
-						placeholder="Max"
+						placeholder={t('pharmacyFilters.max')}
 						value={searchFilter.search.deliveryFeeRange?.end ?? ''}
 						onChange={(e) => setSearchFilter({ ...searchFilter, page: 1, search: { ...searchFilter.search, deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 100000 } } })}
 					/>
 				</Stack>
 
 				<Stack className="button-group">
-					<Button variant="contained" onClick={() => apply(searchFilter)}>Search</Button>
-					<Button startIcon={<RefreshIcon />} onClick={() => apply(initialInput)}>Reset</Button>
+					<Button variant="contained" onClick={() => apply(searchFilter)}>{t('pharmacyFilters.search')}</Button>
+					<Button startIcon={<RefreshIcon />} onClick={() => apply(initialInput)}>{t('pharmacyFilters.reset')}</Button>
 				</Stack>
 			</Stack>
 		</Stack>
