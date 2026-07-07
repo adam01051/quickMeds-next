@@ -10,8 +10,10 @@ import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { LIKE_TARGET_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [searchCommunity, setSearchCommunity] = useState({
 		...initialInput,
@@ -54,7 +56,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 			});
 			await boardArticlesRefetch({ input: searchCommunity });
 
-			await sweetTopSmallSuccessAlert('Success!', 750);
+			await sweetTopSmallSuccessAlert(t('mypage.alerts.likeSuccess'), 750);
 		} catch (err: any) {
 			console.log('ERROR, likeBoArticleHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
@@ -76,7 +78,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 				) : (
 					<div className={'no-data'}>
 						<img src="/img/icons/icoAlert.svg" alt="" />
-						<p>No Articles found!</p>
+						<p>{t('mypage.articles.emptyTitle')}</p>
 					</div>
 				)}
 			</Stack>
@@ -93,7 +95,7 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 						/>
 					</Stack>
 					<Stack className="total">
-						<Typography>Total {totalCount ?? 0} article(s) available</Typography>
+						<Typography>{t('mypage.articles.totalAvailable', { count: totalCount ?? 0 })}</Typography>
 					</Stack>
 				</Stack>
 			)}

@@ -93,6 +93,62 @@
 		"success": {
 			"created": "Pharmacy created successfully.",
 			"updated": "Pharmacy updated successfully."
+		},
+		"summary": {
+			"eyebrow": "Редактировать аптеку",
+			"title": "Обновите данные аптеки",
+			"description": "Поддерживайте публичный профиль аптеки актуальным для клиентов QuickMeds."
+		},
+		"sections": {
+			"basics": "Основное",
+			"basicsDescription": "Название и тип аптеки",
+			"services": "Услуги",
+			"servicesDescription": "Доставка, страховка и дата открытия",
+			"description": "Описание",
+			"descriptionHelp": "Информация об аптеке для клиентов",
+			"pharmacyServices": "Услуги аптеки",
+			"pharmacyDescription": "Описание аптеки"
+		},
+		"fields": {
+			"name": "Название аптеки",
+			"namePlaceholder": "Название аптеки",
+			"type": "Тип аптеки",
+			"deliveryFee": "Стоимость доставки (UZS)",
+			"deliveryFeePlaceholder": "0 означает бесплатную доставку",
+			"openedDate": "Дата открытия",
+			"description": "Описание"
+		},
+		"services": {
+			"acceptsInsurance": "Принимает страховку",
+			"offersDelivery": "Есть доставка"
+		},
+		"hours": {
+			"title": "Рабочие часы",
+			"mobileDescription": "Необязательное публичное расписание",
+			"desktopDescription": "Необязательно. Оставьте все дни пустыми, чтобы показать, что часы не указаны.",
+			"emptyHint": "Оставьте все дни пустыми, чтобы показать, что часы не указаны.",
+			"open247": "Открыто 24/7",
+			"closed": "Закрыто"
+		},
+		"photos": {
+			"title": "Фото",
+			"mobileDescription": "Загрузите до пяти изображений",
+			"uploadTitle": "Загрузите фото вашей аптеки",
+			"add": "Добавьте четкие фото аптеки",
+			"formatShort": "Формат JPEG или PNG",
+			"formatLong": "Формат JPEG или PNG, до пяти изображений",
+			"browse": "Выбрать файлы",
+			"remove": "Удалить",
+			"imageAlt": "Аптека"
+		},
+		"weekdays": {
+			"monday": "Понедельник",
+			"tuesday": "Вторник",
+			"wednesday": "Среда",
+			"thursday": "Четверг",
+			"friday": "Пятница",
+			"saturday": "Суббота",
+			"sunday": "Воскресенье"
 		}
 	},
 	"mypage": {
@@ -100,6 +156,11 @@
 			"logout": "Logout",
 			"logoutConfirm": "Do you want to logout?",
 			"tryAgain": "Try again"
+		},
+		"alerts": {
+			"likeSuccess": "Успешно!",
+			"subscribed": "Подписка оформлена!",
+			"unsubscribed": "Подписка отменена!"
 		},
 		"menu": {
 			"account": "Account",
@@ -113,7 +174,9 @@
 			"defaultMember": "QuickMeds member",
 			"openAdmin": "Open Admin",
 			"closeMenu": "Close My Page menu",
-			"mobileNavigation": "My Page mobile navigation"
+			"mobileNavigation": "My Page mobile navigation",
+			"navigation": "Навигация My Page",
+			"sections": "Разделы My Page"
 		},
 		"categories": {
 			"myProfile": { "eyebrow": "Account", "title": "My Profile", "description": "Keep your QuickMeds account information current." },
@@ -126,6 +189,88 @@
 			"writeArticle": { "eyebrow": "Community", "title": "Write Article", "description": "Share a useful experience or update with the QuickMeds community." },
 			"myPharmacies": { "eyebrow": "Pharmacy Owner", "title": "My Pharmacies", "description": "Manage the pharmacies registered to your account." },
 			"addPharmacy": { "eyebrow": "Pharmacy Owner", "title": "Add Pharmacy", "description": "Register a pharmacy and provide accurate service information." }
+		},
+		"profile": {
+			"photo": "Фото",
+			"uploadImage": "Загрузить фото профиля",
+			"uploadHelp": "Фото должно быть в формате JPG, JPEG или PNG.",
+			"username": "Имя пользователя",
+			"usernamePlaceholder": "Ваше имя пользователя",
+			"phone": "Телефон",
+			"phonePlaceholder": "Ваш телефон",
+			"address": "Адрес",
+			"addressPlaceholder": "Ваш адрес",
+			"updateProfile": "Обновить профиль",
+			"updateSuccess": "Информация успешно обновлена.",
+			"imageAlt": "Профиль {{name}}"
+		},
+		"articles": {
+			"emptyTitle": "Статьи не найдены!",
+			"totalAvailable": "Всего доступно статей: {{count}}"
+		},
+		"editor": {
+			"category": "Категория",
+			"title": "Заголовок",
+			"titlePlaceholder": "Введите заголовок",
+			"placeholder": "Введите текст",
+			"register": "Опубликовать",
+			"success": "Статья успешно создана"
+		},
+		"connections": {
+			"name": "Имя",
+			"details": "Детали",
+			"subscription": "Подписка",
+			"noFollowers": "Пока нет подписчиков!",
+			"noFollowings": "Пока нет подписок!",
+			"followers": "Подписчики",
+			"followings": "Подписки",
+			"following": "Вы подписаны",
+			"follow": "Подписаться",
+			"unfollow": "Отписаться",
+			"followersTotal": "{{count}} подписчиков",
+			"followingsTotal": "{{count}} подписок"
+		},
+		"messages": {
+			"sectionMenu": "Меню сообщений",
+			"loadErrorTitle": "Сообщения не загрузились",
+			"loadErrorText": "Не удалось открыть ваш почтовый ящик. Попробуйте снова.",
+			"emptyTitle": "Сообщений пока нет",
+			"emptyText": "Начните со страницы аптеки, если у вас есть вопрос владельцу аптеки.",
+			"findPharmacies": "Найти аптеки",
+			"conversationsAria": "Диалоги сообщений",
+			"conversationCount": "{{count}} диалогов",
+			"newCount": "{{count}} новых",
+			"searchPlaceholder": "Поиск диалогов...",
+			"pharmacyConversation": "Диалог с аптекой",
+			"image": "Изображение",
+			"imageMessage": "Сообщение с изображением",
+			"noSearchResults": "Нет диалогов по этому поиску.",
+			"backToConversations": "Назад к диалогам",
+			"viewPharmacyAria": "Открыть {{name}}",
+			"pharmacy": "аптека",
+			"openPharmacyDetails": "Открыть детали аптеки",
+			"conversation": "Диалог",
+			"participant": "участник",
+			"callParticipant": "Позвонить {{name}}",
+			"history": "История диалога",
+			"loadingConversation": "Диалог загружается…",
+			"conversationLoadError": "Сообщения не загрузились. Попробуйте снова.",
+			"noConversationMessages": "В этом диалоге пока нет сообщений.",
+			"attachmentAlt": "Вложение сообщения",
+			"newMessages": "Новые сообщения",
+			"messageLabel": "Сообщение",
+			"composerPlaceholder": "Спросите о наличии, доставке или услугах аптеки.",
+			"uploading": "Загрузка…",
+			"attach": "Прикрепить",
+			"sending": "Отправка…",
+			"send": "Отправить",
+			"removeAttachment": "Удалить вложение",
+			"remove": "Удалить",
+			"errors": {
+				"maxAttachments": "Можно прикрепить до 4 изображений.",
+				"uploadFailed": "Не удалось загрузить изображение.",
+				"messageRequired": "Напишите сообщение или прикрепите изображение."
+			}
 		},
 		"myPharmacies": {
 			"filterByStatus": "Filter my pharmacies by status",
@@ -182,9 +327,9 @@
 			"connectionError": "Проверьте соединение и попробуйте снова."
 		}
 	},
-	"nav": {
-		"home": "Главная",
-		"pharmacies": "Аптеки",
+  "nav": {
+    "home": "Главная",
+    "pharmacies": "Аптеки",
 		"community": "Сообщество",
 		"myPage": "Моя страница",
 		"cs": "Поддержка",
@@ -199,12 +344,92 @@
 		"mobileNavigation": "Мобильная навигация",
 		"primaryNavigation": "Основная навигация",
 		"navigateQuickMeds": "Навигация QuickMeds",
-		"language": "Язык",
-		"loginOrCreate": "Войти или создать аккаунт"
-	},
-	"pharmacyType": {
-		"RETAIL": "Розничная",
-		"HOSPITAL": "Больничная",
+    "language": "Язык",
+    "loginOrCreate": "Войти или создать аккаунт"
+  },
+  "auth": {
+    "tabs": {
+      "login": "Войти",
+      "register": "Регистрация"
+    },
+    "join": {
+      "tabsAria": "Доступ к аккаунту",
+      "login": {
+        "eyebrow": "С возвращением",
+        "title": "С возвращением в QuickMeds",
+        "description": "Войдите, чтобы открыть сохраненные аптеки, активность сообщества и инструменты владельца аптеки."
+      },
+      "signup": {
+        "eyebrow": "Присоединяйтесь к QuickMeds",
+        "title": "Создайте аккаунт QuickMeds",
+        "description": "Создайте аккаунт, чтобы сохранять аптеки, участвовать в сообществе или управлять присутствием своей аптеки."
+      },
+      "fields": {
+        "nickname": "Никнейм",
+        "nicknamePlaceholder": "Введите никнейм",
+        "password": "Пароль",
+        "passwordPlaceholder": "Введите пароль",
+        "phone": "Номер телефона",
+        "phonePlaceholder": "Введите номер телефона"
+      },
+      "password": {
+        "show": "Показать пароль",
+        "hide": "Скрыть пароль"
+      },
+      "roles": {
+        "legend": "Зарегистрироваться как",
+        "user": "Пользователь",
+        "userDescription": "Ищите и сохраняйте аптеки",
+        "agent": "Владелец аптеки",
+        "agentDescription": "Регистрируйте аптеки и управляйте ими"
+      },
+      "actions": {
+        "login": "Войти",
+        "loggingIn": "Выполняется вход...",
+        "createAccount": "Создать аккаунт",
+        "creatingAccount": "Создание аккаунта...",
+        "continueTelegram": "Продолжить через Telegram",
+        "openingTelegram": "Открываем Telegram..."
+      },
+      "switch": {
+        "toLoginPrompt": "Уже есть аккаунт?",
+        "toSignupPrompt": "Впервые в QuickMeds?",
+        "toLoginAction": "Войти",
+        "toSignupAction": "Создать аккаунт"
+      },
+      "visual": {
+        "aria": "Поиск аптек QuickMeds",
+        "imageAlt": "Современный интерьер аптеки",
+        "eyebrow": "Один аккаунт, удобный доступ к аптекам",
+        "title": "Находите надежные аптеки и оставайтесь на связи с местной заботой о здоровье.",
+        "items": [
+          "Сохраняйте аптеки на потом",
+          "Следите за актуальными часами работы и услугами",
+          "Участвуйте в сообществе QuickMeds"
+        ]
+      },
+      "divider": "или",
+      "errors": {
+        "authenticationFailed": "Не удалось выполнить вход. Попробуйте еще раз."
+      }
+    },
+    "telegramComplete": {
+      "label": "Вход через Telegram",
+      "loadingTitle": "Выполняем вход...",
+      "loadingDescription": "QuickMeds завершает безопасный вход через Telegram.",
+      "errorTitle": "Не удалось завершить вход",
+      "backToLogin": "Вернуться ко входу",
+      "errors": {
+        "missingTicket": "Не удалось завершить вход через Telegram. Попробуйте еще раз.",
+        "expired": "Сессия входа через Telegram истекла. Попробуйте еще раз.",
+        "missingToken": "QuickMeds не получил действительный токен входа.",
+        "failed": "Вход через Telegram не удался. Попробуйте еще раз."
+      }
+    }
+  },
+  "pharmacyType": {
+    "RETAIL": "Розничная",
+    "HOSPITAL": "Больничная",
 		"COMPOUNDING": "Рецептурное изготовление",
 		"ONLINE": "Онлайн"
 	},
@@ -647,6 +872,109 @@
 			"day_few": "{{count}} дня назад",
 			"day_many": "{{count}} дней назад",
 			"day_other": "{{count}} дня назад"
+		}
+	},
+	"cs": {
+		"intro": {
+			"title": "Служба поддержки",
+			"description": "Найдите быстрые ответы и обновления платформы."
+		},
+		"tabs": {
+			"notice": "Уведомления",
+			"faq": "FAQ"
+		},
+		"notice": {
+			"title": "Уведомления",
+			"badge": "Инфо",
+			"emptyTitle": "Сейчас нет уведомлений платформы. Посмотрите FAQ для частых вопросов.",
+			"updated": "Обновляется при необходимости"
+		},
+		"faq": {
+			"badges": {
+				"question": "В",
+				"answer": "О"
+			},
+			"categories": {
+				"gettingStarted": "Начало работы",
+				"pharmacySearch": "Поиск аптек",
+				"messaging": "Сообщения",
+				"account": "Аккаунт",
+				"pharmacyOwners": "Владельцы аптек"
+			},
+			"items": {
+				"faq-find-pharmacy-near-me": {
+					"subject": "Как найти аптеку рядом со мной?",
+					"content": "Используйте страницу «Аптеки», чтобы искать по названию, адресу, региону, типу аптеки, поддержке доставки, страхованию и статусу работы, когда эти данные доступны."
+				},
+				"faq-search-name-address": {
+					"subject": "Можно ли искать по названию или адресу аптеки?",
+					"content": "Да. Введите название аптеки, улицу, район или ориентир в поле поиска, и QuickMeds подберет доступные профили аптек."
+				},
+				"faq-account-needed-browse": {
+					"subject": "Нужен ли аккаунт, чтобы просматривать аптеки?",
+					"content": "Нет. Вы можете просматривать публичные списки аптек без входа. Некоторые действия, например сообщения, подписки, лайки и комментарии, требуют аккаунт."
+				},
+				"faq-open-now": {
+					"subject": "Что означает «Открыто сейчас»?",
+					"content": "Статус работы рассчитывается по сохраненным рабочим часам аптеки и часовому поясу. Если часы не указаны, QuickMeds не считает аптеку открытой."
+				},
+				"faq-delivery": {
+					"subject": "Как узнать, предлагает ли аптека доставку?",
+					"content": "Карточки аптек и страницы деталей показывают, доступна ли доставка, а также стоимость доставки в UZS, если она указана."
+				},
+				"faq-insurance": {
+					"subject": "Как узнать, принимает ли аптека страховку?",
+					"content": "Проверьте информацию о страховании на карточке аптеки или странице деталей. Перед визитом подтвердите это напрямую в аптеке."
+				},
+				"faq-stock-prices": {
+					"subject": "Может ли QuickMeds подтвердить наличие лекарств или цены?",
+					"content": "Пока нет. QuickMeds помогает находить аптеки и связываться с ними. Напишите или позвоните в аптеку, чтобы подтвердить актуальное наличие лекарств и цены."
+				},
+				"faq-contact-pharmacy": {
+					"subject": "Как связаться с аптекой?",
+					"content": "Откройте страницу деталей аптеки и используйте форму сообщения или доступные контактные данные."
+				},
+				"faq-message-location": {
+					"subject": "Где отображаются мои сообщения аптекам?",
+					"content": "Авторизованные пользователи могут видеть переписки с аптеками в My Page в разделе Messages."
+				},
+				"faq-message-images": {
+					"subject": "Можно ли отправлять изображения в сообщении аптеке?",
+					"content": "Да, если сообщения доступны, вы можете прикреплять поддерживаемые изображения вместе с текстом."
+				},
+				"faq-own-pharmacy-message": {
+					"subject": "Почему я не могу написать в свою аптеку?",
+					"content": "Владельцы аптек не могут начинать клиентские переписки со своей собственной аптечной карточкой."
+				},
+				"faq-save-like-pharmacy": {
+					"subject": "Как сохранить или лайкнуть аптеку?",
+					"content": "Войдите в аккаунт, затем используйте действие с сердцем на карточках аптек или страницах деталей. Сохраненные аптеки появятся в поддерживаемых разделах аккаунта."
+				},
+				"faq-follow-member-owner": {
+					"subject": "Как подписаться на участника или владельца аптеки?",
+					"content": "Откройте публичный профиль и нажмите Follow. Управлять подписчиками и подписками можно в My Page."
+				},
+				"faq-comments": {
+					"subject": "Можно ли оставлять комментарии к аптеке?",
+					"content": "Да, авторизованные пользователи могут комментировать страницы аптек, где комментарии включены. Пишите по теме и уважительно."
+				},
+				"faq-wrong-info": {
+					"subject": "Что делать, если информация выглядит неверной?",
+					"content": "По срочным вопросам свяжитесь с аптекой напрямую. По вопросам платформы или карточки используйте доступные каналы поддержки/admin QuickMeds."
+				},
+				"faq-become-owner": {
+					"subject": "Как стать владельцем аптеки?",
+					"content": "Войдите в аккаунт и используйте опцию Pharmacy Owner в My Page. После одобрения или включения доступа вы сможете добавлять и управлять аптечными карточками."
+				},
+				"faq-add-listing": {
+					"subject": "Как добавить карточку аптеки?",
+					"content": "Владельцы аптек могут перейти в My Page, выбрать Add Pharmacy, заполнить обязательные данные аптеки, загрузить изображения и сохранить карточку."
+				},
+				"faq-edit-listing": {
+					"subject": "Можно ли редактировать аптеку после публикации?",
+					"content": "Да. Владельцы аптек могут управлять существующими карточками в My Page в разделе My Pharmacies."
+				}
+			}
 		}
 	},
 	"admin": {

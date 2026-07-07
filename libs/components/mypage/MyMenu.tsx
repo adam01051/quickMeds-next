@@ -68,11 +68,11 @@ const MyMenu = () => {
 	);
 
 	return (
-		<aside className="my-page-menu" aria-label="My Page navigation">
+		<aside className="my-page-menu" aria-label={t('mypage.menu.navigation')}>
 			<div className="my-page-menu__identity">
 				<img
 					src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'}
-					alt={`${user?.memberNick || 'Member'} profile`}
+					alt={t('mypage.profile.imageAlt', { name: user?.memberNick || t('mypage.menu.defaultMember') })}
 				/>
 				<div>
 					<strong>{user?.memberNick || t('mypage.menu.defaultMember')}</strong>

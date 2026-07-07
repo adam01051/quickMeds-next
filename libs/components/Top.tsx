@@ -5,7 +5,6 @@ import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
 import { Badge, Stack, Box } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
 import { alpha, styled } from '@mui/material/styles';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -376,16 +375,17 @@ const Top = () => {
 									</Link>
 								)}
 								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label={t('nav.notifications')} />}
-								<Button
-									disableRipple
+								<button
+									type="button"
 									className="btn-lang"
 									onClick={langClick}
-									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
+									aria-label={t('nav.language')}
 								>
 									<Box component={'div'} className={'flag'}>
 										<img src={activeLanguage.flagSrc} alt={t(activeLanguage.labelKey)} />
 									</Box>
-								</Button>
+									<CaretDown size={14} color="#616161" weight="fill" aria-hidden="true" />
+								</button>
 
 								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
 									{LANGUAGE_OPTIONS.map((option) => (

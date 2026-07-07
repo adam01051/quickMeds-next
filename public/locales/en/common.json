@@ -93,6 +93,62 @@
     "success": {
       "created": "Pharmacy created successfully.",
       "updated": "Pharmacy updated successfully."
+    },
+    "summary": {
+      "eyebrow": "Edit Pharmacy",
+      "title": "Update pharmacy details",
+      "description": "Keep your public pharmacy profile accurate for customers browsing QuickMeds."
+    },
+    "sections": {
+      "basics": "Basics",
+      "basicsDescription": "Name and pharmacy type",
+      "services": "Services",
+      "servicesDescription": "Delivery, insurance, and opening date",
+      "description": "Description",
+      "descriptionHelp": "Customer-facing pharmacy information",
+      "pharmacyServices": "Pharmacy services",
+      "pharmacyDescription": "Pharmacy description"
+    },
+    "fields": {
+      "name": "Pharmacy name",
+      "namePlaceholder": "Pharmacy name",
+      "type": "Pharmacy type",
+      "deliveryFee": "Delivery fee (UZS)",
+      "deliveryFeePlaceholder": "0 means free delivery",
+      "openedDate": "Opened date",
+      "description": "Description"
+    },
+    "services": {
+      "acceptsInsurance": "Accepts insurance",
+      "offersDelivery": "Offers delivery"
+    },
+    "hours": {
+      "title": "Working hours",
+      "mobileDescription": "Optional public schedule",
+      "desktopDescription": "Optional. Leave all days unset to display Hours not provided.",
+      "emptyHint": "Leave all days unset to display Hours not provided.",
+      "open247": "Open 24/7",
+      "closed": "Closed"
+    },
+    "photos": {
+      "title": "Photos",
+      "mobileDescription": "Upload up to five images",
+      "uploadTitle": "Upload photos of your pharmacy",
+      "add": "Add clear pharmacy photos",
+      "formatShort": "JPEG or PNG format",
+      "formatLong": "JPEG or PNG format, up to five images",
+      "browse": "Browse Files",
+      "remove": "Remove",
+      "imageAlt": "Pharmacy"
+    },
+    "weekdays": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
     }
   },
   "mypage": {
@@ -100,6 +156,11 @@
       "logout": "Logout",
       "logoutConfirm": "Do you want to logout?",
       "tryAgain": "Try again"
+    },
+    "alerts": {
+      "likeSuccess": "Success!",
+      "subscribed": "Subscribed!",
+      "unsubscribed": "Unsubscribed!"
     },
     "menu": {
       "account": "Account",
@@ -113,7 +174,9 @@
       "defaultMember": "QuickMeds member",
       "openAdmin": "Open Admin",
       "closeMenu": "Close My Page menu",
-      "mobileNavigation": "My Page mobile navigation"
+      "mobileNavigation": "My Page mobile navigation",
+      "navigation": "My Page navigation",
+      "sections": "My Page sections"
     },
     "categories": {
       "myProfile": { "eyebrow": "Account", "title": "My Profile", "description": "Keep your QuickMeds account information current." },
@@ -126,6 +189,88 @@
       "writeArticle": { "eyebrow": "Community", "title": "Write Article", "description": "Share a useful experience or update with the QuickMeds community." },
       "myPharmacies": { "eyebrow": "Pharmacy Owner", "title": "My Pharmacies", "description": "Manage the pharmacies registered to your account." },
       "addPharmacy": { "eyebrow": "Pharmacy Owner", "title": "Add Pharmacy", "description": "Register a pharmacy and provide accurate service information." }
+    },
+    "profile": {
+      "photo": "Photo",
+      "uploadImage": "Upload Profile Image",
+      "uploadHelp": "A photo must be in JPG, JPEG or PNG format.",
+      "username": "Username",
+      "usernamePlaceholder": "Your username",
+      "phone": "Phone",
+      "phonePlaceholder": "Your Phone",
+      "address": "Address",
+      "addressPlaceholder": "Your address",
+      "updateProfile": "Update Profile",
+      "updateSuccess": "information updated successfully.",
+      "imageAlt": "{{name}} profile"
+    },
+    "articles": {
+      "emptyTitle": "No Articles found!",
+      "totalAvailable": "Total {{count}} article(s) available"
+    },
+    "editor": {
+      "category": "Category",
+      "title": "Title",
+      "titlePlaceholder": "Type Title",
+      "placeholder": "Type here",
+      "register": "Register",
+      "success": "Article is created successfully"
+    },
+    "connections": {
+      "name": "Name",
+      "details": "Details",
+      "subscription": "Subscription",
+      "noFollowers": "No Followers yet!",
+      "noFollowings": "No Followings yet!",
+      "followers": "Followers",
+      "followings": "Followings",
+      "following": "Following",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "followersTotal": "{{count}} followers",
+      "followingsTotal": "{{count}} followings"
+    },
+    "messages": {
+      "sectionMenu": "Messages section menu",
+      "loadErrorTitle": "Messages could not load",
+      "loadErrorText": "We could not reach your inbox. Please try again.",
+      "emptyTitle": "No messages yet",
+      "emptyText": "Start from a pharmacy detail page when you have a question for a Pharmacy Owner.",
+      "findPharmacies": "Find pharmacies",
+      "conversationsAria": "Message conversations",
+      "conversationCount": "{{count}} conversations",
+      "newCount": "{{count}} New",
+      "searchPlaceholder": "Search conversations...",
+      "pharmacyConversation": "Pharmacy conversation",
+      "image": "Image",
+      "imageMessage": "Image message",
+      "noSearchResults": "No conversations match this search.",
+      "backToConversations": "Back to conversations",
+      "viewPharmacyAria": "View {{name}}",
+      "pharmacy": "pharmacy",
+      "openPharmacyDetails": "Open pharmacy details",
+      "conversation": "Conversation",
+      "participant": "participant",
+      "callParticipant": "Call {{name}}",
+      "history": "Conversation history",
+      "loadingConversation": "Loading conversation…",
+      "conversationLoadError": "Messages could not load. Please try again.",
+      "noConversationMessages": "No messages in this conversation yet.",
+      "attachmentAlt": "Message attachment",
+      "newMessages": "New messages",
+      "messageLabel": "Message",
+      "composerPlaceholder": "Ask about availability, delivery, or pharmacy services.",
+      "uploading": "Uploading…",
+      "attach": "Attach",
+      "sending": "Sending…",
+      "send": "Send",
+      "removeAttachment": "Remove attachment",
+      "remove": "Remove",
+      "errors": {
+        "maxAttachments": "You can attach up to 4 images.",
+        "uploadFailed": "Image upload failed.",
+        "messageRequired": "Write a message or attach an image first."
+      }
     },
     "myPharmacies": {
       "filterByStatus": "Filter my pharmacies by status",
@@ -201,6 +346,86 @@
     "navigateQuickMeds": "Navigate QuickMeds",
     "language": "Language",
     "loginOrCreate": "Login or create account"
+  },
+  "auth": {
+    "tabs": {
+      "login": "Login",
+      "register": "Register"
+    },
+    "join": {
+      "tabsAria": "Account access",
+      "login": {
+        "eyebrow": "Welcome back",
+        "title": "Welcome back to QuickMeds",
+        "description": "Log in to access saved pharmacies, community activity, and Pharmacy Owner tools."
+      },
+      "signup": {
+        "eyebrow": "Join QuickMeds",
+        "title": "Create your QuickMeds account",
+        "description": "Create an account to save pharmacies, join the community, or manage your pharmacy presence."
+      },
+      "fields": {
+        "nickname": "Nickname",
+        "nicknamePlaceholder": "Enter your nickname",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "phone": "Phone number",
+        "phonePlaceholder": "Enter your phone number"
+      },
+      "password": {
+        "show": "Show password",
+        "hide": "Hide password"
+      },
+      "roles": {
+        "legend": "Register as",
+        "user": "User",
+        "userDescription": "Discover and save pharmacies",
+        "agent": "Pharmacy Owner",
+        "agentDescription": "Register and manage pharmacies"
+      },
+      "actions": {
+        "login": "Login",
+        "loggingIn": "Logging in...",
+        "createAccount": "Create account",
+        "creatingAccount": "Creating account...",
+        "continueTelegram": "Continue with Telegram",
+        "openingTelegram": "Opening Telegram..."
+      },
+      "switch": {
+        "toLoginPrompt": "Already have an account?",
+        "toSignupPrompt": "New to QuickMeds?",
+        "toLoginAction": "Login",
+        "toSignupAction": "Create an account"
+      },
+      "visual": {
+        "aria": "QuickMeds pharmacy discovery",
+        "imageAlt": "A modern pharmacy interior",
+        "eyebrow": "One account, useful pharmacy access",
+        "title": "Find trusted pharmacies and stay connected to local care.",
+        "items": [
+          "Save pharmacies for later",
+          "Follow real operating hours and services",
+          "Participate in the QuickMeds community"
+        ]
+      },
+      "divider": "or",
+      "errors": {
+        "authenticationFailed": "Authentication failed. Please try again."
+      }
+    },
+    "telegramComplete": {
+      "label": "Telegram login",
+      "loadingTitle": "Signing you in...",
+      "loadingDescription": "QuickMeds is completing your secure Telegram login.",
+      "errorTitle": "We could not finish signing you in",
+      "backToLogin": "Back to login",
+      "errors": {
+        "missingTicket": "Telegram login could not be completed. Please try again.",
+        "expired": "Telegram login session expired. Please try again.",
+        "missingToken": "QuickMeds did not receive a valid login token.",
+        "failed": "Telegram login failed. Please try again."
+      }
+    }
   },
   "pharmacyType": {
     "RETAIL": "Retail",
@@ -647,6 +872,109 @@
       "day_few": "{{count}} days ago",
       "day_many": "{{count}} days ago",
       "day_other": "{{count}} days ago"
+    }
+  },
+  "cs": {
+    "intro": {
+      "title": "Customer Support",
+      "description": "Find quick answers and platform updates."
+    },
+    "tabs": {
+      "notice": "Notice",
+      "faq": "FAQ"
+    },
+    "notice": {
+      "title": "Notice",
+      "badge": "Info",
+      "emptyTitle": "No platform notices right now. Check FAQ for common questions.",
+      "updated": "Updated as needed"
+    },
+    "faq": {
+      "badges": {
+        "question": "Q",
+        "answer": "A"
+      },
+      "categories": {
+        "gettingStarted": "Getting Started",
+        "pharmacySearch": "Pharmacy Search",
+        "messaging": "Messaging",
+        "account": "Account",
+        "pharmacyOwners": "Pharmacy Owners"
+      },
+      "items": {
+        "faq-find-pharmacy-near-me": {
+          "subject": "How do I find a pharmacy near me?",
+          "content": "Use the Pharmacies page to search by name, address, region, pharmacy type, delivery support, insurance support, and opening status when available."
+        },
+        "faq-search-name-address": {
+          "subject": "Can I search by pharmacy name or address?",
+          "content": "Yes. Type a pharmacy name, street, district, or landmark into the search field and QuickMeds will match available pharmacy profiles."
+        },
+        "faq-account-needed-browse": {
+          "subject": "Do I need an account to browse pharmacies?",
+          "content": "No. You can browse public pharmacy listings without signing in. Some actions, such as messaging, following, liking, and commenting, require an account."
+        },
+        "faq-open-now": {
+          "subject": "What does \"Open now\" mean?",
+          "content": "Open status is calculated from the pharmacy's saved working hours and timezone. If hours are missing, QuickMeds does not assume the pharmacy is open."
+        },
+        "faq-delivery": {
+          "subject": "How do I know if a pharmacy offers delivery?",
+          "content": "Pharmacy cards and detail pages show whether delivery is available and, when provided, the delivery fee in UZS."
+        },
+        "faq-insurance": {
+          "subject": "How do I know if a pharmacy accepts insurance?",
+          "content": "Look for the insurance information on the pharmacy card or pharmacy detail page. Confirm directly with the pharmacy before visiting."
+        },
+        "faq-stock-prices": {
+          "subject": "Can QuickMeds confirm medicine stock or prices?",
+          "content": "Not yet. QuickMeds helps you discover and contact pharmacies. Please message or call the pharmacy to confirm current medicine availability and prices."
+        },
+        "faq-contact-pharmacy": {
+          "subject": "How do I contact a pharmacy?",
+          "content": "Open the pharmacy detail page and use the message form or available contact details."
+        },
+        "faq-message-location": {
+          "subject": "Where do my pharmacy messages appear?",
+          "content": "Signed-in users can see pharmacy conversations in My Page under Messages."
+        },
+        "faq-message-images": {
+          "subject": "Can I send images in a pharmacy message?",
+          "content": "Yes, where messaging is available, you can attach supported image files along with your message."
+        },
+        "faq-own-pharmacy-message": {
+          "subject": "Why can't I message my own pharmacy?",
+          "content": "Pharmacy Owners cannot start customer conversations with their own pharmacy listing."
+        },
+        "faq-save-like-pharmacy": {
+          "subject": "How do I save or like a pharmacy?",
+          "content": "Sign in, then use the heart action on pharmacy cards or detail pages. Saved pharmacies appear in your account areas where supported."
+        },
+        "faq-follow-member-owner": {
+          "subject": "How do I follow a member or Pharmacy Owner?",
+          "content": "Open their public profile and use Follow. You can manage followers and followings from My Page."
+        },
+        "faq-comments": {
+          "subject": "Can I leave comments on a pharmacy?",
+          "content": "Yes, signed-in users can comment on pharmacy detail pages where comments are enabled. Keep comments relevant and respectful."
+        },
+        "faq-wrong-info": {
+          "subject": "What should I do if information looks wrong?",
+          "content": "Contact the pharmacy directly for urgent questions. For platform or listing issues, use QuickMeds support/admin contact channels when available."
+        },
+        "faq-become-owner": {
+          "subject": "How do I become a Pharmacy Owner?",
+          "content": "Sign in and use the Pharmacy Owner option in My Page. Once approved or enabled, you can add and manage pharmacy listings."
+        },
+        "faq-add-listing": {
+          "subject": "How do I add a pharmacy listing?",
+          "content": "Pharmacy Owners can go to My Page, choose Add Pharmacy, complete the required pharmacy details, upload images, and save the listing."
+        },
+        "faq-edit-listing": {
+          "subject": "Can I edit my pharmacy after publishing it?",
+          "content": "Yes. Pharmacy Owners can manage existing listings from My Page under My Pharmacies."
+        }
+      }
     }
   },
   "admin": {

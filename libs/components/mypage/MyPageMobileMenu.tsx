@@ -121,7 +121,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 						className="my-page-menu__mobile-sheet"
 						role="dialog"
 						aria-modal="true"
-						aria-label="My Page sections"
+						aria-label={t('mypage.menu.sections')}
 						onPointerDown={(event: React.PointerEvent<HTMLDivElement>) => event.stopPropagation()}
 						initial={{ opacity: 0, x: -24, scale: 0.98 }}
 						animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -129,7 +129,7 @@ const MyPageMobileMenu = ({ triggerClassName = 'my-page-menu__mobile-trigger' }:
 						transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
 					>
 						<div className="my-page-menu__mobile-head">
-							<strong>{t('My Page')}</strong>
+							<strong>{t('nav.myPage')}</strong>
 							<button type="button" aria-label={t('mypage.menu.closeMenu')} onClick={() => setMobileMenuOpen(false)}>
 								<CloseRoundedIcon />
 							</button>

@@ -13,8 +13,10 @@ import { useMutation } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { Message } from '../../enums/common.enum';
 import { sweetErrorHandling, sweetTopSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const TuiEditor = () => {
+	const { t } = useTranslation('common');
 	const editorRef = useRef<Editor>(null),
 		token = getJwtToken(),
 		router = useRouter();
@@ -98,7 +100,7 @@ const TuiEditor = () => {
 				},
 			});
 
-			await sweetTopSuccessAlert('Article is created successfully', 700);
+			await sweetTopSuccessAlert(t('mypage.editor.success'), 700);
 			await router.push({
 				pathname: '/mypage',
 				query: {
@@ -122,32 +124,32 @@ const TuiEditor = () => {
 			<Stack className="community-editor-fields" direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
 				<Box component={'div'} className={'form_row community-editor-field'} style={{ width: '300px' }}>
 					<Typography className="community-editor-label" style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Category
+						{t('mypage.editor.category')}
 					</Typography>
 					<FormControl sx={{ width: '100%', background: 'white' }}>
 						<Select
 							value={articleCategory}
 							onChange={changeCategoryHandler}
 							displayEmpty
-							inputProps={{ 'aria-label': 'Without label' }}
+							inputProps={{ 'aria-label': t('mypage.editor.category') }}
 						>
 							<MenuItem value={BoardArticleCategory.FREE}>
-								<span>Free</span>
+								<span>{t('boardCategory.FREE')}</span>
 							</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
-							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
-							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
+							<MenuItem value={BoardArticleCategory.HUMOR}>{t('boardCategory.HUMOR')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.NEWS}>{t('boardCategory.NEWS')}</MenuItem>
+							<MenuItem value={BoardArticleCategory.RECOMMEND}>{t('boardCategory.RECOMMEND')}</MenuItem>
 						</Select>
 					</FormControl>
 				</Box>
 				<Box component={'div'} className="community-editor-field" style={{ width: '300px', flexDirection: 'column' }}>
 					<Typography className="community-editor-label" style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Title
+						{t('mypage.editor.title')}
 					</Typography>
 					<TextField
 						onChange={articleTitleHandler}
 						id="filled-basic"
-						label="Type Title"
+						label={t('mypage.editor.titlePlaceholder')}
 						className="community-editor-title-input"
 						style={{ width: '300px', background: 'white' }}
 					/>
@@ -155,8 +157,8 @@ const TuiEditor = () => {
 			</Stack>
 
 			<Editor
-				initialValue={'Type here'}
-				placeholder={'Type here'}
+				initialValue={t('mypage.editor.placeholder')}
+				placeholder={t('mypage.editor.placeholder')}
 				previewStyle={'vertical'}
 				height={'640px'}
 				// @ts-ignore
@@ -187,7 +189,7 @@ const TuiEditor = () => {
 					style={{ margin: '30px', width: '250px', height: '45px' }}
 					onClick={handleRegisterButton}
 				>
-					Register
+					{t('mypage.editor.register')}
 				</Button>
 			</Stack>
 		</Stack>

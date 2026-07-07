@@ -25,12 +25,6 @@ interface MyPharmacyCardProps {
 	updatePharmacyHandler?: any;
 }
 
-const formatPharmacyType = (value: string) =>
-	value
-		.toLowerCase()
-		.replace(/_/g, ' ')
-		.replace(/\b\w/g, (letter) => letter.toUpperCase());
-
 const getHoursLabelKey = (property: Property) => {
 	if (property.open24Hours) return 'mypage.myPharmacies.card.open247';
 	if (!property.hoursConfigured) return 'mypage.myPharmacies.card.hoursNotProvided';
@@ -92,7 +86,7 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 		return (
 			<article className="my-pharmacy-card">
 				<div className="my-pharmacy-card__media" onClick={() => pushPharmacyDetail(property._id)}>
-					<img src={image} alt={`${property.pharmacyName} pharmacy`} onError={useFallbackImage} />
+					<img src={image} alt={t('sharedPharmacyCard.imageAlt', { name: property.pharmacyName })} onError={useFallbackImage} />
 					<span className={`my-pharmacy-card__hours ${hoursClass}`}>
 						<AccessTimeRoundedIcon />
 						{hoursLabel}
@@ -116,7 +110,7 @@ export const MyPharmacyCard = (props: MyPharmacyCardProps) => {
 					<p className="my-pharmacy-card__address">{property.pharmacyAddress}</p>
 
 					<div className="my-pharmacy-card__chips">
-						<span>{formatPharmacyType(property.pharmacyType)}</span>
+						<span>{t(`pharmacyType.${property.pharmacyType}`)}</span>
 						<span>
 							<LocalShippingOutlinedIcon />
 							{property.hasDelivery ? formatDeliveryFeeUZS(property.pharmacyDeliveryFee) : t('mypage.myPharmacies.card.pickupOnly')}

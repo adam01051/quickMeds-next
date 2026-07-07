@@ -16,7 +16,7 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import PharmacyLocationPicker from './PharmacyLocationPicker';
 import { isValidLatLng, toPharmacyCoordinateFields } from '../../utils/coordinates';
 
-const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const WEEKDAY_KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 	const router = useRouter();
@@ -122,34 +122,34 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 			<div id="add-property-page" className="add-pharmacy-mobile">
 				{isEditMode && (
 					<section className="add-pharmacy-mobile__summary">
-						<span>Edit Pharmacy</span>
-						<h2>Update pharmacy details</h2>
-						<p>Keep your public pharmacy profile accurate for customers browsing QuickMeds.</p>
+						<span>{t('addPharmacy.summary.eyebrow')}</span>
+						<h2>{t('addPharmacy.summary.title')}</h2>
+						<p>{t('addPharmacy.summary.description')}</p>
 					</section>
 				)}
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Basics</span>
-						<strong>Name and pharmacy type</strong>
+						<span>{t('addPharmacy.sections.basics')}</span>
+						<strong>{t('addPharmacy.sections.basicsDescription')}</strong>
 					</div>
 					<label className="add-pharmacy-mobile__field">
-						<span>Pharmacy name</span>
+						<span>{t('addPharmacy.fields.name')}</span>
 						<input
-							placeholder="Pharmacy name"
+							placeholder={t('addPharmacy.fields.namePlaceholder')}
 							value={form.pharmacyName}
 							onChange={(e) => update({ pharmacyName: e.target.value })}
 						/>
 					</label>
 					<label className="add-pharmacy-mobile__field">
-						<span>Pharmacy type</span>
+						<span>{t('addPharmacy.fields.type')}</span>
 						<select
 							value={form.pharmacyType}
 							onChange={(e) => update({ pharmacyType: e.target.value as PharmacyType })}
 						>
 							{Object.values(PharmacyType).map((value) => (
 								<option key={value} value={value}>
-									{value}
+									{t(`pharmacyType.${value}`)}
 								</option>
 							))}
 						</select>
@@ -158,8 +158,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Services</span>
-						<strong>Delivery, insurance, and opening date</strong>
+						<span>{t('addPharmacy.sections.services')}</span>
+						<strong>{t('addPharmacy.sections.servicesDescription')}</strong>
 					</div>
 					<div className="add-pharmacy-mobile__toggles">
 						<FormControlLabel
@@ -169,7 +169,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									onChange={(e) => update({ acceptsInsurance: e.target.checked })}
 								/>
 							}
-							label="Accepts insurance"
+							label={t('addPharmacy.services.acceptsInsurance')}
 						/>
 						<FormControlLabel
 							control={
@@ -183,24 +183,24 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									}
 								/>
 							}
-							label="Offers delivery"
+							label={t('addPharmacy.services.offersDelivery')}
 						/>
 					</div>
 					<div className="add-pharmacy-mobile__grid">
 						<label className="add-pharmacy-mobile__field">
-							<span>Delivery fee (UZS)</span>
+							<span>{t('addPharmacy.fields.deliveryFee')}</span>
 							<input
 								type="number"
 								min="0"
 								step="1"
 								disabled={!form.hasDelivery}
-								placeholder="0 means free delivery"
+								placeholder={t('addPharmacy.fields.deliveryFeePlaceholder')}
 								value={form.pharmacyDeliveryFee}
 								onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })}
 							/>
 						</label>
 						<label className="add-pharmacy-mobile__field">
-							<span>Opened date</span>
+							<span>{t('addPharmacy.fields.openedDate')}</span>
 							<input
 								type="date"
 								value={form.openedAt ? new Date(form.openedAt).toISOString().slice(0, 10) : ''}
@@ -227,8 +227,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Working hours</span>
-						<strong>Optional public schedule</strong>
+						<span>{t('addPharmacy.hours.title')}</span>
+						<strong>{t('addPharmacy.hours.mobileDescription')}</strong>
 					</div>
 					<div className="add-pharmacy-mobile__toggles">
 						<FormControlLabel
@@ -243,13 +243,13 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									}
 								/>
 							}
-							label="Open 24/7"
+							label={t('addPharmacy.hours.open247')}
 						/>
 					</div>
 					{!form.open24Hours && (
 						<div className="add-pharmacy-mobile__hours">
-							<p>Leave all days unset to display Hours not provided.</p>
-							{WEEKDAYS.map((label, index) => {
+							<p>{t('addPharmacy.hours.emptyHint')}</p>
+							{WEEKDAY_KEYS.map((key, index) => {
 								const dayOfWeek = index + 1;
 								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
 								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
@@ -262,8 +262,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									});
 								};
 								return (
-									<div className="add-pharmacy-mobile__day" key={label}>
-										<strong>{label}</strong>
+									<div className="add-pharmacy-mobile__day" key={key}>
+										<strong>{t(`addPharmacy.weekdays.${key}`)}</strong>
 										<FormControlLabel
 											control={
 												<Checkbox
@@ -277,7 +277,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 													}
 												/>
 											}
-											label="Closed"
+											label={t('addPharmacy.hours.closed')}
 										/>
 										<div>
 											<input
@@ -302,13 +302,13 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Photos</span>
-						<strong>Upload up to five images</strong>
+						<span>{t('addPharmacy.photos.title')}</span>
+						<strong>{t('addPharmacy.photos.mobileDescription')}</strong>
 					</div>
 					<button className="add-pharmacy-mobile__upload" type="button" onClick={() => inputRef.current?.click()}>
 						<img src="/img/icons/discovery.svg" alt="" />
-						<span>Add pharmacy photos</span>
-						<small>JPEG or PNG format</small>
+						<span>{t('addPharmacy.photos.add')}</span>
+						<small>{t('addPharmacy.photos.formatShort')}</small>
 						<input
 							ref={inputRef}
 							type="file"
@@ -322,9 +322,9 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						<div className="add-pharmacy-mobile__gallery">
 							{form.pharmacyImages.map((image) => (
 								<div className="add-pharmacy-mobile__image" key={image}>
-									<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
+									<img src={`${REACT_APP_API_URL}/${image}`} alt={t('addPharmacy.photos.imageAlt')} />
 									<button type="button" onClick={() => removeImage(image)}>
-										Remove
+										{t('addPharmacy.photos.remove')}
 									</button>
 								</div>
 							))}
@@ -334,11 +334,11 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 				<section className="add-pharmacy-mobile__card">
 					<div className="add-pharmacy-mobile__card-head">
-						<span>Description</span>
-						<strong>Customer-facing pharmacy information</strong>
+						<span>{t('addPharmacy.sections.description')}</span>
+						<strong>{t('addPharmacy.sections.descriptionHelp')}</strong>
 					</div>
 					<label className="add-pharmacy-mobile__field">
-						<span>Description</span>
+						<span>{t('addPharmacy.fields.description')}</span>
 						<textarea value={form.pharmacyDesc ?? ''} onChange={(e) => update({ pharmacyDesc: e.target.value })} />
 					</label>
 				</section>
@@ -357,10 +357,10 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 			<Stack className="config">
 				<Stack className="description-box">
 					<Stack className="config-column">
-						<Typography className="title">Pharmacy name</Typography>
+						<Typography className="title">{t('addPharmacy.fields.name')}</Typography>
 						<input
 							className="description-input"
-							placeholder="Pharmacy name"
+							placeholder={t('addPharmacy.fields.namePlaceholder')}
 							value={form.pharmacyName}
 							onChange={(e) => update({ pharmacyName: e.target.value })}
 						/>
@@ -368,7 +368,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
-							<Typography className="title">Pharmacy type</Typography>
+							<Typography className="title">{t('addPharmacy.fields.type')}</Typography>
 							<select
 								className="select-description"
 								value={form.pharmacyType}
@@ -376,7 +376,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 							>
 								{Object.values(PharmacyType).map((value) => (
 									<option key={value} value={value}>
-										{value}
+										{t(`pharmacyType.${value}`)}
 									</option>
 								))}
 							</select>
@@ -402,20 +402,20 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 
 					<Stack className="config-row">
 						<Stack className="price-year-after-price">
-							<Typography className="title">Delivery fee (UZS)</Typography>
+							<Typography className="title">{t('addPharmacy.fields.deliveryFee')}</Typography>
 							<input
 								className="description-input"
 								type="number"
 								min="0"
 								step="1"
 								disabled={!form.hasDelivery}
-								placeholder="0 means free delivery"
+								placeholder={t('addPharmacy.fields.deliveryFeePlaceholder')}
 								value={form.pharmacyDeliveryFee}
 								onChange={(e) => update({ pharmacyDeliveryFee: Number(e.target.value) })}
 							/>
 						</Stack>
 						<Stack className="price-year-after-price">
-							<Typography className="title">Opened date</Typography>
+							<Typography className="title">{t('addPharmacy.fields.openedDate')}</Typography>
 							<input
 								className="description-input"
 								type="date"
@@ -425,7 +425,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						</Stack>
 					</Stack>
 
-					<Typography className="property-title">Pharmacy services</Typography>
+					<Typography className="property-title">{t('addPharmacy.sections.pharmacyServices')}</Typography>
 					<Stack className="pharmacy-service-row">
 						<FormControlLabel
 							control={
@@ -434,7 +434,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									onChange={(e) => update({ acceptsInsurance: e.target.checked })}
 								/>
 							}
-							label="Accepts insurance"
+							label={t('addPharmacy.services.acceptsInsurance')}
 						/>
 						<FormControlLabel
 							control={
@@ -448,7 +448,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									}
 								/>
 							}
-							label="Offers delivery"
+							label={t('addPharmacy.services.offersDelivery')}
 						/>
 						<FormControlLabel
 							control={
@@ -462,16 +462,16 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									}
 								/>
 							}
-							label="Open 24/7"
+							label={t('addPharmacy.hours.open247')}
 						/>
 					</Stack>
 					{!form.open24Hours && (
 						<Stack className="config-column">
-							<Typography className="property-title">Working hours</Typography>
+							<Typography className="property-title">{t('addPharmacy.hours.title')}</Typography>
 							<Typography className="sub-title">
-								Optional. Leave all days unset to display Hours not provided.
+								{t('addPharmacy.hours.desktopDescription')}
 							</Typography>
-							{WEEKDAYS.map((label, index) => {
+							{WEEKDAY_KEYS.map((key, index) => {
 								const dayOfWeek = index + 1;
 								const day = form.operatingHours?.find((item) => item.dayOfWeek === dayOfWeek);
 								const updateDay = (value: { isClosed?: boolean; opensAt?: string; closesAt?: string }) => {
@@ -484,8 +484,8 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 									});
 								};
 								return (
-									<Stack className="config-row" key={label}>
-										<Typography className="title">{label}</Typography>
+									<Stack className="config-row" key={key}>
+										<Typography className="title">{t(`addPharmacy.weekdays.${key}`)}</Typography>
 										<FormControlLabel
 											control={
 												<Checkbox
@@ -499,7 +499,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 													}
 												/>
 											}
-											label="Closed"
+											label={t('addPharmacy.hours.closed')}
 										/>
 										<input
 											className="description-input"
@@ -521,9 +521,9 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 						</Stack>
 					)}
 
-					<Typography className="property-title">Pharmacy description</Typography>
+					<Typography className="property-title">{t('addPharmacy.sections.pharmacyDescription')}</Typography>
 					<Stack className="config-column">
-						<Typography className="title">Description</Typography>
+						<Typography className="title">{t('addPharmacy.fields.description')}</Typography>
 						<textarea
 							className="description-text"
 							value={form.pharmacyDesc ?? ''}
@@ -532,16 +532,16 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					</Stack>
 				</Stack>
 
-				<Typography className="upload-title">Upload photos of your pharmacy</Typography>
+				<Typography className="upload-title">{t('addPharmacy.photos.uploadTitle')}</Typography>
 				<Stack className="images-box">
 					<Stack className="upload-box">
 						<img className="pharmacy-upload-icon" src="/img/icons/discovery.svg" alt="" />
 						<Stack className="text-box">
-							<Typography className="drag-title">Add clear pharmacy photos</Typography>
-							<Typography className="format-title">JPEG or PNG format, up to five images</Typography>
+							<Typography className="drag-title">{t('addPharmacy.photos.add')}</Typography>
+							<Typography className="format-title">{t('addPharmacy.photos.formatLong')}</Typography>
 						</Stack>
 						<Button className="browse-button" onClick={() => inputRef.current?.click()}>
-							<Typography className="browse-button-text">Browse Files</Typography>
+							<Typography className="browse-button-text">{t('addPharmacy.photos.browse')}</Typography>
 							<input
 								ref={inputRef}
 								type="file"
@@ -555,7 +555,7 @@ const AddProperty = ({ initialValues }: { initialValues: PharmacyInput }) => {
 					<Stack className="gallery-box">
 						{form.pharmacyImages.map((image) => (
 							<Stack className="image-box" key={image}>
-								<img src={`${REACT_APP_API_URL}/${image}`} alt="Pharmacy" />
+								<img src={`${REACT_APP_API_URL}/${image}`} alt={t('addPharmacy.photos.imageAlt')} />
 								<Button className="absolute-box" onClick={() => removeImage(image)}>
 									×
 								</Button>

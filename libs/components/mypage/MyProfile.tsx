@@ -9,9 +9,11 @@ import { userVar } from '../../../apollo/store';
 import { MemberUpdate } from '../../types/member/member.update';
 import { UPDATE_MEMBER } from '../../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 	const token = getJwtToken();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [updateData, setUpdateData] = useState<MemberUpdate>(initialValues);
 	const currentProfileData = {
@@ -91,7 +93,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 			const jwtToken = result.data.updateMember?.accessToken;
 			await updateStorage({ jwtToken });
 			updateUserInfo(result.data.updateMember?.accessToken);
-			await sweetMixinSuccessAlert('information updated successfully.');
+			await sweetMixinSuccessAlert(t('mypage.profile.updateSuccess'));
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
@@ -107,55 +109,55 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 		<div id="my-profile-page">
 			<Stack className="top-box">
 				<Stack className="photo-box">
-					<Typography className="title">Photo</Typography>
+					<Typography className="title">{t('mypage.profile.photo')}</Typography>
 					<Stack className="image-big-box">
 						<Stack className="image-box">
 							<img
 								src={updateData?.memberImage ? `${REACT_APP_API_URL}/${updateData?.memberImage}` : `/img/profile/defaultUser.svg`}
-								alt={`${updateData.memberNick || 'QuickMeds member'} profile`}
+								alt={t('mypage.profile.imageAlt', { name: updateData.memberNick || t('mypage.menu.defaultMember') })}
 							/>
 						</Stack>
 						<Stack className="upload-big-box">
 							<input type="file" hidden id="hidden-input" onChange={uploadImage} accept="image/jpg, image/jpeg, image/png" />
 							<label htmlFor="hidden-input" className="labeler">
-								<Typography>Upload Profile Image</Typography>
+								<Typography>{t('mypage.profile.uploadImage')}</Typography>
 							</label>
-							<Typography className="upload-text">A photo must be in JPG, JPEG or PNG format.</Typography>
+							<Typography className="upload-text">{t('mypage.profile.uploadHelp')}</Typography>
 						</Stack>
 					</Stack>
 				</Stack>
 				<Stack className="small-input-box">
 					<Stack className="input-box">
-						<Typography className="title">Username</Typography>
+						<Typography className="title">{t('mypage.profile.username')}</Typography>
 						<input
 							type="text"
-							placeholder="Your username"
+							placeholder={t('mypage.profile.usernamePlaceholder')}
 							value={updateData.memberNick || ''}
 							onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberNick: value })}
 						/>
 					</Stack>
 					<Stack className="input-box">
-						<Typography className="title">Phone</Typography>
+						<Typography className="title">{t('mypage.profile.phone')}</Typography>
 						<input
 							type="text"
-							placeholder="Your Phone"
+							placeholder={t('mypage.profile.phonePlaceholder')}
 							value={updateData.memberPhone || ''}
 							onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberPhone: value })}
 						/>
 					</Stack>
 				</Stack>
 				<Stack className="address-box">
-					<Typography className="title">Address</Typography>
+					<Typography className="title">{t('mypage.profile.address')}</Typography>
 					<input
 						type="text"
-						placeholder="Your address"
+						placeholder={t('mypage.profile.addressPlaceholder')}
 						value={updateData.memberAddress || ''}
 						onChange={({ target: { value } }) => setUpdateData({ ...updateData, memberAddress: value })}
 					/>
 				</Stack>
 				<Stack className="about-me-box">
 					<Button className="update-button" type="button" onClick={updateProfileHandler} disabled={!isProfileChanged}>
-						<Typography>Update Profile</Typography>
+						<Typography>{t('mypage.profile.updateProfile')}</Typography>
 						<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
 							<g clipPath="url(#clip0_7065_6985)">
 								<path

@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../../libs/components/layout/LayoutBasic';
 import { updateStorage, updateUserInfo } from '../../../libs/auth';
@@ -24,6 +25,7 @@ const safeReturnTo = (returnTo: unknown): string => {
 
 const TelegramComplete: NextPage = () => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
@@ -31,7 +33,7 @@ const TelegramComplete: NextPage = () => {
 
 		const ticket = typeof router.query.ticket === 'string' ? router.query.ticket : '';
 		if (!ticket) {
-			setErrorMessage('Telegram login could not be completed. Please try again.');
+			setErrorMessage(t('auth.telegramComplete.errors.missingTicket'));
 			return;
 		}
 
@@ -45,10 +47,10 @@ const TelegramComplete: NextPage = () => {
 					body: JSON.stringify({ ticket }),
 				});
 
-				if (!response.ok) throw new Error('Telegram login session expired. Please try again.');
+				if (!response.ok) throw new Error(t('auth.telegramComplete.errors.expired'));
 
 				const result = await response.json();
-				if (!result?.accessToken) throw new Error('QuickMeds did not receive a valid login token.');
+				if (!result?.accessToken) throw new Error(t('auth.telegramComplete.errors.missingToken'));
 
 				updateStorage({ jwtToken: result.accessToken });
 				updateUserInfo(result.accessToken);
@@ -56,7 +58,7 @@ const TelegramComplete: NextPage = () => {
 				if (!cancelled) await router.replace(safeReturnTo(result.returnTo));
 			} catch (error: unknown) {
 				if (!cancelled) {
-					setErrorMessage(error instanceof Error ? error.message : 'Telegram login failed. Please try again.');
+					setErrorMessage(error instanceof Error ? error.message : t('auth.telegramComplete.errors.failed'));
 				}
 			}
 		};
@@ -66,7 +68,7 @@ const TelegramComplete: NextPage = () => {
 		return () => {
 			cancelled = true;
 		};
-	}, [router]);
+	}, [router, t]);
 
 	return (
 		<main className="telegram-complete">
@@ -76,20 +78,20 @@ const TelegramComplete: NextPage = () => {
 				</div>
 				{errorMessage ? (
 					<>
-						<p>Telegram login</p>
-						<h1>We could not finish signing you in</h1>
+						<p>{t('auth.telegramComplete.label')}</p>
+						<h1>{t('auth.telegramComplete.errorTitle')}</h1>
 						<span>{errorMessage}</span>
 						<Link href="/account/join" passHref legacyBehavior>
 							<Button component="a" className="telegram-complete__action">
-								Back to login
+								{t('auth.telegramComplete.backToLogin')}
 							</Button>
 						</Link>
 					</>
 				) : (
 					<>
-						<p>Telegram login</p>
-						<h1>Signing you in...</h1>
-						<span>QuickMeds is completing your secure Telegram login.</span>
+						<p>{t('auth.telegramComplete.label')}</p>
+						<h1>{t('auth.telegramComplete.loadingTitle')}</h1>
+						<span>{t('auth.telegramComplete.loadingDescription')}</span>
 					</>
 				)}
 			</section>
