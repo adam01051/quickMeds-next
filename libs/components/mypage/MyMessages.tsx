@@ -21,6 +21,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { sweetErrorHandling, sweetMixinErrorAlert } from '../../sweetAlert';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import MyPageMobileMenu from './MyPageMobileMenu';
+import { useTranslation } from 'next-i18next';
 
 const threadInquiry: MessageThreadsInquiry = {
 	page: 1,
@@ -38,6 +39,7 @@ type ThreadRealtimeUpdate = Pick<MessageThread, 'lastMessageText' | 'lastMessage
 
 const MyMessages = () => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const device = useDeviceDetect();
 	const isMobile = device === 'mobile';
 	const user = useReactiveVar(userVar);
@@ -176,7 +178,7 @@ const MyMessages = () => {
 			return {
 				...current,
 				[message.threadId]: {
-					lastMessageText: message.messageText || (message.messageImages?.length ? 'Image' : ''),
+				lastMessageText: message.messageText || (message.messageImages?.length ? t('mypage.messages.image') : ''),
 					lastMessageAt: message.createdAt,
 					myUnreadCount: isIncoming && !isOpenThread ? currentUnread + 1 : isOpenThread ? 0 : currentUnread,
 				},
@@ -319,7 +321,7 @@ const MyMessages = () => {
 		try {
 			const files = Array.from(event.target.files ?? []);
 			if (!files.length) return;
-			if (files.length + messageImages.length > 4) throw new Error('You can attach up to 4 images.');
+			if (files.length + messageImages.length > 4) throw new Error(t('mypage.messages.errors.maxAttachments'));
 			setIsUploading(true);
 
 			const body = new FormData();
@@ -339,7 +341,7 @@ const MyMessages = () => {
 			setMessageImages((current) => [...current, ...(response.data?.data?.imagesUploader ?? [])]);
 			if (fileRef.current) fileRef.current.value = '';
 		} catch (error: any) {
-			await sweetMixinErrorAlert(error.message ?? 'Image upload failed.');
+			await sweetMixinErrorAlert(error.message ?? t('mypage.messages.errors.uploadFailed'));
 		} finally {
 			setIsUploading(false);
 		}
@@ -349,7 +351,7 @@ const MyMessages = () => {
 		try {
 			const currentThreadId = activeThreadId;
 			if (!currentThreadId) return;
-			if (!messageText.trim() && !messageImages.length) throw new Error('Write a message or attach an image first.');
+			if (!messageText.trim() && !messageImages.length) throw new Error(t('mypage.messages.errors.messageRequired'));
 			if (isSending) return;
 			setIsSending(true);
 			const response = await sendMessage({
@@ -391,12 +393,12 @@ const MyMessages = () => {
 
 	const otherParticipant = (thread: MessageThread) => {
 		const member = user?._id === thread.ownerId ? thread.customerData : thread.ownerData;
-		return member?.memberFullName ?? member?.memberNick ?? 'QuickMeds member';
+		return member?.memberFullName ?? member?.memberNick ?? t('mypage.menu.defaultMember');
 	};
 	const otherMember = selectedThread ? (user?._id === selectedThread.ownerId ? selectedThread.customerData : selectedThread.ownerData) : null;
 	const selectedUnreadTotal = threads.reduce((total, thread) => total + (thread.myUnreadCount ?? 0), 0);
 	const stateMobileMenu = (
-		<div className="my-messages__state-menu" aria-label="Messages section menu">
+		<div className="my-messages__state-menu" aria-label={t('mypage.messages.sectionMenu')}>
 			<MyPageMobileMenu triggerClassName="my-messages__mobile-menu-trigger" />
 		</div>
 	);
@@ -415,9 +417,9 @@ const MyMessages = () => {
 		return (
 			<section className="my-messages my-messages__state">
 				{stateMobileMenu}
-				<h2>Messages could not load</h2>
-				<p>We could not reach your inbox. Please try again.</p>
-				<Button onClick={() => refetchThreads({ input: threadInquiry })}>Retry</Button>
+				<h2>{t('mypage.messages.loadErrorTitle')}</h2>
+				<p>{t('mypage.messages.loadErrorText')}</p>
+				<Button onClick={() => refetchThreads({ input: threadInquiry })}>{t('mypage.common.tryAgain')}</Button>
 			</section>
 		);
 	}
@@ -426,22 +428,22 @@ const MyMessages = () => {
 		return (
 			<section className="my-messages my-messages__state">
 				{stateMobileMenu}
-				<h2>No messages yet</h2>
-				<p>Start from a pharmacy detail page when you have a question for a Pharmacy Owner.</p>
-				<Link href="/pharmacies">Find pharmacies <ArrowForwardRoundedIcon /></Link>
+				<h2>{t('mypage.messages.emptyTitle')}</h2>
+				<p>{t('mypage.messages.emptyText')}</p>
+				<Link href="/pharmacies">{t('mypage.messages.findPharmacies')} <ArrowForwardRoundedIcon /></Link>
 			</section>
 		);
 	}
 
 	return (
 		<section className={`my-messages ${activeThreadId ? 'my-messages--chat-open' : ''}`}>
-			<aside className="my-messages__threads" aria-label="Message conversations" data-testid="messages-conversation-list">
+			<aside className="my-messages__threads" aria-label={t('mypage.messages.conversationsAria')} data-testid="messages-conversation-list">
 				<div className="my-messages__thread-header">
 					<div>
-						<span>Messages</span>
-						<strong>{filteredThreads.length} conversations</strong>
+						<span>{t('mypage.categories.messages.title')}</span>
+						<strong>{t('mypage.messages.conversationCount', { count: filteredThreads.length })}</strong>
 					</div>
-					{selectedUnreadTotal > 0 && <em>{selectedUnreadTotal} New</em>}
+					{selectedUnreadTotal > 0 && <em>{t('mypage.messages.newCount', { count: selectedUnreadTotal })}</em>}
 					<MyPageMobileMenu triggerClassName="my-messages__mobile-menu-trigger" />
 				</div>
 				<label className="my-messages__search" htmlFor="message-thread-search">
@@ -450,7 +452,7 @@ const MyMessages = () => {
 						id="message-thread-search"
 						type="search"
 						value={threadSearch}
-						placeholder="Search conversations..."
+						placeholder={t('mypage.messages.searchPlaceholder')}
 						onChange={(event) => setThreadSearch(event.target.value)}
 					/>
 				</label>
@@ -466,8 +468,8 @@ const MyMessages = () => {
 						<img src={memberImageUrl(user?._id === thread.ownerId ? thread.customerData?.memberImage : thread.ownerData?.memberImage)} alt="" />
 						<span>
 							<strong>{otherParticipant(thread)}</strong>
-							<em>{thread.pharmacyData?.pharmacyName ?? 'Pharmacy conversation'}</em>
-							<small>{thread.lastMessageText || 'Image message'}</small>
+							<em>{thread.pharmacyData?.pharmacyName ?? t('mypage.messages.pharmacyConversation')}</em>
+							<small>{thread.lastMessageText || t('mypage.messages.imageMessage')}</small>
 						</span>
 						<div className="my-messages__thread-meta">
 							{thread.lastMessageAt && <time>{messageDate(thread.lastMessageAt)}</time>}
@@ -475,7 +477,7 @@ const MyMessages = () => {
 						</div>
 					</button>
 				))}
-				{!filteredThreads.length && <p className="my-messages__no-thread">No conversations match this search.</p>}
+				{!filteredThreads.length && <p className="my-messages__no-thread">{t('mypage.messages.noSearchResults')}</p>}
 				</div>
 			</aside>
 
@@ -486,7 +488,7 @@ const MyMessages = () => {
 							type="button"
 							className="my-messages__back"
 							onClick={closeMobileThread}
-							aria-label="Back to conversations"
+							aria-label={t('mypage.messages.backToConversations')}
 							data-testid="mobile-chat-back-button"
 						>
 							<ArrowBackRoundedIcon />
@@ -495,16 +497,16 @@ const MyMessages = () => {
 							<Link
 								href={`/pharmacies/detail?id=${selectedThread.pharmacyId}`}
 								className="my-messages__conversation-identity"
-								aria-label={`View ${selectedThread.pharmacyData?.pharmacyName ?? 'pharmacy'}`}
+								aria-label={t('mypage.messages.viewPharmacyAria', { name: selectedThread.pharmacyData?.pharmacyName ?? t('mypage.messages.pharmacy') })}
 								data-testid="view-pharmacy-action"
 							>
 								<div className="my-messages__member-avatar">
 									<img src={memberImageUrl(otherMember?.memberImage)} alt="" />
 								</div>
 								<div>
-									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? 'QuickMeds member'}</span>
-									<h2>{selectedThread.pharmacyData?.pharmacyName ?? 'Pharmacy conversation'}</h2>
-									<p>Open pharmacy details</p>
+									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? t('mypage.menu.defaultMember')}</span>
+									<h2>{selectedThread.pharmacyData?.pharmacyName ?? t('mypage.messages.pharmacyConversation')}</h2>
+									<p>{t('mypage.messages.openPharmacyDetails')}</p>
 								</div>
 							</Link>
 						) : (
@@ -513,16 +515,16 @@ const MyMessages = () => {
 									<img src={memberImageUrl(otherMember?.memberImage)} alt="" />
 								</div>
 								<div>
-									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? 'QuickMeds member'}</span>
-									<h2>{selectedThread?.pharmacyData?.pharmacyName ?? 'Conversation'}</h2>
-									<p>Pharmacy conversation</p>
+									<span>{otherMember?.memberFullName ?? otherMember?.memberNick ?? t('mypage.menu.defaultMember')}</span>
+									<h2>{selectedThread?.pharmacyData?.pharmacyName ?? t('mypage.messages.conversation')}</h2>
+									<p>{t('mypage.messages.pharmacyConversation')}</p>
 								</div>
 							</div>
 						)}
 					</div>
 					<div className="my-messages__conversation-actions">
 						{otherMember?.memberPhone && (
-							<a href={`tel:${otherMember.memberPhone}`} aria-label={`Call ${otherMember.memberNick ?? 'participant'}`}>
+							<a href={`tel:${otherMember.memberPhone}`} aria-label={t('mypage.messages.callParticipant', { name: otherMember.memberNick ?? t('mypage.messages.participant') })}>
 								<PhoneOutlinedIcon />
 							</a>
 						)}
@@ -536,10 +538,10 @@ const MyMessages = () => {
 					ref={historyRef}
 					onScroll={handleHistoryScroll}
 				>
-					{!!displayedMessages.length && <div className="my-messages__day-divider">Conversation history</div>}
-					{messagesLoading && <p className="my-messages__hint">Loading conversation…</p>}
-					{messagesError && <p className="my-messages__hint">Messages could not load. Please try again.</p>}
-					{!messagesLoading && !displayedMessages.length && <p className="my-messages__hint">No messages in this conversation yet.</p>}
+					{!!displayedMessages.length && <div className="my-messages__day-divider">{t('mypage.messages.history')}</div>}
+					{messagesLoading && <p className="my-messages__hint">{t('mypage.messages.loadingConversation')}</p>}
+					{messagesError && <p className="my-messages__hint">{t('mypage.messages.conversationLoadError')}</p>}
+					{!messagesLoading && !displayedMessages.length && <p className="my-messages__hint">{t('mypage.messages.noConversationMessages')}</p>}
 					{displayedMessages.map((message) => {
 						const mine = message.senderId === user?._id;
 						return (
@@ -551,7 +553,7 @@ const MyMessages = () => {
 										<div className="my-messages__images">
 											{message.messageImages.map((image) => (
 												<a href={messageImageUrl(image)} target="_blank" rel="noreferrer" key={image}>
-													<img src={messageImageUrl(image)} alt="Message attachment" />
+													<img src={messageImageUrl(image)} alt={t('mypage.messages.attachmentAlt')} />
 												</a>
 											))}
 										</div>
@@ -568,19 +570,19 @@ const MyMessages = () => {
 							data-testid="scroll-to-latest-messages"
 							onClick={() => scrollHistoryToBottom('smooth')}
 						>
-							New messages
+							{t('mypage.messages.newMessages')}
 						</button>
 					)}
 					<div ref={bottomRef} className="my-messages__bottom-sentinel" aria-hidden="true" />
 				</div>
 
 				<form className="my-messages__composer" onSubmit={submitMessage} data-testid="message-composer">
-					<label htmlFor="message-composer">Message</label>
+					<label htmlFor="message-composer">{t('mypage.messages.messageLabel')}</label>
 					<div className="my-messages__composer-row">
 						<textarea
 							id="message-composer"
 							value={messageText}
-							placeholder="Ask about availability, delivery, or pharmacy services."
+							placeholder={t('mypage.messages.composerPlaceholder')}
 							onChange={(event) => setMessageText(event.target.value)}
 							onKeyDown={handleComposerKeyDown}
 							disabled={isSending}
@@ -589,10 +591,10 @@ const MyMessages = () => {
 						<div className="my-messages__composer-actions">
 							<input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png" multiple onChange={uploadMessageImages} />
 							<Button type="button" onClick={() => fileRef.current?.click()} disabled={isUploading || isSending}>
-								<AttachFileRoundedIcon /> {isUploading ? 'Uploading…' : 'Attach'}
+								<AttachFileRoundedIcon /> {isUploading ? t('mypage.messages.uploading') : t('mypage.messages.attach')}
 							</Button>
 							<Button type="submit" disabled={isSending || (!messageText.trim() && !messageImages.length)} data-testid="message-send-button">
-								{isSending ? 'Sending…' : 'Send'} <SendRoundedIcon />
+								{isSending ? t('mypage.messages.sending') : t('mypage.messages.send')} <SendRoundedIcon />
 							</Button>
 						</div>
 					</div>
@@ -600,8 +602,8 @@ const MyMessages = () => {
 						<div className="my-messages__preview">
 							{messageImages.map((image) => (
 								<button type="button" key={image} onClick={() => setMessageImages((current) => current.filter((item) => item !== image))}>
-									<img src={messageImageUrl(image)} alt="Remove attachment" />
-									<span>Remove</span>
+									<img src={messageImageUrl(image)} alt={t('mypage.messages.removeAttachment')} />
+									<span>{t('mypage.messages.remove')}</span>
 								</button>
 							))}
 						</div>

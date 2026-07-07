@@ -10,6 +10,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { userVar } from '../../../apollo/store';
 import { T } from '../../types/common';
 import { GET_MEMBER_FOLLOWERS } from '../../../apollo/user/query';
+import { useTranslation } from 'next-i18next';
 
 interface MemberFollowsProps {
 	initialInput: FollowInquiry;
@@ -21,6 +22,7 @@ interface MemberFollowsProps {
 
 const MemberFollowers = (props: MemberFollowsProps) => {
 	const { initialInput, subscribeHandler, likeMemberHandler, unsubscribeHandler, redirectToMemberPageHandler } = props;
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [total, setTotal] = useState<number>(0);
 	const category: any = router.query?.category ?? 'properties';
@@ -69,14 +71,14 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 		<div id="member-follows-page">
 			<Stack className="follows-list-box">
 				<Stack className="listing-title-box">
-					<Typography className="title-text">Name</Typography>
-					<Typography className="title-text">Details</Typography>
-					<Typography className="title-text">Subscription</Typography>
+					<Typography className="title-text">{t('mypage.connections.name')}</Typography>
+					<Typography className="title-text">{t('mypage.connections.details')}</Typography>
+					<Typography className="title-text">{t('mypage.connections.subscription')}</Typography>
 				</Stack>
 				{memberFollowers?.length === 0 && (
 					<div className={'no-data'}>
 						<img src="/img/icons/icoAlert.svg" alt="" />
-						<p>No Followers yet!</p>
+						<p>{t('mypage.connections.noFollowers')}</p>
 					</div>
 				)}
 				{memberFollowers.map((follower: Follower) => {
@@ -97,11 +99,11 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 							</Stack>
 							<Stack className={'details-box'}>
 								<Box className={'info-box'} component={'div'}>
-									<p>Followers</p>
+									<p>{t('mypage.connections.followers')}</p>
 									<span>{follower?.followerData?.memberFollowers}</span>
 								</Box>
 								<Box className={'info-box'} component={'div'}>
-									<p>Followings</p>
+									<p>{t('mypage.connections.followings')}</p>
 									<span>{follower?.followerData?.memberFollowings}</span>
 								</Box>
 								<Box className={'info-box'} component={'div'}>
@@ -126,13 +128,13 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 								<Stack className="action-box">
 									{alreadyFollowing ? (
 										<>
-											<Typography>Following</Typography>
+											<Typography>{t('mypage.connections.following')}</Typography>
 											<Button
 												variant="outlined"
 												sx={{ color: '#52615b', borderColor: '#cfdcd7', ':hover': { borderColor: '#08634f' } }}
 												onClick={() => memberId && unsubscribeHandler(memberId, getMemberFollowersRefetch, followInquiry)}
 											>
-												Unfollow
+												{t('mypage.connections.unfollow')}
 											</Button>
 										</>
 									) : (
@@ -141,7 +143,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 											sx={{ background: '#08634f', ':hover': { background: '#064e3b' } }}
 											onClick={() => memberId && subscribeHandler(memberId, getMemberFollowersRefetch, followInquiry)}
 										>
-											Follow
+											{t('mypage.connections.follow')}
 										</Button>
 									)}
 								</Stack>
@@ -162,7 +164,7 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 						/>
 					</Stack>
 					<Stack className="total-result">
-						<Typography>{total} followers</Typography>
+						<Typography>{t('mypage.connections.followersTotal', { count: total })}</Typography>
 					</Stack>
 				</Stack>
 			)}

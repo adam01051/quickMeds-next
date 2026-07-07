@@ -8,6 +8,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import BrandLogo from '../../libs/components/common/BrandLogo';
@@ -32,6 +33,7 @@ const safeReferrer = (referrer: string | string[] | undefined): string => {
 
 const Join: NextPage = () => {
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const [mode, setMode] = useState<AccountMode>('login');
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: 'USER' as AccountType });
 	const [showPassword, setShowPassword] = useState(false);
@@ -67,7 +69,7 @@ const Join: NextPage = () => {
 			}
 			await router.push(safeReferrer(router.query.referrer));
 		} catch (error: unknown) {
-			setErrorMessage(error instanceof Error ? error.message : 'Authentication failed. Please try again.');
+			setErrorMessage(error instanceof Error ? error.message : t('auth.join.errors.authenticationFailed'));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -84,6 +86,7 @@ const Join: NextPage = () => {
 	const isSignup = mode === 'signup';
 	const isDisabled =
 		isSubmitting || input.nick.trim() === '' || input.password === '' || (isSignup && input.phone.trim() === '');
+	const visualItems = t('auth.join.visual.items', { returnObjects: true }) as string[];
 
 	return (
 		<main className="join-page">
@@ -92,53 +95,51 @@ const Join: NextPage = () => {
 					<div className="join-page__form-side">
 					
 
-						<div className="join-page__mode-tabs" aria-label="Account access">
+						<div className="join-page__mode-tabs" aria-label={t('auth.join.tabsAria')}>
 							<button type="button" className={mode === 'login' ? 'active' : ''} onClick={() => changeMode('login')}>
-								Login
+								{t('auth.tabs.login')}
 							</button>
 							<button type="button" className={isSignup ? 'active' : ''} onClick={() => changeMode('signup')}>
-								Register
+								{t('auth.tabs.register')}
 							</button>
 						</div>
 
 						<header className="join-page__header">
-							<p>{isSignup ? 'Join QuickMeds' : 'Welcome back'}</p>
-							<h1 id="account-title">{isSignup ? 'Create your QuickMeds account' : 'Welcome back to QuickMeds'}</h1>
+							<p>{t(isSignup ? 'auth.join.signup.eyebrow' : 'auth.join.login.eyebrow')}</p>
+							<h1 id="account-title">{t(isSignup ? 'auth.join.signup.title' : 'auth.join.login.title')}</h1>
 							<span>
-								{isSignup
-									? 'Create an account to save pharmacies, join the community, or manage your pharmacy presence.'
-									: 'Log in to access saved pharmacies, community activity, and Pharmacy Owner tools.'}
+								{t(isSignup ? 'auth.join.signup.description' : 'auth.join.login.description')}
 							</span>
 						</header>
 
 						<form className="join-page__form" onSubmit={handleSubmit}>
 							<label>
-								<span>Nickname</span>
+								<span>{t('auth.join.fields.nickname')}</span>
 								<input
 									type="text"
 									value={input.nick}
 									onChange={(event) => setInput((current) => ({ ...current, nick: event.target.value }))}
-									placeholder="Enter your nickname"
+									placeholder={t('auth.join.fields.nicknamePlaceholder')}
 									autoComplete="username"
 									required
 								/>
 							</label>
 
 							<label>
-								<span>Password</span>
+								<span>{t('auth.join.fields.password')}</span>
 								<div className="join-page__password">
 									<input
 										type={showPassword ? 'text' : 'password'}
 										value={input.password}
 										onChange={(event) => setInput((current) => ({ ...current, password: event.target.value }))}
-										placeholder="Enter your password"
+										placeholder={t('auth.join.fields.passwordPlaceholder')}
 										autoComplete={isSignup ? 'new-password' : 'current-password'}
 										required
 									/>
 									<button
 										type="button"
 										onClick={() => setShowPassword((current) => !current)}
-										aria-label={showPassword ? 'Hide password' : 'Show password'}
+										aria-label={t(showPassword ? 'auth.join.password.hide' : 'auth.join.password.show')}
 										aria-pressed={showPassword}
 									>
 										{showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
@@ -149,19 +150,19 @@ const Join: NextPage = () => {
 							{isSignup && (
 								<>
 									<label>
-										<span>Phone number</span>
+										<span>{t('auth.join.fields.phone')}</span>
 										<input
 											type="tel"
 											value={input.phone}
 											onChange={(event) => setInput((current) => ({ ...current, phone: event.target.value }))}
-											placeholder="Enter your phone number"
+											placeholder={t('auth.join.fields.phonePlaceholder')}
 											autoComplete="tel"
 											required
 										/>
 									</label>
 
 									<fieldset className="join-page__roles">
-										<legend>Register as</legend>
+										<legend>{t('auth.join.roles.legend')}</legend>
 										<label className={input.type === 'USER' ? 'selected' : ''}>
 											<input
 												type="radio"
@@ -172,8 +173,8 @@ const Join: NextPage = () => {
 											/>
 											<PersonOutlineRoundedIcon />
 											<span>
-												<strong>User</strong>
-												<small>Discover and save pharmacies</small>
+												<strong>{t('auth.join.roles.user')}</strong>
+												<small>{t('auth.join.roles.userDescription')}</small>
 											</span>
 										</label>
 										<label className={input.type === 'AGENT' ? 'selected' : ''}>
@@ -186,8 +187,8 @@ const Join: NextPage = () => {
 											/>
 											<LocalPharmacyOutlinedIcon />
 											<span>
-												<strong>Pharmacy Owner</strong>
-												<small>Register and manage pharmacies</small>
+												<strong>{t('auth.join.roles.agent')}</strong>
+												<small>{t('auth.join.roles.agentDescription')}</small>
 											</span>
 										</label>
 									</fieldset>
@@ -203,16 +204,16 @@ const Join: NextPage = () => {
 							<Button type="submit" variant="contained" disabled={isDisabled} className="join-page__submit">
 								{isSubmitting
 									? isSignup
-										? 'Creating account...'
-										: 'Logging in...'
+										? t('auth.join.actions.creatingAccount')
+										: t('auth.join.actions.loggingIn')
 									: isSignup
-										? 'Create account'
-										: 'Login'}
+										? t('auth.join.actions.createAccount')
+										: t('auth.join.actions.login')}
 							</Button>
 						</form>
 
 						<div className="join-page__divider" aria-hidden="true">
-							<span>or</span>
+							<span>{t('auth.join.divider')}</span>
 						</div>
 
 						<button
@@ -222,26 +223,26 @@ const Join: NextPage = () => {
 							disabled={isTelegramRedirecting}
 						>
 							<TelegramIcon />
-							<span>{isTelegramRedirecting ? 'Opening Telegram...' : 'Continue with Telegram'}</span>
+							<span>{isTelegramRedirecting ? t('auth.join.actions.openingTelegram') : t('auth.join.actions.continueTelegram')}</span>
 						</button>
 
 						<p className="join-page__switch">
-							{isSignup ? 'Already have an account?' : 'New to QuickMeds?'}
+							{t(isSignup ? 'auth.join.switch.toLoginPrompt' : 'auth.join.switch.toSignupPrompt')}
 							<button type="button" onClick={() => changeMode(isSignup ? 'login' : 'signup')}>
-								{isSignup ? 'Login' : 'Create an account'}
+								{t(isSignup ? 'auth.join.switch.toLoginAction' : 'auth.join.switch.toSignupAction')}
 							</button>
 						</p>
 					</div>
 
-					<aside className="join-page__visual" aria-label="QuickMeds pharmacy discovery">
-						<img src="/img/homepage/pharmacy-hero.webp" alt="A modern pharmacy interior" />
+					<aside className="join-page__visual" aria-label={t('auth.join.visual.aria')}>
+						<img src="/img/homepage/pharmacy-hero.webp" alt={t('auth.join.visual.imageAlt')} />
 						<div>
-							<p>One account, useful pharmacy access</p>
-							<h2>Find trusted pharmacies and stay connected to local care.</h2>
+							<p>{t('auth.join.visual.eyebrow')}</p>
+							<h2>{t('auth.join.visual.title')}</h2>
 							<ul>
-								<li><CheckCircleOutlineRoundedIcon /> Save pharmacies for later</li>
-								<li><CheckCircleOutlineRoundedIcon /> Follow real operating hours and services</li>
-								<li><CheckCircleOutlineRoundedIcon /> Participate in the QuickMeds community</li>
+								{visualItems.map((item) => (
+									<li key={item}><CheckCircleOutlineRoundedIcon /> {item}</li>
+								))}
 							</ul>
 						</div>
 					</aside>

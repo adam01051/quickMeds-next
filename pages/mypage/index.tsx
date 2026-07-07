@@ -110,7 +110,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Success!', 800);
+			await sweetTopSmallSuccessAlert(t('mypage.alerts.likeSuccess'), 800);
 			await refetch({ input: query });
 		} catch (error: any) {
 			console.log('Error in like memberHandler', error.message);
@@ -134,7 +134,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Subscribed!', 800);
+			await sweetTopSmallSuccessAlert(t('mypage.alerts.subscribed'), 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
@@ -151,7 +151,7 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert('Unsubscribed!', 800);
+			await sweetTopSmallSuccessAlert(t('mypage.alerts.unsubscribed'), 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();

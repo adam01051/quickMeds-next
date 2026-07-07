@@ -93,6 +93,62 @@
     "success": {
       "created": "Dorixona muvaffaqiyatli yaratildi.",
       "updated": "Dorixona muvaffaqiyatli yangilandi."
+    },
+    "summary": {
+      "eyebrow": "Dorixonani tahrirlash",
+      "title": "Dorixona ma'lumotlarini yangilang",
+      "description": "QuickMeds mijozlari uchun ommaviy dorixona profilingizni aniq saqlang."
+    },
+    "sections": {
+      "basics": "Asosiy",
+      "basicsDescription": "Nomi va dorixona turi",
+      "services": "Xizmatlar",
+      "servicesDescription": "Yetkazib berish, sug'urta va ochilgan sana",
+      "description": "Tavsif",
+      "descriptionHelp": "Mijozlarga ko'rinadigan dorixona ma'lumoti",
+      "pharmacyServices": "Dorixona xizmatlari",
+      "pharmacyDescription": "Dorixona tavsifi"
+    },
+    "fields": {
+      "name": "Dorixona nomi",
+      "namePlaceholder": "Dorixona nomi",
+      "type": "Dorixona turi",
+      "deliveryFee": "Yetkazib berish narxi (UZS)",
+      "deliveryFeePlaceholder": "0 bepul yetkazib berishni anglatadi",
+      "openedDate": "Ochilgan sana",
+      "description": "Tavsif"
+    },
+    "services": {
+      "acceptsInsurance": "Sug'urtani qabul qiladi",
+      "offersDelivery": "Yetkazib berish mavjud"
+    },
+    "hours": {
+      "title": "Ish vaqti",
+      "mobileDescription": "Ixtiyoriy ommaviy jadval",
+      "desktopDescription": "Ixtiyoriy. Ish vaqti ko'rsatilmaganini chiqarish uchun barcha kunlarni bo'sh qoldiring.",
+      "emptyHint": "Ish vaqti ko'rsatilmaganini chiqarish uchun barcha kunlarni bo'sh qoldiring.",
+      "open247": "24/7 ochiq",
+      "closed": "Yopiq"
+    },
+    "photos": {
+      "title": "Rasmlar",
+      "mobileDescription": "Beshtagacha rasm yuklang",
+      "uploadTitle": "Dorixonangiz rasmlarini yuklang",
+      "add": "Aniq dorixona rasmlarini qo'shing",
+      "formatShort": "JPEG yoki PNG format",
+      "formatLong": "JPEG yoki PNG format, beshtagacha rasm",
+      "browse": "Fayllarni tanlash",
+      "remove": "O'chirish",
+      "imageAlt": "Dorixona"
+    },
+    "weekdays": {
+      "monday": "Dushanba",
+      "tuesday": "Seshanba",
+      "wednesday": "Chorshanba",
+      "thursday": "Payshanba",
+      "friday": "Juma",
+      "saturday": "Shanba",
+      "sunday": "Yakshanba"
     }
   },
   "mypage": {
@@ -100,6 +156,11 @@
       "logout": "Chiqish",
       "logoutConfirm": "Chiqishni xohlaysizmi?",
       "tryAgain": "Qayta urinib ko'ring"
+    },
+    "alerts": {
+      "likeSuccess": "Muvaffaqiyatli!",
+      "subscribed": "Obuna bo'lindi!",
+      "unsubscribed": "Obuna bekor qilindi!"
     },
     "menu": {
       "account": "Hisob",
@@ -113,7 +174,9 @@
       "defaultMember": "QuickMeds a'zosi",
       "openAdmin": "Adminni ochish",
       "closeMenu": "Mening sahifam menyusini yopish",
-      "mobileNavigation": "Mening sahifam mobil navigatsiyasi"
+      "mobileNavigation": "Mening sahifam mobil navigatsiyasi",
+      "navigation": "Mening sahifam navigatsiyasi",
+      "sections": "Mening sahifam bo'limlari"
     },
     "categories": {
       "myProfile": { "eyebrow": "Hisob", "title": "Mening profilim", "description": "QuickMeds hisob ma'lumotlaringizni yangilab boring." },
@@ -126,6 +189,88 @@
       "writeArticle": { "eyebrow": "Hamjamiyat", "title": "Maqola yozish", "description": "QuickMeds hamjamiyati bilan foydali tajriba yoki yangilik ulashing." },
       "myPharmacies": { "eyebrow": "Dorixona egasi", "title": "Mening dorixonalarim", "description": "Hisobingizga biriktirilgan dorixonalarni boshqaring." },
       "addPharmacy": { "eyebrow": "Dorixona egasi", "title": "Dorixona qo'shish", "description": "Dorixonani ro'yxatdan o'tkazing va aniq xizmat ma'lumotlarini kiriting." }
+    },
+    "profile": {
+      "photo": "Rasm",
+      "uploadImage": "Profil rasmini yuklash",
+      "uploadHelp": "Rasm JPG, JPEG yoki PNG formatda bo'lishi kerak.",
+      "username": "Foydalanuvchi nomi",
+      "usernamePlaceholder": "Foydalanuvchi nomingiz",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefoningiz",
+      "address": "Manzil",
+      "addressPlaceholder": "Manzilingiz",
+      "updateProfile": "Profilni yangilash",
+      "updateSuccess": "Ma'lumot muvaffaqiyatli yangilandi.",
+      "imageAlt": "{{name}} profili"
+    },
+    "articles": {
+      "emptyTitle": "Maqolalar topilmadi!",
+      "totalAvailable": "Jami {{count}} ta maqola mavjud"
+    },
+    "editor": {
+      "category": "Kategoriya",
+      "title": "Sarlavha",
+      "titlePlaceholder": "Sarlavha kiriting",
+      "placeholder": "Bu yerga yozing",
+      "register": "E'lon qilish",
+      "success": "Maqola muvaffaqiyatli yaratildi"
+    },
+    "connections": {
+      "name": "Ism",
+      "details": "Tafsilotlar",
+      "subscription": "Obuna",
+      "noFollowers": "Hali kuzatuvchilar yo'q!",
+      "noFollowings": "Hali kuzatilayotganlar yo'q!",
+      "followers": "Kuzatuvchilar",
+      "followings": "Kuzatilayotganlar",
+      "following": "Kuzatilmoqda",
+      "follow": "Kuzatish",
+      "unfollow": "Kuzatishni bekor qilish",
+      "followersTotal": "{{count}} ta kuzatuvchi",
+      "followingsTotal": "{{count}} ta kuzatilayotgan"
+    },
+    "messages": {
+      "sectionMenu": "Xabarlar bo'limi menyusi",
+      "loadErrorTitle": "Xabarlar yuklanmadi",
+      "loadErrorText": "Kiruvchi xabarlaringizga ulanib bo'lmadi. Qayta urinib ko'ring.",
+      "emptyTitle": "Hali xabarlar yo'q",
+      "emptyText": "Dorixona egasiga savolingiz bo'lsa, dorixona batafsil sahifasidan boshlang.",
+      "findPharmacies": "Dorixonalarni topish",
+      "conversationsAria": "Xabar suhbatlari",
+      "conversationCount": "{{count}} ta suhbat",
+      "newCount": "{{count}} yangi",
+      "searchPlaceholder": "Suhbatlarni qidirish...",
+      "pharmacyConversation": "Dorixona suhbati",
+      "image": "Rasm",
+      "imageMessage": "Rasmli xabar",
+      "noSearchResults": "Bu qidiruvga mos suhbatlar yo'q.",
+      "backToConversations": "Suhbatlarga qaytish",
+      "viewPharmacyAria": "{{name}} ni ko'rish",
+      "pharmacy": "dorixona",
+      "openPharmacyDetails": "Dorixona tafsilotlarini ochish",
+      "conversation": "Suhbat",
+      "participant": "ishtirokchi",
+      "callParticipant": "{{name}} ga qo'ng'iroq qilish",
+      "history": "Suhbat tarixi",
+      "loadingConversation": "Suhbat yuklanmoqda…",
+      "conversationLoadError": "Xabarlar yuklanmadi. Qayta urinib ko'ring.",
+      "noConversationMessages": "Bu suhbatda hali xabarlar yo'q.",
+      "attachmentAlt": "Xabar biriktirmasi",
+      "newMessages": "Yangi xabarlar",
+      "messageLabel": "Xabar",
+      "composerPlaceholder": "Mavjudlik, yetkazib berish yoki dorixona xizmatlari haqida so'rang.",
+      "uploading": "Yuklanmoqda…",
+      "attach": "Biriktirish",
+      "sending": "Yuborilmoqda…",
+      "send": "Yuborish",
+      "removeAttachment": "Biriktirmani olib tashlash",
+      "remove": "O'chirish",
+      "errors": {
+        "maxAttachments": "4 tagacha rasm biriktirishingiz mumkin.",
+        "uploadFailed": "Rasm yuklanmadi.",
+        "messageRequired": "Avval xabar yozing yoki rasm biriktiring."
+      }
     },
     "myPharmacies": {
       "filterByStatus": "Dorixonalarimni holat bo'yicha filtrlash",
@@ -201,6 +346,86 @@
     "navigateQuickMeds": "QuickMeds bo'ylab o'tish",
     "language": "Til",
     "loginOrCreate": "Kirish yoki hisob yaratish"
+  },
+  "auth": {
+    "tabs": {
+      "login": "Kirish",
+      "register": "Ro'yxatdan o'tish"
+    },
+    "join": {
+      "tabsAria": "Hisobga kirish",
+      "login": {
+        "eyebrow": "Xush kelibsiz",
+        "title": "QuickMeds'ga qaytganingiz bilan",
+        "description": "Saqlangan dorixonalar, hamjamiyat faolligi va dorixona egasi vositalaridan foydalanish uchun kiring."
+      },
+      "signup": {
+        "eyebrow": "QuickMeds'ga qo'shiling",
+        "title": "QuickMeds hisobingizni yarating",
+        "description": "Dorixonalarni saqlash, hamjamiyatga qo'shilish yoki dorixonangiz sahifasini boshqarish uchun hisob yarating."
+      },
+      "fields": {
+        "nickname": "Taxallus",
+        "nicknamePlaceholder": "Taxallusingizni kiriting",
+        "password": "Parol",
+        "passwordPlaceholder": "Parolingizni kiriting",
+        "phone": "Telefon raqami",
+        "phonePlaceholder": "Telefon raqamingizni kiriting"
+      },
+      "password": {
+        "show": "Parolni ko'rsatish",
+        "hide": "Parolni yashirish"
+      },
+      "roles": {
+        "legend": "Sifatida ro'yxatdan o'tish",
+        "user": "Foydalanuvchi",
+        "userDescription": "Dorixonalarni toping va saqlang",
+        "agent": "Dorixona egasi",
+        "agentDescription": "Dorixonalarni ro'yxatdan o'tkazing va boshqaring"
+      },
+      "actions": {
+        "login": "Kirish",
+        "loggingIn": "Kirilmoqda...",
+        "createAccount": "Hisob yaratish",
+        "creatingAccount": "Hisob yaratilmoqda...",
+        "continueTelegram": "Telegram orqali davom etish",
+        "openingTelegram": "Telegram ochilmoqda..."
+      },
+      "switch": {
+        "toLoginPrompt": "Hisobingiz bormi?",
+        "toSignupPrompt": "QuickMeds'da yangimisiz?",
+        "toLoginAction": "Kirish",
+        "toSignupAction": "Hisob yaratish"
+      },
+      "visual": {
+        "aria": "QuickMeds dorixona qidiruvi",
+        "imageAlt": "Zamonaviy dorixona interyeri",
+        "eyebrow": "Bitta hisob, dorixonalarga qulay kirish",
+        "title": "Ishonchli dorixonalarni toping va mahalliy tibbiy yordam bilan aloqada bo'ling.",
+        "items": [
+          "Dorixonalarni keyinroq ko'rish uchun saqlang",
+          "Haqiqiy ish vaqti va xizmatlarni kuzating",
+          "QuickMeds hamjamiyatida ishtirok eting"
+        ]
+      },
+      "divider": "yoki",
+      "errors": {
+        "authenticationFailed": "Autentifikatsiya amalga oshmadi. Qayta urinib ko'ring."
+      }
+    },
+    "telegramComplete": {
+      "label": "Telegram orqali kirish",
+      "loadingTitle": "Siz tizimga kiritilmoqdasiz...",
+      "loadingDescription": "QuickMeds xavfsiz Telegram kirishini yakunlamoqda.",
+      "errorTitle": "Kirishni yakunlab bo'lmadi",
+      "backToLogin": "Kirish sahifasiga qaytish",
+      "errors": {
+        "missingTicket": "Telegram orqali kirishni yakunlab bo'lmadi. Qayta urinib ko'ring.",
+        "expired": "Telegram kirish sessiyasi muddati tugadi. Qayta urinib ko'ring.",
+        "missingToken": "QuickMeds haqiqiy kirish tokenini olmadi.",
+        "failed": "Telegram orqali kirish amalga oshmadi. Qayta urinib ko'ring."
+      }
+    }
   },
   "pharmacyType": {
     "RETAIL": "Chakana",
@@ -647,6 +872,109 @@
       "day_few": "{{count}} kun oldin",
       "day_many": "{{count}} kun oldin",
       "day_other": "{{count}} kun oldin"
+    }
+  },
+  "cs": {
+    "intro": {
+      "title": "Mijozlarga yordam",
+      "description": "Tezkor javoblar va platforma yangiliklarini toping."
+    },
+    "tabs": {
+      "notice": "E'lonlar",
+      "faq": "FAQ"
+    },
+    "notice": {
+      "title": "E'lonlar",
+      "badge": "Ma'lumot",
+      "emptyTitle": "Hozircha platforma e'lonlari yo'q. Ko'p beriladigan savollar uchun FAQ bo'limini ko'ring.",
+      "updated": "Zarurat bo'lganda yangilanadi"
+    },
+    "faq": {
+      "badges": {
+        "question": "S",
+        "answer": "J"
+      },
+      "categories": {
+        "gettingStarted": "Boshlash",
+        "pharmacySearch": "Dorixona qidiruvi",
+        "messaging": "Xabarlar",
+        "account": "Hisob",
+        "pharmacyOwners": "Dorixona egalari"
+      },
+      "items": {
+        "faq-find-pharmacy-near-me": {
+          "subject": "Yonimdagi dorixonani qanday topaman?",
+          "content": "Dorixonalar sahifasida nom, manzil, hudud, dorixona turi, yetkazib berish, sug'urta yordami va mavjud bo'lsa ochiq holati bo'yicha qidiring."
+        },
+        "faq-search-name-address": {
+          "subject": "Dorixona nomi yoki manzili bo'yicha qidira olamanmi?",
+          "content": "Ha. Qidiruv maydoniga dorixona nomi, ko'cha, tuman yoki mo'ljal kiriting, QuickMeds mavjud dorixona profillarini moslaydi."
+        },
+        "faq-account-needed-browse": {
+          "subject": "Dorixonalarni ko'rish uchun hisob kerakmi?",
+          "content": "Yo'q. Ommaviy dorixona ro'yxatlarini tizimga kirmasdan ko'rishingiz mumkin. Xabar yuborish, kuzatish, yoqtirish va izoh qoldirish kabi ayrim amallar hisob talab qiladi."
+        },
+        "faq-open-now": {
+          "subject": "\"Hozir ochiq\" nimani anglatadi?",
+          "content": "Ochiq holati dorixonaning saqlangan ish vaqti va vaqt mintaqasi asosida hisoblanadi. Ish vaqti kiritilmagan bo'lsa, QuickMeds dorixonani ochiq deb hisoblamaydi."
+        },
+        "faq-delivery": {
+          "subject": "Dorixona yetkazib berishini qanday bilaman?",
+          "content": "Dorixona kartalari va batafsil sahifalarda yetkazib berish mavjudligi hamda kiritilgan bo'lsa UZSdagi yetkazib berish narxi ko'rsatiladi."
+        },
+        "faq-insurance": {
+          "subject": "Dorixona sug'urtani qabul qilishini qanday bilaman?",
+          "content": "Dorixona kartasi yoki batafsil sahifadagi sug'urta ma'lumotini tekshiring. Borishdan oldin dorixona bilan bevosita tasdiqlang."
+        },
+        "faq-stock-prices": {
+          "subject": "QuickMeds dori mavjudligi yoki narxlarni tasdiqlay oladimi?",
+          "content": "Hozircha yo'q. QuickMeds dorixonalarni topish va ular bilan bog'lanishga yordam beradi. Joriy dori mavjudligi va narxlarini tasdiqlash uchun dorixonaga yozing yoki qo'ng'iroq qiling."
+        },
+        "faq-contact-pharmacy": {
+          "subject": "Dorixona bilan qanday bog'lanaman?",
+          "content": "Dorixona batafsil sahifasini oching va xabar formasi yoki mavjud aloqa ma'lumotlaridan foydalaning."
+        },
+        "faq-message-location": {
+          "subject": "Dorixonaga yozgan xabarlarim qayerda ko'rinadi?",
+          "content": "Tizimga kirgan foydalanuvchilar dorixona suhbatlarini My Page ichidagi Messages bo'limida ko'rishlari mumkin."
+        },
+        "faq-message-images": {
+          "subject": "Dorixonaga xabarda rasm yubora olamanmi?",
+          "content": "Ha, xabar almashish mavjud bo'lsa, xabaringiz bilan birga qo'llab-quvvatlanadigan rasm fayllarini biriktirishingiz mumkin."
+        },
+        "faq-own-pharmacy-message": {
+          "subject": "Nega o'z dorixonamga xabar yubora olmayman?",
+          "content": "Dorixona egalari o'z dorixona ro'yxati bilan mijoz suhbati boshlay olmaydi."
+        },
+        "faq-save-like-pharmacy": {
+          "subject": "Dorixonani qanday saqlayman yoki yoqtiraman?",
+          "content": "Tizimga kiring, so'ng dorixona kartalari yoki batafsil sahifalarda yurak amalidan foydalaning. Saqlangan dorixonalar qo'llab-quvvatlanadigan hisob bo'limlarida ko'rinadi."
+        },
+        "faq-follow-member-owner": {
+          "subject": "A'zo yoki dorixona egasini qanday kuzataman?",
+          "content": "Ularning ommaviy profilini oching va Follow tugmasidan foydalaning. Kuzatuvchilar va kuzatilayotganlarni My Page orqali boshqarishingiz mumkin."
+        },
+        "faq-comments": {
+          "subject": "Dorixonaga izoh qoldira olamanmi?",
+          "content": "Ha, tizimga kirgan foydalanuvchilar izohlar yoqilgan dorixona batafsil sahifalarida izoh qoldirishlari mumkin. Izohlar mavzuga mos va hurmatli bo'lsin."
+        },
+        "faq-wrong-info": {
+          "subject": "Ma'lumot noto'g'ri ko'rinsa nima qilishim kerak?",
+          "content": "Shoshilinch savollar uchun dorixona bilan bevosita bog'laning. Platforma yoki ro'yxat muammolari uchun mavjud QuickMeds support/admin kanallaridan foydalaning."
+        },
+        "faq-become-owner": {
+          "subject": "Qanday qilib dorixona egasi bo'laman?",
+          "content": "Tizimga kiring va My Page ichidagi Pharmacy Owner opsiyasidan foydalaning. Tasdiqlangach yoki yoqilgach, dorixona ro'yxatlarini qo'shish va boshqarish mumkin."
+        },
+        "faq-add-listing": {
+          "subject": "Dorixona ro'yxatini qanday qo'shaman?",
+          "content": "Dorixona egalari My Page ga o'tib, Add Pharmacy ni tanlaydi, zarur dorixona ma'lumotlarini to'ldiradi, rasmlarni yuklaydi va ro'yxatni saqlaydi."
+        },
+        "faq-edit-listing": {
+          "subject": "Dorixonam e'lon qilingandan keyin uni tahrirlay olamanmi?",
+          "content": "Ha. Dorixona egalari mavjud ro'yxatlarni My Page ichidagi My Pharmacies bo'limida boshqarishlari mumkin."
+        }
+      }
     }
   },
   "admin": {
