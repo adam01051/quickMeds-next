@@ -370,10 +370,6 @@ const Top = () => {
 										</Badge>
 									</Link>
 								)}
-<<<<<<< HEAD
-								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label={t('nav.notifications')} />}
-=======
->>>>>>> master
 								<button
 									type="button"
 									className="btn-lang"
