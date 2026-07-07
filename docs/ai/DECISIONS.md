@@ -164,3 +164,15 @@
 - Account login return targets must remain user-facing internal pages only.
 - Auth pages, Next.js internal asset paths, API paths, and the account join page itself are treated as unsafe post-login destinations and normalize to `/`.
 - The current localStorage JWT session model remains unchanged; this is a redirect-safety guard, not an auth storage migration.
+
+# Homepage Translation Decision
+
+- Homepage translation v1 stays in the existing nested `common.json` namespace for `en`, `ru`, `uz`, and `kr`; do not add a separate homepage namespace until broader app translation needs justify it.
+- English remains the source-of-truth UI copy for homepage dictionary keys.
+- Backend-owned dynamic records such as pharmacy names, addresses, article titles/content, uploaded media, and community records remain untranslated data.
+- Homepage translation must stay within the current pharmacy-discovery scope and must not introduce medicine inventory, prescription, price-comparison, rating, or unsupported service claims.
+
+# Local Agent Tooling Repository Decision
+
+- Local Codex/agent skill bundles are developer-machine tooling and must not be committed to the QuickMeds application repository.
+- Keep `AGENTS.md`, `SKILL.md`, `.agents/`, `.codex/`, `skills/`, `.claude/`, and `.cursor/` ignored unless a future team decision promotes a specific file into maintained project documentation.

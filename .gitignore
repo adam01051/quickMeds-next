@@ -40,6 +40,15 @@ next-env.d.ts
 /.idea
 # yarn.lock
 
+# local AI/agent tooling
+AGENTS.md
+SKILL.md
+/.agents/
+/.codex/
+/skills/
+/.claude/
+/.cursor/
+
 # env ignores
 .env.development
 .env.local

@@ -13,8 +13,8 @@ import { useRouter } from 'next/router';
 import { PharmacyLocation, PharmacyType } from '../../enums/property.enum';
 import { PharmaciesInquiry } from '../../types/property/property.input';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { useTranslation } from 'next-i18next';
 
 interface HeaderFilterProps {
 	initialInput: PharmaciesInquiry;
@@ -23,6 +23,7 @@ interface HeaderFilterProps {
 const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const locationRef = useRef<HTMLDivElement>(null);
 	const typeRef = useRef<HTMLDivElement>(null);
 	const [searchFilter, setSearchFilter] = useState<PharmaciesInquiry>(initialInput);
@@ -48,6 +49,10 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 	};
 
 	const resetFilterHandler = () => setSearchFilter(initialInput);
+	const getLocationLabel = (location?: PharmacyLocation) =>
+		location ? t(`pharmacyLocation.${location}`) : t('home.search.allRegions');
+	const getTypeLabel = (type?: PharmacyType) =>
+		type ? t(`pharmacyType.${type}`) : t(device === 'mobile' ? 'home.search.allPharmacyTypes' : 'home.search.pharmacyType');
 
 	return (
 		<div className="home-search-area">
@@ -60,11 +65,11 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 				<div className="select-box">
 					<div className="box search-field on">
 						{device !== 'mobile' && <SearchRoundedIcon className="field-icon" />}
-						<span className="field-label">Pharmacy</span>
+						<span className="field-label">{t('home.search.pharmacy')}</span>
 						<input
 							className="header-search-input"
-							placeholder={device === 'mobile' ? 'Search pharmacy name or address' : 'Pharmacy or address'}
-							aria-label="Search pharmacy name or address"
+							placeholder={t(device === 'mobile' ? 'home.search.mobilePlaceholder' : 'home.search.desktopPlaceholder')}
+							aria-label={t('home.search.searchAria')}
 							value={searchFilter.search.text ?? ''}
 							onChange={(event) => updateSearch({ text: event.target.value || undefined })}
 							onKeyDown={(event) => event.key === 'Enter' && pushSearchHandler()}
@@ -74,7 +79,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 						type="button"
 						className={`box location-field ${openLocation ? 'on' : ''}`}
 						aria-expanded={openLocation}
-						aria-label="Choose pharmacy region"
+						aria-label={t('home.search.chooseRegionAria')}
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
 						onClick={() => {
@@ -84,8 +89,8 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					>
 						{device !== 'mobile' && <LocationOnOutlinedIcon className="field-icon" />}
 						<span className="field-copy">
-							<small>Region</small>
-							<strong>{getPharmacyLocationLabel(searchFilter.search.locationList?.[0])}</strong>
+							<small>{t('home.search.region')}</small>
+							<strong>{getLocationLabel(searchFilter.search.locationList?.[0])}</strong>
 						</span>
 						<ExpandMoreIcon />
 					</motion.button>
@@ -93,7 +98,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 						type="button"
 						className={`box type-field ${openType ? 'on' : ''}`}
 						aria-expanded={openType}
-						aria-label="Choose pharmacy type"
+						aria-label={t('home.search.chooseTypeAria')}
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
 						onClick={() => {
@@ -103,8 +108,8 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					>
 						{device !== 'mobile' && <LocalPharmacyOutlinedIcon className="field-icon" />}
 						<span className="field-copy">
-							<small>Pharmacy type</small>
-							<strong>{searchFilter.search.typeList?.[0] ?? (device === 'mobile' ? 'All pharmacy types' : 'Pharmacy type')}</strong>
+							<small>{t('home.search.pharmacyType')}</small>
+							<strong>{getTypeLabel(searchFilter.search.typeList?.[0])}</strong>
 						</span>
 						<ExpandMoreIcon />
 					</motion.button>
@@ -114,25 +119,25 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					<motion.button
 						type="button"
 						className={`advanced-filter ${openAdvancedFilter ? 'is-active' : ''}`}
-						aria-label="Open advanced pharmacy filters"
+						aria-label={t('home.search.openAdvancedAria')}
 						aria-expanded={openAdvancedFilter}
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
 						onClick={() => setOpenAdvancedFilter(true)}
 					>
 						<TuneRoundedIcon />
-						<span>Filters</span>
+						<span>{t('home.search.filters')}</span>
 					</motion.button>
 					<motion.button
 						type="button"
 						className="search-btn"
-						aria-label="Search pharmacies"
+						aria-label={t('home.search.searchButtonAria')}
 						whileHover={shouldReduceMotion ? undefined : { y: -1 }}
 						whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
 						onClick={pushSearchHandler}
 					>
 						{device === 'mobile' && <img src="/img/icons/search_white.svg" alt="" />}
-						<span>Search</span>
+						<span>{t('commonActions.search')}</span>
 						{device !== 'mobile' && <ArrowForwardRoundedIcon />}
 					</motion.button>
 				</div>
@@ -154,7 +159,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 									setOpenLocation(false);
 								}}
 							>
-								<span>All regions</span>
+								<span>{t('home.search.allRegions')}</span>
 							</button>
 							{Object.values(PharmacyLocation).map((location) => (
 								<button
@@ -165,7 +170,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 										setOpenLocation(false);
 									}}
 								>
-									<span>{getPharmacyLocationLabel(location)}</span>
+									<span>{t(`pharmacyLocation.${location}`)}</span>
 								</button>
 							))}
 						</motion.div>
@@ -193,14 +198,14 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 									}}
 								>
 									<img src="/img/icons/securePayment.svg" alt="" />
-									<span>{type}</span>
+									<span>{t(`pharmacyType.${type}`)}</span>
 								</button>
 							))}
 						</motion.div>
 					)}
 				</AnimatePresence>
 			</motion.div>
-			<div className="home-search-future" aria-label="Pharmacy discovery options">
+			<div className="home-search-future" aria-label={t('home.search.optionsAria')}>
 				<button
 					type="button"
 					className={searchFilter.search.openNow ? 'is-active' : ''}
@@ -208,7 +213,7 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					onClick={() => updateSearch({ openNow: searchFilter.search.openNow ? undefined : true })}
 				>
 					<AccessTimeRoundedIcon />
-					<span><strong>Open now</strong></span>
+					<span><strong>{t('home.pharmacyCard.openNow')}</strong></span>
 				</button>
 				<button
 					type="button"
@@ -217,16 +222,16 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 					onClick={() => updateSearch({ open24Hours: searchFilter.search.open24Hours ? undefined : true })}
 				>
 					<NightlightOutlinedIcon />
-					<span><strong>24/7 pharmacies</strong></span>
+					<span><strong>{t('home.search.open247')}</strong></span>
 				</button>
 				<button type="button" disabled>
 					<LocationOnOutlinedIcon />
 					<span>
-						<strong>{device === 'mobile' ? 'Near me' : 'Use current location'}</strong>
-						<small className="future-item-label">Coming soon</small>
+						<strong>{t(device === 'mobile' ? 'home.search.nearMe' : 'home.search.useCurrentLocation')}</strong>
+						<small className="future-item-label">{t('home.common.comingSoon')}</small>
 					</span>
 				</button>
-				{device !== 'mobile' && <span className="home-search-future__label">Current location coming soon</span>}
+				{device !== 'mobile' && <span className="home-search-future__label">{t('home.search.currentLocationComingSoon')}</span>}
 			</div>
 
 			<AnimatePresence>
@@ -240,17 +245,17 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 							transition={{ duration: 0.2, ease: 'easeOut' }}
 						>
 							<div className="advanced-filter-modal">
-								<button type="button" aria-label="Close advanced filters" className="close" onClick={() => setOpenAdvancedFilter(false)}>
+								<button type="button" aria-label={t('home.search.closeAdvancedAria')} className="close" onClick={() => setOpenAdvancedFilter(false)}>
 									<CloseIcon />
 								</button>
 								<div className="top">
-									<span>Find a pharmacy</span>
+									<span>{t('home.search.findPharmacy')}</span>
 									<div className="search-input-box">
 										<img src="/img/icons/search.svg" alt="" />
 										<input
 											value={searchFilter.search.text ?? ''}
-											placeholder="Pharmacy name or address"
-											aria-label="Pharmacy name or address"
+											placeholder={t('home.search.modalPlaceholder')}
+											aria-label={t('home.search.modalPlaceholder')}
 											onChange={(event) => updateSearch({ text: event.target.value || undefined })}
 										/>
 									</div>
@@ -259,31 +264,31 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 								<div className="middle pharmacy-advanced-middle">
 									<div className="row-box">
 										<div className="box">
-											<span>services</span>
+											<span>{t('home.search.services')}</span>
 											<div className="inside pharmacy-service-options">
 												<FormControlLabel
 													control={<Checkbox checked={searchFilter.search.hasDelivery === true} onChange={(e) => updateSearch({ hasDelivery: e.target.checked || undefined })} />}
-													label="Delivery"
+													label={t('home.pharmacyCard.delivery')}
 												/>
 												<FormControlLabel
 													control={<Checkbox checked={searchFilter.search.acceptsInsurance === true} onChange={(e) => updateSearch({ acceptsInsurance: e.target.checked || undefined })} />}
-													label="Insurance"
+													label={t('home.pharmacyCard.insurance')}
 												/>
 											</div>
 										</div>
 										<div className="box">
-											<span>delivery fee</span>
+											<span>{t('home.pharmacyCard.deliveryFee')}</span>
 											<div className="inside pharmacy-range">
 												<input
 													type="number"
-													placeholder="Minimum"
+													placeholder={t('home.search.minimum')}
 													value={searchFilter.search.deliveryFeeRange?.start ?? ''}
 													onChange={(e) => updateSearch({ deliveryFeeRange: { start: Number(e.target.value) || 0, end: searchFilter.search.deliveryFeeRange?.end ?? 100000 } })}
 												/>
 												<div className="minus-line" />
 												<input
 													type="number"
-													placeholder="Maximum"
+													placeholder={t('home.search.maximum')}
 													value={searchFilter.search.deliveryFeeRange?.end ?? ''}
 													onChange={(e) => updateSearch({ deliveryFeeRange: { start: searchFilter.search.deliveryFeeRange?.start ?? 0, end: Number(e.target.value) || 100000 } })}
 												/>
@@ -295,10 +300,10 @@ const HeaderFilter = ({ initialInput }: HeaderFilterProps) => {
 								<div className="bottom">
 									<button type="button" className="reset-filter" onClick={resetFilterHandler}>
 										<img src="/img/icons/reset.svg" alt="" />
-										<span>Reset all filters</span>
+										<span>{t('home.search.resetAll')}</span>
 									</button>
 									<Button startIcon={<img src="/img/icons/search.svg" alt="" />} className="search-btn" onClick={pushSearchHandler}>
-										Search
+										{t('commonActions.search')}
 									</Button>
 								</div>
 							</div>

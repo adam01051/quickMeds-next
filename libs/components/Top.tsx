@@ -56,16 +56,16 @@ const Top = () => {
 	const isActiveRoute = (pathname: string) =>
 		pathname === '/' ? router.pathname === pathname : router.pathname === pathname || router.pathname.startsWith(`${pathname}/`);
 	const mobileNavLinks = [
-		{ href: '/', label: t('Home'), icon: <HomeRoundedIcon /> },
-		{ href: '/pharmacies', label: t('Pharmacies'), icon: <SearchRoundedIcon /> },
-		{ href: '/community?articleCategory=FREE', label: t('Community'), icon: <ForumOutlinedIcon /> },
+		{ href: '/', label: t('nav.home'), icon: <HomeRoundedIcon /> },
+		{ href: '/pharmacies', label: t('nav.pharmacies'), icon: <SearchRoundedIcon /> },
+		{ href: '/community?articleCategory=FREE', label: t('nav.community'), icon: <ForumOutlinedIcon /> },
 		...(user?._id
-			? [{ href: '/mypage', label: t('My Page'), icon: <AccountCircleOutlinedIcon /> }]
+			? [{ href: '/mypage', label: t('nav.myPage'), icon: <AccountCircleOutlinedIcon /> }]
 			: [
-					{ href: '/account/join', label: t('Login'), icon: <AccountCircleOutlinedIcon /> },
-					{ href: '/account/join?mode=signup', label: t('Register'), icon: <AccountCircleOutlinedIcon /> },
+					{ href: '/account/join', label: t('nav.login'), icon: <AccountCircleOutlinedIcon /> },
+					{ href: '/account/join?mode=signup', label: t('nav.register'), icon: <AccountCircleOutlinedIcon /> },
 			  ]),
-		{ href: '/cs', label: t('CS'), icon: <SupportAgentOutlinedIcon /> },
+		{ href: '/cs', label: t('nav.cs'), icon: <SupportAgentOutlinedIcon /> },
 	];
 
 	useQuery(GET_UNREAD_MESSAGE_COUNT, {
@@ -187,12 +187,12 @@ const Top = () => {
 		return (
 			<Stack className="top catalog-mobile-top">
 				<div className="catalog-mobile-top__bar">
-					<Link href="/" aria-label="quickMeds home"><BrandLogo /></Link>
+					<Link href="/" aria-label={t('nav.homeAria')}><BrandLogo /></Link>
 					<div className="catalog-mobile-top__actions">
 						<button
 							type="button"
 							className="catalog-mobile-top__menu"
-							aria-label="Open navigation menu"
+							aria-label={t('nav.openMenu')}
 							aria-expanded={mobileMenuOpen}
 							onClick={() => setMobileMenuOpen(true)}
 						>
@@ -200,18 +200,18 @@ const Top = () => {
 						</button>
 						{user?._id ? (
 							<>
-								<Link href="/mypage?category=messages" className="catalog-mobile-top__icon" aria-label="Messages">
+								<Link href="/mypage?category=messages" className="catalog-mobile-top__icon" aria-label={t('nav.messages')}>
 									<Badge badgeContent={unreadMessages} color="error" max={99} overlap="circular">
 										<MailOutlineRoundedIcon />
 									</Badge>
 								</Link>
-								<button type="button" className="catalog-mobile-top__icon" aria-label="Notifications">
+								<button type="button" className="catalog-mobile-top__icon" aria-label={t('nav.notifications')}>
 									<NotificationsOutlinedIcon />
 								</button>
 								<button
 									type="button"
 									className="catalog-mobile-top__avatar"
-									aria-label="Account menu"
+									aria-label={t('nav.accountMenu')}
 									aria-haspopup="menu"
 									aria-expanded={logoutOpen}
 									onClick={(event) => setLogoutAnchor(event.currentTarget)}
@@ -226,12 +226,12 @@ const Top = () => {
 								>
 									<MenuItem onClick={() => logOut()}>
 										<Logout fontSize="small" style={{ color: '#064e3b', marginRight: '10px' }} />
-										Logout
+										{t('mypage.common.logout')}
 									</MenuItem>
 								</Menu>
 							</>
 						) : (
-							<Link href="/account/join" className="catalog-mobile-top__login" aria-label="Login or create account">
+							<Link href="/account/join" className="catalog-mobile-top__login" aria-label={t('nav.loginOrCreate')}>
 								<AccountCircleOutlinedIcon />
 							</Link>
 						)}
@@ -252,7 +252,7 @@ const Top = () => {
 						>
 							<motion.nav
 								className="catalog-mobile-nav-sheet"
-								aria-label="Mobile navigation"
+								aria-label={t('nav.mobileNavigation')}
 								onPointerDown={(event: React.PointerEvent<HTMLElement>) => event.stopPropagation()}
 								initial={{ opacity: 0, y: -10, scale: 0.98 }}
 								animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -260,8 +260,8 @@ const Top = () => {
 								transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
 							>
 								<div className="catalog-mobile-nav-sheet__head">
-									<span>Navigate QuickMeds</span>
-									<button type="button" aria-label="Close navigation menu" onClick={() => setMobileMenuOpen(false)}>
+									<span>{t('nav.navigateQuickMeds')}</span>
+									<button type="button" aria-label={t('nav.closeMenu')} onClick={() => setMobileMenuOpen(false)}>
 										<CloseRoundedIcon />
 									</button>
 								</div>
@@ -277,7 +277,7 @@ const Top = () => {
 										</Link>
 									))}
 								</div>
-								<div className="catalog-mobile-nav-sheet__language" aria-label="Language">
+								<div className="catalog-mobile-nav-sheet__language" aria-label={t('nav.language')}>
 									{LANGUAGE_OPTIONS.map((option) => (
 										<button
 											type="button"
@@ -314,23 +314,23 @@ const Top = () => {
 								<BrandLogo variant="dark" />
 							</Link>
 						</Box>
-						<Box component={'nav'} className={'router-box'} aria-label="Primary navigation">
+						<Box component={'nav'} className={'router-box'} aria-label={t('nav.primaryNavigation')}>
 							<Link href={'/'} aria-current={isActiveRoute('/') ? 'page' : undefined}>
-								<div>{t('Home')}</div>
+								<div>{t('nav.home')}</div>
 							</Link>
 							<Link href={'/pharmacies'} aria-current={isActiveRoute('/pharmacies') ? 'page' : undefined}>
-								<div>{t('Pharmacies')}</div>
+								<div>{t('nav.pharmacies')}</div>
 							</Link>
 							<Link href={'/community?articleCategory=FREE'} aria-current={isActiveRoute('/community') ? 'page' : undefined}>
-								<div> {t('Community')} </div>
+								<div> {t('nav.community')} </div>
 							</Link>
 							{user?._id && (
 								<Link href={'/mypage'} aria-current={isActiveRoute('/mypage') ? 'page' : undefined}>
-									<div> {t('My Page')} </div>
+									<div> {t('nav.myPage')} </div>
 							</Link>
 							)}
 							<Link href={'/cs'} aria-current={isActiveRoute('/cs') ? 'page' : undefined}>
-								<div> {t('CS')} </div>
+								<div> {t('nav.cs')} </div>
 							</Link>
 						</Box>
 						<Box component={'div'} className={'user-box'}>
@@ -356,26 +356,26 @@ const Top = () => {
 									>
 										<MenuItem onClick={() => logOut()}>
 											<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
-											Logout
+											{t('mypage.common.logout')}
 										</MenuItem>
 									</Menu>
 								</>
 							) : (
 								<div className="public-auth-actions">
-									<Link href="/account/join" className="public-auth-actions__login">{t('Login')}</Link>
-									<Link href="/account/join?mode=signup" className="public-auth-actions__register">{t('Register')}</Link>
+									<Link href="/account/join" className="public-auth-actions__login">{t('nav.login')}</Link>
+									<Link href="/account/join?mode=signup" className="public-auth-actions__register">{t('nav.register')}</Link>
 								</div>
 							)}
 
 							<div className={'lan-box'}>
 								{user?._id && (
-									<Link href="/mypage?category=messages" className="message-icon-link" aria-label="Messages">
+									<Link href="/mypage?category=messages" className="message-icon-link" aria-label={t('nav.messages')}>
 										<Badge badgeContent={unreadMessages} color="error" max={99} overlap="circular">
 											<MailOutlineRoundedIcon className="message-icon" />
 										</Badge>
 									</Link>
 								)}
-								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label="Notifications" />}
+								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label={t('nav.notifications')} />}
 								<Button
 									disableRipple
 									className="btn-lang"

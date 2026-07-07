@@ -158,5 +158,219 @@
         "close": "Close"
       }
     }
+  },
+  "nav": {
+    "home": "Home",
+    "pharmacies": "Pharmacies",
+    "community": "Community",
+    "myPage": "My Page",
+    "cs": "CS",
+    "login": "Login",
+    "register": "Register",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "accountMenu": "Account menu",
+    "homeAria": "quickMeds home",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "mobileNavigation": "Mobile navigation",
+    "primaryNavigation": "Primary navigation",
+    "navigateQuickMeds": "Navigate QuickMeds",
+    "language": "Language",
+    "loginOrCreate": "Login or create account"
+  },
+  "pharmacyType": {
+    "RETAIL": "Retail",
+    "HOSPITAL": "Hospital",
+    "COMPOUNDING": "Compounding",
+    "ONLINE": "Online"
+  },
+  "boardCategory": {
+    "FREE": "Discussions",
+    "RECOMMEND": "Recommendations",
+    "NEWS": "News",
+    "HUMOR": "Community Corner"
+  },
+  "commonActions": {
+    "search": "Search",
+    "viewAll": "View all",
+    "viewAllArticles": "View all articles",
+    "browsePharmacies": "Browse pharmacies",
+    "readArticle": "Read article"
+  },
+  "home": {
+    "meta": {
+      "title": "quickMeds"
+    },
+    "common": {
+      "comingSoon": "Coming soon"
+    },
+    "hero": {
+      "kicker": "Pharmacy discovery for everyday care",
+      "title": "Find a trusted pharmacy near you.",
+      "description": "Search by pharmacy name, address, or area, then compare useful services before you visit."
+    },
+    "search": {
+      "pharmacy": "Pharmacy",
+      "desktopPlaceholder": "Pharmacy or address",
+      "mobilePlaceholder": "Search pharmacy name or address",
+      "searchAria": "Search pharmacy name or address",
+      "chooseRegionAria": "Choose pharmacy region",
+      "chooseTypeAria": "Choose pharmacy type",
+      "region": "Region",
+      "pharmacyType": "Pharmacy type",
+      "allRegions": "All regions",
+      "allPharmacyTypes": "All pharmacy types",
+      "filters": "Filters",
+      "openAdvancedAria": "Open advanced pharmacy filters",
+      "searchButtonAria": "Search pharmacies",
+      "optionsAria": "Pharmacy discovery options",
+      "open247": "24/7 pharmacies",
+      "nearMe": "Near me",
+      "useCurrentLocation": "Use current location",
+      "currentLocationComingSoon": "Current location coming soon",
+      "closeAdvancedAria": "Close advanced filters",
+      "findPharmacy": "Find a pharmacy",
+      "modalPlaceholder": "Pharmacy name or address",
+      "services": "Services",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "resetAll": "Reset all filters"
+    },
+    "sections": {
+      "featured": {
+        "title": "Featured pharmacies",
+        "description": "Highly ranked pharmacies ready to support everyday care.",
+        "loadingAria": "Loading featured pharmacies"
+      },
+      "trending": {
+        "kicker": "Liked by the community",
+        "title": "Trending pharmacies",
+        "description": "Trend is based on pharmacy likes and community interactions.",
+        "loadingAria": "Loading trending pharmacies",
+        "summary": "{{name}} is a {{type}} pharmacy offering {{serviceMode}}, {{insurance}}, and clear availability signals for QuickMeds users.",
+        "signal": "QuickMeds signal",
+        "chooseFeatureAria": "Choose a trending pharmacy to feature",
+        "featureAria": "Feature {{name}}"
+      },
+      "why": {
+        "kicker": "Why QuickMeds",
+        "title": "Know the essentials before you choose a pharmacy.",
+        "description": "QuickMeds brings pharmacy location, delivery, insurance, verified status, and operating-hours information into one calm search experience.",
+        "comingSoonText": "Current-location distance search, verified-only filtering, notifications, and chat will be added when their backend behavior is ready.",
+        "items": {
+          "realSignals": {
+            "title": "Real pharmacy signals",
+            "copy": "Verified status appears only when a pharmacy has provided verification."
+          },
+          "delivery": {
+            "title": "Delivery and fee clarity",
+            "copy": "Check delivery availability and UZS fees before you decide."
+          },
+          "hours": {
+            "title": "Operating-hours status",
+            "copy": "See 24/7, open or closed, and hours-not-provided states from real pharmacy data."
+          },
+          "regions": {
+            "title": "Regional discovery",
+            "copy": "Search across supported Uzbekistan regions instead of vague location buckets."
+          }
+        }
+      },
+      "locations": {
+        "title": "Explore supported areas",
+        "description": "Select a region to open pharmacy search with that Uzbekistan region already applied."
+      },
+      "articles": {
+        "title": "Community health reading",
+        "description": "Useful updates and pharmacy-discovery notes from QuickMeds Community.",
+        "defaultExcerpt": "Read a practical update from the QuickMeds Community.",
+        "emptyTitle": "More practical reading is on the way.",
+        "emptyText": "Health-related community articles will appear here as they are published.",
+        "views_one": "{{count}} view",
+        "views_few": "{{count}} views",
+        "views_many": "{{count}} views",
+        "views_other": "{{count}} views"
+      },
+      "ownerCta": {
+        "imageAlt": "Modern pharmacy counter and shelves",
+        "overlayTitle": "Your pharmacy, easier to find",
+        "overlayText": "QuickMeds helps nearby customers compare services before they visit.",
+        "mobileAction": "Join as a pharmacy owner",
+        "statTitle": "Visible services",
+        "statText": "Hours, delivery, insurance",
+        "kicker": "For Pharmacy Owners",
+        "title": "Join the QuickMeds pharmacy network.",
+        "description": "Make your pharmacy easier to find, keep services visible, and connect with people searching nearby.",
+        "benefits": {
+          "discovery": {
+            "title": "Boost local discovery",
+            "copy": "Show location, delivery, hours, and services in one searchable profile."
+          },
+          "trust": {
+            "title": "Build patient trust",
+            "copy": "Create a clear pharmacy presence with availability and contact paths."
+          }
+        },
+        "primaryAction": "Become a Pharmacy Owner",
+        "secondaryAction": "Explore Pharmacy Owners"
+      }
+    },
+    "pharmacyCard": {
+      "open247": "Open 24/7",
+      "hoursNotProvided": "Hours not provided",
+      "openNow": "Open now",
+      "closed": "Closed",
+      "pickupOnly": "Pickup only",
+      "pickupService": "pickup service",
+      "delivery": "Delivery",
+      "deliveryAndPickup": "delivery and pickup",
+      "deliveryFee": "Delivery fee",
+      "deliveryFeeAmount": "{{fee}} UZS",
+      "deliveryWithFee": "{{fee}} UZS delivery",
+      "free": "Free",
+      "freeDelivery": "Free delivery",
+      "service": "Service",
+      "insurance": "Insurance",
+      "insuranceSupport": "insurance support",
+      "directPayVisits": "direct-pay visits",
+      "verified": "Verified",
+      "viewPharmacy": "View pharmacy",
+      "viewPharmacyAria": "View {{name}}",
+      "imageAlt": "{{name}} pharmacy",
+      "saveFavoriteAria": "Save {{name}}",
+      "removeFavoriteAria": "Remove {{name}} from favorites",
+      "likeAria": "Like {{name}}",
+      "unlikeAria": "Unlike {{name}}",
+      "likeCount_one": "{{count}} like",
+      "likeCount_few": "{{count}} likes",
+      "likeCount_many": "{{count}} likes",
+      "likeCount_other": "{{count}} likes"
+    },
+    "states": {
+      "pharmaciesLoadError": "Pharmacies could not be loaded.",
+      "trendingLoadError": "Trending pharmacies could not be loaded.",
+      "noPharmaciesTitle": "No pharmacies are available yet.",
+      "noPharmaciesText": "Try browsing all pharmacies or searching another area.",
+      "noTrendingTitle": "No trending pharmacies are available yet.",
+      "noTrendingText": "Browse all pharmacies while community activity builds."
+    }
+  },
+  "footer": {
+    "brandText": "Find trusted pharmacies, delivery options, insurance support, and useful community guidance across Uzbekistan.",
+    "customerCare": "Customer care",
+    "supportText": "Support for pharmacy discovery and account questions.",
+    "follow": "Follow QuickMeds",
+    "socialAria": "QuickMeds social links",
+    "navigationAria": "Footer navigation",
+    "discover": "Discover",
+    "deliveryPharmacies": "Delivery pharmacies",
+    "insuranceSupport": "Insurance support",
+    "quickLinks": "Quick links",
+    "support": "Support",
+    "about": "About QuickMeds",
+    "regions": "Regions",
+    "copyright": "© {{year}} QuickMeds. All rights reserved.",
+    "legal": "Privacy · Terms · Sitemap"
   }
 }

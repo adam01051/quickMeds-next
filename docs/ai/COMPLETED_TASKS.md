@@ -1169,3 +1169,28 @@ Validation completed:
 - `git diff --check` passed.
 - Fresh headless Chrome loaded `http://localhost:3001/account/join/`; the Next dev log returned `GET /account/join 200`.
 - A fresh Chrome CDP diagnostic opened `http://localhost:3001/`, clicked the Login link, and submitted the login form without any `hot-update` request and without any 4xx network response.
+
+## Homepage Translation V1
+
+- Moved homepage-visible static UI copy into the existing `next-i18next` `common` namespace for English, Russian, Uzbek, and Korean.
+- Added nested homepage dictionaries under `home`, plus shared `nav`, `footer`, `pharmacyType`, `boardCategory`, and `commonActions` keys in `public/locales/*/common.json`.
+- Converted the active homepage route `/` and visible shared homepage chrome to `useTranslation('common')`: hero/search, Featured pharmacies, Trending pharmacies, pharmacy cards, supporting sections, owner CTA, nav, and footer.
+- Kept dynamic backend-owned data untranslated, including pharmacy names, addresses, article titles/content, uploaded media data, and backend records.
+- Kept the existing Pages Router, Apollo GraphQL queries/mutations, SCSS structure, and backend contracts unchanged.
+
+Validation completed:
+
+- Locale JSON parse and strict key-parity check passed for `en`, `ru`, `uz`, and `kr`.
+- `yarn typecheck --pretty false` passed.
+- `yarn build` passed and generated all 94 current locale-expanded pages; the existing `react-i18next` static-generation warning was observed but did not fail the build.
+- Production route smoke checks passed for `/`, `/ru`, `/uz`, and `/kr`, confirming localized homepage text is served for each locale.
+
+Remaining verification:
+
+- Manual native-speaker review remains pending for Russian, Uzbek, and Korean copy quality across the full app.
+
+## Local Agent Tooling Git Ignore Cleanup
+
+- Added `.gitignore` coverage for local AI/agent tooling: `AGENTS.md`, `SKILL.md`, `.agents/`, `.codex/`, `skills/`, `.claude/`, and `.cursor/`.
+- Removed already-tracked local agent/skill files from the Git index with `git rm --cached`, leaving the files available on disk for local Codex usage.
+- Confirmed `git check-ignore` matches representative `AGENTS.md`, `.agents`, `.codex`, and `skills` paths.

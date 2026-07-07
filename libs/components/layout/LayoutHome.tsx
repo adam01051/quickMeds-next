@@ -8,6 +8,7 @@ import HeaderFilter from '../homepage/HeaderFilter';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
 //@ts-ignore
 import 'swiper/css';
 //@ts-ignore
@@ -18,6 +19,7 @@ import 'swiper/css/navigation';
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
+		const { t } = useTranslation('common');
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -28,8 +30,8 @@ const withLayoutMain = (Component: any) => {
 		/** HANDLERS **/
 		const homeHead = (
 			<Head>
-				<title>quickMeds</title>
-				<meta name={'title'} content={`quickMeds`} />
+				<title>{t('home.meta.title')}</title>
+				<meta name={'title'} content={t('home.meta.title')} />
 			</Head>
 		);
 
@@ -43,9 +45,9 @@ const withLayoutMain = (Component: any) => {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.35, ease: 'easeOut' }}
 						>
-							<span className="hero-kicker">Pharmacy discovery for everyday care</span>
-							<h1>Find a trusted pharmacy near you.</h1>
-							<p>Search by pharmacy name, address, or area, then compare useful services before you visit.</p>
+							<span className="hero-kicker">{t('home.hero.kicker')}</span>
+							<h1>{t('home.hero.title')}</h1>
+							<p>{t('home.hero.description')}</p>
 						</motion.div>
 						<div className="home-hero-visual" aria-hidden="true">
 							<img src="/img/homepage/pharmacy-hero.webp" alt="" width="960" height="720" />

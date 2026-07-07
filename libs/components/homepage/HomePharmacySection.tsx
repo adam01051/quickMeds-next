@@ -13,6 +13,7 @@ import { Message } from '../../enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import HomePharmacyCard from './HomePharmacyCard';
+import { useTranslation } from 'next-i18next';
 
 interface HomePharmacySectionProps {
 	title: string;
@@ -30,6 +31,7 @@ const HomePharmacySection = ({
 	mobileOnly = false,
 }: HomePharmacySectionProps) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const reduceMotion = useReducedMotion();
 	const [pharmacies, setPharmacies] = useState<Property[]>([]);
@@ -83,23 +85,23 @@ const HomePharmacySection = ({
 						<p>{description}</p>
 					</div>
 					<Link href="/pharmacies">
-						View all
+						{t('commonActions.viewAll')}
 						<ArrowForwardRoundedIcon />
 					</Link>
 				</header>
 				{loading && pharmacies.length === 0 ? (
-					<div className="home-pharmacy-grid" aria-label={`Loading ${title}`}>
+					<div className="home-pharmacy-grid" aria-label={t('home.sections.featured.loadingAria')}>
 						{[0, 1, 2].map((item) => <div className="home-pharmacy-skeleton" key={item} />)}
 					</div>
 				) : error ? (
 					<div className="home-section-state">
-						<strong>Pharmacies could not be loaded.</strong>
-						<button type="button" onClick={() => refetch({ input: initialInput })}>Try again</button>
+						<strong>{t('home.states.pharmaciesLoadError')}</strong>
+						<button type="button" onClick={() => refetch({ input: initialInput })}>{t('mypage.common.tryAgain')}</button>
 					</div>
 				) : pharmacies.length === 0 ? (
 					<div className="home-section-state">
-						<strong>No pharmacies are available yet.</strong>
-						<span>Try browsing all pharmacies or searching another area.</span>
+						<strong>{t('home.states.noPharmaciesTitle')}</strong>
+						<span>{t('home.states.noPharmaciesText')}</span>
 					</div>
 				) : isMobile ? (
 					<motion.div

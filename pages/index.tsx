@@ -6,6 +6,7 @@ import HomePharmacySection from '../libs/components/homepage/HomePharmacySection
 import HomeSupportingSections from '../libs/components/homepage/HomeSupportingSections';
 import HomeTrendingSection from '../libs/components/homepage/HomeTrendingSection';
 import { Direction } from '../libs/enums/common.enum';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -14,11 +15,13 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const Home: NextPage = () => {
+	const { t } = useTranslation('common');
+
 	return (
 		<Stack className={'home-page'}>
 			<HomePharmacySection
-				title="Featured pharmacies"
-				description="Highly ranked pharmacies ready to support everyday care."
+				title={t('home.sections.featured.title')}
+				description={t('home.sections.featured.description')}
 				initialInput={{ page: 1, limit: 6, sort: 'pharmacyRank', direction: Direction.DESC, search: {} }}
 				mobileOnly
 			/>

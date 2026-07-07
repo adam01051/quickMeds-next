@@ -167,3 +167,10 @@ Pharmacy discovery is authoritative. Do not introduce medicine catalog, inventor
 
 1. If the first Docker Compose startup is still killed during `yarn install` with exit code `137`, increase Docker Desktop memory or move to a cached Dockerfile build so dependency installation does not run under the one-shot Compose startup command.
 2. If install/build remains too slow for local use, introduce a small Dockerfile with cached dependency and build layers as a separate approved phase.
+
+## Full App Translation Follow-up
+
+1. Sweep the remaining public and account routes for hardcoded UI copy beyond the homepage, including pharmacy catalog/detail, Community, CS, account auth, My Page subsections, owner flows, admin-visible public labels, and legacy unused homepage components.
+2. Complete native-speaker review for Russian, Uzbek, and Korean homepage copy before treating translations as production final.
+3. Decide whether to split translations into route namespaces after the next translation phase; homepage v1 intentionally remains in nested `common.json`.
+4. Add automated locale parity checking to the regular validation workflow so future keys stay aligned across `en`, `ru`, `uz`, and `kr`.

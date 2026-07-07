@@ -388,3 +388,12 @@ Deferred compatibility work:
 - Successful account login still uses the existing GraphQL `LOGIN` mutation, localStorage access token, and Apollo reactive user hydration.
 - The safe return-path helper now rejects `/account/join`, `/auth`, `/api`, and `/_next` paths before redirecting, preventing self-return and internal development asset URLs from becoming post-login destinations.
 - Telegram completion uses the same return-path policy so the new social-login bridge and the existing nickname/password login stay aligned.
+
+## Homepage Translation Migration
+
+- Homepage translation v1 uses the existing `next-i18next` Pages Router setup with locales `en`, `ru`, `uz`, and `kr`; no new namespace was introduced.
+- The active homepage route now reads nested keys from `public/locales/*/common.json` for meta, hero, search/filter controls, section headings, empty/error/loading states, pharmacy card labels, footer, and shared public nav labels visible on home.
+- Locale-aware pharmacy type labels use `pharmacyType.RETAIL`, `pharmacyType.HOSPITAL`, `pharmacyType.COMPOUNDING`, and `pharmacyType.ONLINE`; region labels continue using the existing `pharmacyLocation.*` keys.
+- Homepage like counts and community article view counts use i18next pluralization keys with `{{count}}` interpolation.
+- Pharmacy names, addresses, article titles/content, and other backend-owned records remain runtime data and are not translated by the frontend dictionary.
+- No GraphQL contracts, Apollo behavior, SCSS architecture, or backend migration behavior changed in this phase.

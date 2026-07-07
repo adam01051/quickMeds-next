@@ -21,10 +21,10 @@ import { T } from '../../types/common';
 import { Message } from '../../enums/common.enum';
 import { REACT_APP_API_URL } from '../../config';
 import { formatterStr } from '../../utils';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import HomePharmacyCard from './HomePharmacyCard';
+import { useTranslation } from 'next-i18next';
 
 interface HomeTrendingSectionProps {
 	initialInput: PharmaciesInquiry;
@@ -34,7 +34,7 @@ const layoutTransition: Transition = { duration: 0.56, ease: [0.22, 1, 0.36, 1] 
 const detailsTransition: Transition = { duration: 0.22, ease: 'easeOut', delay: 0.12 };
 const compactTransition: Transition = { duration: 0.2, ease: 'easeOut' };
 
-const getLikeLabel = (likes: number) => `${likes} ${likes === 1 ? 'like' : 'likes'}`;
+const getLikeLabel = (t: any, likes: number) => t('home.pharmacyCard.likeCount', { count: likes });
 
 const getPharmacyImage = (pharmacy: Property) => {
 	return pharmacy.pharmacyImages?.[0] ? `${REACT_APP_API_URL}/${pharmacy.pharmacyImages[0]}` : '/img/banner/header1.svg';
@@ -45,31 +45,37 @@ const useFallbackImage = (event: SyntheticEvent<HTMLImageElement>) => {
 	event.currentTarget.src = '/img/banner/header1.svg';
 };
 
-const getHoursLabel = (pharmacy: Property) => {
-	if (pharmacy.open24Hours) return 'Open 24/7';
-	if (!pharmacy.hoursConfigured) return 'Hours not provided';
-	return pharmacy.isOpenNow ? 'Open now' : 'Closed';
+const getHoursLabel = (t: any, pharmacy: Property) => {
+	if (pharmacy.open24Hours) return t('home.pharmacyCard.open247');
+	if (!pharmacy.hoursConfigured) return t('home.pharmacyCard.hoursNotProvided');
+	return pharmacy.isOpenNow ? t('home.pharmacyCard.openNow') : t('home.pharmacyCard.closed');
 };
 
-const getDeliveryLabel = (pharmacy: Property) => {
-	if (!pharmacy.hasDelivery) return 'Pickup only';
-	if (pharmacy.pharmacyDeliveryFee === 0) return 'Free delivery';
-	return `${formatterStr(pharmacy.pharmacyDeliveryFee)} UZS delivery`;
+const getDeliveryLabel = (t: any, pharmacy: Property) => {
+	if (!pharmacy.hasDelivery) return t('home.pharmacyCard.pickupOnly');
+	if (pharmacy.pharmacyDeliveryFee === 0) return t('home.pharmacyCard.freeDelivery');
+	return t('home.pharmacyCard.deliveryWithFee', { fee: formatterStr(pharmacy.pharmacyDeliveryFee) });
 };
 
-const getTypeLabel = (pharmacy: Property) => {
-	return pharmacy.pharmacyType.toLowerCase().replace(/_/g, ' ');
+const getTypeLabel = (t: any, pharmacy: Property) => {
+	return t(`pharmacyType.${pharmacy.pharmacyType}`);
 };
 
-const getTrendingSummary = (pharmacy: Property) => {
-	const serviceMode = pharmacy.hasDelivery ? 'delivery and pickup' : 'pickup service';
-	const insurance = pharmacy.acceptsInsurance ? 'insurance support' : 'direct-pay visits';
+const getTrendingSummary = (t: any, pharmacy: Property) => {
+	const serviceMode = pharmacy.hasDelivery ? t('home.pharmacyCard.deliveryAndPickup') : t('home.pharmacyCard.pickupService');
+	const insurance = pharmacy.acceptsInsurance ? t('home.pharmacyCard.insuranceSupport') : t('home.pharmacyCard.directPayVisits');
 
-	return `${pharmacy.pharmacyName} is a ${getTypeLabel(pharmacy)} pharmacy offering ${serviceMode}, ${insurance}, and clear availability signals for QuickMeds users.`;
+	return t('home.sections.trending.summary', {
+		name: pharmacy.pharmacyName,
+		type: getTypeLabel(t, pharmacy),
+		serviceMode,
+		insurance,
+	});
 };
 
 const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const reduceMotion = useReducedMotion();
 	const [pharmacies, setPharmacies] = useState<Property[]>([]);
@@ -126,7 +132,7 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 		return (
 			<IconButton
 				className={className}
-				aria-label={isFavorite ? `Unlike ${pharmacy.pharmacyName}` : `Like ${pharmacy.pharmacyName}`}
+				aria-label={t(isFavorite ? 'home.pharmacyCard.unlikeAria' : 'home.pharmacyCard.likeAria', { name: pharmacy.pharmacyName })}
 				onClick={(event) => {
 					event.stopPropagation();
 					favoritePharmacy(pharmacy._id);
@@ -161,30 +167,30 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 				<div className="home-shell">
 					<header className="home-section-heading home-trending-heading">
 						<div>
-							<span className="home-trending-kicker">Liked by the community</span>
-							<h2>Trending pharmacies</h2>
-							<p>Trend is based on pharmacy likes and community interactions.</p>
+							<span className="home-trending-kicker">{t('home.sections.trending.kicker')}</span>
+							<h2>{t('home.sections.trending.title')}</h2>
+							<p>{t('home.sections.trending.description')}</p>
 						</div>
 						<Link href="/pharmacies">
-							View all
+							{t('commonActions.viewAll')}
 							<ArrowForwardRoundedIcon />
 						</Link>
 					</header>
 
 					{loading && pharmacies.length === 0 ? (
-						<div className="home-pharmacy-grid" aria-label="Loading trending pharmacies">
+						<div className="home-pharmacy-grid" aria-label={t('home.sections.trending.loadingAria')}>
 							{[0, 1, 2].map((item) => <div className="home-pharmacy-skeleton" key={item} />)}
 						</div>
 					) : error ? (
 						<div className="home-section-state">
-							<strong>Trending pharmacies could not be loaded.</strong>
-							<button type="button" onClick={() => refetch({ input: initialInput })}>Try again</button>
+							<strong>{t('home.states.trendingLoadError')}</strong>
+							<button type="button" onClick={() => refetch({ input: initialInput })}>{t('mypage.common.tryAgain')}</button>
 						</div>
 					) : pharmacies.length === 0 ? (
 						<div className="home-section-state">
-							<strong>No trending pharmacies are available yet.</strong>
-							<span>Browse all pharmacies while community activity builds.</span>
-							<Link href="/pharmacies">Browse pharmacies</Link>
+							<strong>{t('home.states.noTrendingTitle')}</strong>
+							<span>{t('home.states.noTrendingText')}</span>
+							<Link href="/pharmacies">{t('commonActions.browsePharmacies')}</Link>
 						</div>
 					) : (
 						<motion.div
@@ -216,18 +222,18 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 			<div className="home-shell">
 				<header className="home-section-heading home-trending-heading">
 					<div>
-						<span className="home-trending-kicker">Liked by the community</span>
-						<h2>Trending pharmacies</h2>
-						<p>Trend is based on pharmacy likes and community interactions.</p>
+						<span className="home-trending-kicker">{t('home.sections.trending.kicker')}</span>
+						<h2>{t('home.sections.trending.title')}</h2>
+						<p>{t('home.sections.trending.description')}</p>
 					</div>
 					<Link href="/pharmacies">
-						View all
+						{t('commonActions.viewAll')}
 						<ArrowForwardRoundedIcon />
 					</Link>
 				</header>
 
 				{loading && pharmacies.length === 0 ? (
-					<div className="home-trending-skeleton-grid" aria-label="Loading trending pharmacies">
+					<div className="home-trending-skeleton-grid" aria-label={t('home.sections.trending.loadingAria')}>
 						<div className="home-trending-feature-skeleton" />
 						<div className="home-trending-mini-skeletons">
 							{[0, 1, 2, 3].map((item) => <div className="home-trending-mini-skeleton" key={item} />)}
@@ -235,14 +241,14 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 					</div>
 				) : error ? (
 					<div className="home-section-state">
-						<strong>Trending pharmacies could not be loaded.</strong>
-						<button type="button" onClick={() => refetch({ input: initialInput })}>Try again</button>
+						<strong>{t('home.states.trendingLoadError')}</strong>
+						<button type="button" onClick={() => refetch({ input: initialInput })}>{t('mypage.common.tryAgain')}</button>
 					</div>
 				) : pharmacies.length === 0 ? (
 					<div className="home-section-state">
-						<strong>No trending pharmacies are available yet.</strong>
-						<span>Browse all pharmacies while community activity builds.</span>
-						<Link href="/pharmacies">Browse pharmacies</Link>
+						<strong>{t('home.states.noTrendingTitle')}</strong>
+						<span>{t('home.states.noTrendingText')}</span>
+						<Link href="/pharmacies">{t('commonActions.browsePharmacies')}</Link>
 					</div>
 				) : selectedPharmacy ? (
 					<LayoutGroup id="home-trending-pharmacies">
@@ -263,15 +269,15 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 									layoutId={reduceMotion ? undefined : `home-trending-media-${selectedPharmacy._id}`}
 									transition={layoutTransition}
 								>
-									<Link href={`/pharmacies/detail?id=${selectedPharmacy._id}`} aria-label={`View ${selectedPharmacy.pharmacyName}`}>
+									<Link href={`/pharmacies/detail?id=${selectedPharmacy._id}`} aria-label={t('home.pharmacyCard.viewPharmacyAria', { name: selectedPharmacy.pharmacyName })}>
 										<motion.img
 											src={getPharmacyImage(selectedPharmacy)}
-											alt={`${selectedPharmacy.pharmacyName} pharmacy`}
+											alt={t('home.pharmacyCard.imageAlt', { name: selectedPharmacy.pharmacyName })}
 											onError={useFallbackImage}
 										/>
 									</Link>
 									<div className="home-trending-feature__badge">
-										{getLikeLabel(selectedPharmacy.pharmacyLikes)}
+										{getLikeLabel(t, selectedPharmacy.pharmacyLikes)}
 									</div>
 									{renderFavoriteButton(selectedPharmacy, 'home-trending-feature__favorite')}
 								</motion.div>
@@ -293,41 +299,41 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 											{selectedPharmacy.verifiedAt && (
 												<span className="home-trending-feature__verified">
 													<VerifiedRoundedIcon />
-													Verified
+													{t('home.pharmacyCard.verified')}
 												</span>
 											)}
 										</div>
 
-										<p className="home-trending-feature__summary">{getTrendingSummary(selectedPharmacy)}</p>
+										<p className="home-trending-feature__summary">{getTrendingSummary(t, selectedPharmacy)}</p>
 
 										<div className="home-trending-feature__chips">
 											<span className={selectedPharmacy.hoursConfigured && !selectedPharmacy.isOpenNow ? 'is-muted' : ''}>
 												<AccessTimeRoundedIcon />
-												{getHoursLabel(selectedPharmacy)}
+												{getHoursLabel(t, selectedPharmacy)}
 											</span>
 											<span>
 												<StorefrontOutlinedIcon />
-												{getTypeLabel(selectedPharmacy)}
+												{getTypeLabel(t, selectedPharmacy)}
 											</span>
 											<span>
 												<LocalShippingOutlinedIcon />
-												{getDeliveryLabel(selectedPharmacy)}
+												{getDeliveryLabel(t, selectedPharmacy)}
 											</span>
 											{selectedPharmacy.acceptsInsurance && (
 												<span>
 													<HealthAndSafetyOutlinedIcon />
-													Insurance
+													{t('home.pharmacyCard.insurance')}
 												</span>
 											)}
 										</div>
 
 										<div className="home-trending-feature__footer">
 											<div>
-												<span>QuickMeds signal</span>
-												<strong>{getLikeLabel(selectedPharmacy.pharmacyLikes)}</strong>
+												<span>{t('home.sections.trending.signal')}</span>
+												<strong>{getLikeLabel(t, selectedPharmacy.pharmacyLikes)}</strong>
 											</div>
 											<Link href={`/pharmacies/detail?id=${selectedPharmacy._id}`}>
-												View pharmacy
+												{t('home.pharmacyCard.viewPharmacy')}
 												<ArrowForwardRoundedIcon />
 											</Link>
 										</div>
@@ -335,7 +341,7 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 								</AnimatePresence>
 							</motion.article>
 
-							<motion.div className="home-trending-compact-grid" aria-label="Choose a trending pharmacy to feature">
+							<motion.div className="home-trending-compact-grid" aria-label={t('home.sections.trending.chooseFeatureAria')}>
 								{compactPharmacies.map((pharmacy) => (
 									<motion.article
 										className="home-trending-mini-card"
@@ -348,7 +354,7 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 										role="button"
 										tabIndex={0}
 										aria-pressed={selectedId === pharmacy._id}
-										aria-label={`Feature ${pharmacy.pharmacyName}`}
+										aria-label={t('home.sections.trending.featureAria', { name: pharmacy.pharmacyName })}
 										onClick={() => setSelectedId(pharmacy._id)}
 										onKeyDown={(event: KeyboardEvent<HTMLElement>) => handleCompactKeyDown(event, pharmacy._id)}
 										whileHover={reduceMotion ? undefined : { y: -5, scale: 1.015 }}
@@ -360,22 +366,22 @@ const HomeTrendingSection = ({ initialInput }: HomeTrendingSectionProps) => {
 											layoutId={reduceMotion ? undefined : `home-trending-media-${pharmacy._id}`}
 											transition={layoutTransition}
 										>
-											<motion.img src={getPharmacyImage(pharmacy)} alt={`${pharmacy.pharmacyName} pharmacy`} onError={useFallbackImage} />
+											<motion.img src={getPharmacyImage(pharmacy)} alt={t('home.pharmacyCard.imageAlt', { name: pharmacy.pharmacyName })} onError={useFallbackImage} />
 											{renderFavoriteButton(pharmacy, 'home-trending-mini-card__favorite')}
 										</motion.div>
 										<div className="home-trending-mini-card__body">
 											<h3>{pharmacy.pharmacyName}</h3>
-											<p>{getPharmacyLocationLabel(pharmacy.pharmacyLocation)}</p>
+											<p>{t(`pharmacyLocation.${pharmacy.pharmacyLocation}`)}</p>
 											<div>
-												<span>{getHoursLabel(pharmacy)}</span>
-												<strong>{getLikeLabel(pharmacy.pharmacyLikes)}</strong>
+												<span>{getHoursLabel(t, pharmacy)}</span>
+												<strong>{getLikeLabel(t, pharmacy.pharmacyLikes)}</strong>
 											</div>
 											<Link
 												href={`/pharmacies/detail?id=${pharmacy._id}`}
 												onClick={(event) => event.stopPropagation()}
 												onKeyDown={(event) => event.stopPropagation()}
 											>
-												View pharmacy
+												{t('home.pharmacyCard.viewPharmacy')}
 												<ArrowForwardRoundedIcon />
 											</Link>
 										</div>

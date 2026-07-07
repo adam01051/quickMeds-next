@@ -158,5 +158,219 @@
         "close": "Yopish"
       }
     }
+  },
+  "nav": {
+    "home": "Bosh sahifa",
+    "pharmacies": "Dorixonalar",
+    "community": "Hamjamiyat",
+    "myPage": "Mening sahifam",
+    "cs": "Yordam",
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "messages": "Xabarlar",
+    "notifications": "Bildirishnomalar",
+    "accountMenu": "Hisob menyusi",
+    "homeAria": "quickMeds bosh sahifasi",
+    "openMenu": "Navigatsiya menyusini ochish",
+    "closeMenu": "Navigatsiya menyusini yopish",
+    "mobileNavigation": "Mobil navigatsiya",
+    "primaryNavigation": "Asosiy navigatsiya",
+    "navigateQuickMeds": "QuickMeds bo'ylab o'tish",
+    "language": "Til",
+    "loginOrCreate": "Kirish yoki hisob yaratish"
+  },
+  "pharmacyType": {
+    "RETAIL": "Chakana",
+    "HOSPITAL": "Shifoxona",
+    "COMPOUNDING": "Tayyorlovchi",
+    "ONLINE": "Onlayn"
+  },
+  "boardCategory": {
+    "FREE": "Muhokamalar",
+    "RECOMMEND": "Tavsiyalar",
+    "NEWS": "Yangiliklar",
+    "HUMOR": "Hamjamiyat burchagi"
+  },
+  "commonActions": {
+    "search": "Qidirish",
+    "viewAll": "Hammasini ko'rish",
+    "viewAllArticles": "Barcha maqolalar",
+    "browsePharmacies": "Dorixonalarni ko'rish",
+    "readArticle": "Maqolani o'qish"
+  },
+  "home": {
+    "meta": {
+      "title": "quickMeds"
+    },
+    "common": {
+      "comingSoon": "Tez orada"
+    },
+    "hero": {
+      "kicker": "Kundalik parvarish uchun dorixona qidiruvi",
+      "title": "Yaqiningizdagi ishonchli dorixonani toping.",
+      "description": "Dorixona nomi, manzili yoki hududi bo'yicha qidiring va borishdan oldin foydali xizmatlarni solishtiring."
+    },
+    "search": {
+      "pharmacy": "Dorixona",
+      "desktopPlaceholder": "Dorixona yoki manzil",
+      "mobilePlaceholder": "Dorixona nomi yoki manzilini qidiring",
+      "searchAria": "Dorixona nomi yoki manzilini qidirish",
+      "chooseRegionAria": "Dorixona hududini tanlash",
+      "chooseTypeAria": "Dorixona turini tanlash",
+      "region": "Hudud",
+      "pharmacyType": "Dorixona turi",
+      "allRegions": "Barcha hududlar",
+      "allPharmacyTypes": "Barcha dorixona turlari",
+      "filters": "Filtrlar",
+      "openAdvancedAria": "Kengaytirilgan dorixona filtrlarini ochish",
+      "searchButtonAria": "Dorixonalarni qidirish",
+      "optionsAria": "Dorixona qidiruvi parametrlari",
+      "open247": "24/7 dorixonalar",
+      "nearMe": "Yaqinimda",
+      "useCurrentLocation": "Joriy joylashuvdan foydalanish",
+      "currentLocationComingSoon": "Joriy joylashuv bo'yicha qidiruv tez orada",
+      "closeAdvancedAria": "Kengaytirilgan filtrlarni yopish",
+      "findPharmacy": "Dorixona topish",
+      "modalPlaceholder": "Dorixona nomi yoki manzili",
+      "services": "Xizmatlar",
+      "minimum": "Minimum",
+      "maximum": "Maksimum",
+      "resetAll": "Barcha filtrlarni tiklash"
+    },
+    "sections": {
+      "featured": {
+        "title": "Tavsiya etilgan dorixonalar",
+        "description": "Kundalik parvarishda yordam berishga tayyor yuqori baholangan dorixonalar.",
+        "loadingAria": "Tavsiya etilgan dorixonalar yuklanmoqda"
+      },
+      "trending": {
+        "kicker": "Hamjamiyat yoqtirgan",
+        "title": "Ommabop dorixonalar",
+        "description": "Ommaboplik dorixona layklari va hamjamiyat faolligiga asoslanadi.",
+        "loadingAria": "Ommabop dorixonalar yuklanmoqda",
+        "summary": "{{name}} — {{type}} turidagi dorixona. Bu yerda {{serviceMode}}, {{insurance}} va QuickMeds foydalanuvchilari uchun aniq mavjudlik belgilarini ko'rish mumkin.",
+        "signal": "QuickMeds belgisi",
+        "chooseFeatureAria": "Ko'rsatish uchun ommabop dorixonani tanlash",
+        "featureAria": "{{name}} ni ko'rsatish"
+      },
+      "why": {
+        "kicker": "Nega QuickMeds",
+        "title": "Dorixonani tanlashdan oldin asosiy ma'lumotlarni biling.",
+        "description": "QuickMeds dorixona joylashuvi, yetkazib berish, sug'urta, tasdiqlangan holat va ish vaqti ma'lumotlarini bitta qulay qidiruvda jamlaydi.",
+        "comingSoonText": "Joriy joylashuv bo'yicha masofa qidiruvi, faqat tasdiqlangan dorixonalar filtri, bildirishnomalar va chat backend tayyor bo'lganda qo'shiladi.",
+        "items": {
+          "realSignals": {
+            "title": "Haqiqiy dorixona belgilari",
+            "copy": "Tasdiqlangan holat dorixona tekshiruv ma'lumotini berganidan keyingina ko'rsatiladi."
+          },
+          "delivery": {
+            "title": "Yetkazib berish va to'lov aniqligi",
+            "copy": "Tanlashdan oldin yetkazib berish mavjudligi va UZS to'lovlarini tekshiring."
+          },
+          "hours": {
+            "title": "Ish vaqti holati",
+            "copy": "Haqiqiy dorixona ma'lumotlari asosida 24/7, ochiq, yopiq yoki ish vaqti kiritilmagan holatlarni ko'ring."
+          },
+          "regions": {
+            "title": "Hududlar bo'yicha qidiruv",
+            "copy": "Noaniq joylashuvlar o'rniga qo'llab-quvvatlanadigan O'zbekiston hududlari bo'ylab qidiring."
+          }
+        }
+      },
+      "locations": {
+        "title": "Qo'llab-quvvatlanadigan hududlarni ko'ring",
+        "description": "Dorixona qidiruvini tanlangan O'zbekiston hududi bilan ochish uchun hududni tanlang."
+      },
+      "articles": {
+        "title": "Hamjamiyatdan foydali o'qishlar",
+        "description": "QuickMeds hamjamiyatidan foydali yangiliklar va dorixona qidiruvi eslatmalari.",
+        "defaultExcerpt": "QuickMeds hamjamiyatidan amaliy yangilikni o'qing.",
+        "emptyTitle": "Ko'proq foydali materiallar tez orada.",
+        "emptyText": "Sog'liq bilan bog'liq hamjamiyat maqolalari nashr qilinganda shu yerda ko'rinadi.",
+        "views_one": "{{count}} ko'rish",
+        "views_few": "{{count}} ko'rish",
+        "views_many": "{{count}} ko'rish",
+        "views_other": "{{count}} ko'rish"
+      },
+      "ownerCta": {
+        "imageAlt": "Zamonaviy dorixona peshtaxtasi va javonlari",
+        "overlayTitle": "Dorixonangizni topish osonroq",
+        "overlayText": "QuickMeds yaqin atrofdagi mijozlarga tashrifdan oldin xizmatlarni solishtirishga yordam beradi.",
+        "mobileAction": "Dorixona egasi sifatida qo'shilish",
+        "statTitle": "Ko'rinadigan xizmatlar",
+        "statText": "Ish vaqti, yetkazib berish, sug'urta",
+        "kicker": "Dorixona egalari uchun",
+        "title": "QuickMeds dorixona tarmog'iga qo'shiling.",
+        "description": "Dorixonangizni topishni osonlashtiring, xizmatlarni ko'rinadigan qiling va yaqin atrofda qidirayotgan odamlar bilan bog'laning.",
+        "benefits": {
+          "discovery": {
+            "title": "Mahalliy ko'rinishni oshiring",
+            "copy": "Joylashuv, yetkazib berish, ish vaqti va xizmatlarni bitta qidiriladigan profilda ko'rsating."
+          },
+          "trust": {
+            "title": "Mijoz ishonchini yarating",
+            "copy": "Mavjudlik va aloqa yo'llari ko'rsatilgan aniq dorixona sahifasini yarating."
+          }
+        },
+        "primaryAction": "Dorixona egasi bo'lish",
+        "secondaryAction": "Dorixona egalarini ko'rish"
+      }
+    },
+    "pharmacyCard": {
+      "open247": "24/7 ochiq",
+      "hoursNotProvided": "Ish vaqti kiritilmagan",
+      "openNow": "Hozir ochiq",
+      "closed": "Yopiq",
+      "pickupOnly": "Faqat olib ketish",
+      "pickupService": "olib ketish xizmati",
+      "delivery": "Yetkazib berish",
+      "deliveryAndPickup": "yetkazib berish va olib ketish",
+      "deliveryFee": "Yetkazib berish narxi",
+      "deliveryFeeAmount": "{{fee}} UZS",
+      "deliveryWithFee": "{{fee}} UZS yetkazib berish",
+      "free": "Bepul",
+      "freeDelivery": "Bepul yetkazib berish",
+      "service": "Xizmat",
+      "insurance": "Sug'urta",
+      "insuranceSupport": "sug'urta yordami",
+      "directPayVisits": "to'g'ridan-to'g'ri to'lov",
+      "verified": "Tasdiqlangan",
+      "viewPharmacy": "Dorixonani ko'rish",
+      "viewPharmacyAria": "{{name}} ni ko'rish",
+      "imageAlt": "{{name}} dorixonasi",
+      "saveFavoriteAria": "{{name}} ni saqlash",
+      "removeFavoriteAria": "{{name}} ni sevimlilardan olib tashlash",
+      "likeAria": "{{name}} ga layk qo'yish",
+      "unlikeAria": "{{name}} laykini olib tashlash",
+      "likeCount_one": "{{count}} layk",
+      "likeCount_few": "{{count}} layk",
+      "likeCount_many": "{{count}} layk",
+      "likeCount_other": "{{count}} layk"
+    },
+    "states": {
+      "pharmaciesLoadError": "Dorixonalar yuklanmadi.",
+      "trendingLoadError": "Ommabop dorixonalar yuklanmadi.",
+      "noPharmaciesTitle": "Hozircha dorixonalar mavjud emas.",
+      "noPharmaciesText": "Barcha dorixonalarni ko'ring yoki boshqa hududni qidiring.",
+      "noTrendingTitle": "Hozircha ommabop dorixonalar yo'q.",
+      "noTrendingText": "Hamjamiyat faolligi shakllanayotganda barcha dorixonalarni ko'ring."
+    }
+  },
+  "footer": {
+    "brandText": "O'zbekiston bo'ylab ishonchli dorixonalar, yetkazib berish variantlari, sug'urta yordami va foydali hamjamiyat ma'lumotlarini toping.",
+    "customerCare": "Mijozlarga yordam",
+    "supportText": "Dorixona qidiruvi va hisob savollari bo'yicha yordam.",
+    "follow": "QuickMedsni kuzating",
+    "socialAria": "QuickMeds ijtimoiy havolalari",
+    "navigationAria": "Footer navigatsiyasi",
+    "discover": "Qidiruv",
+    "deliveryPharmacies": "Yetkazib beruvchi dorixonalar",
+    "insuranceSupport": "Sug'urta yordami",
+    "quickLinks": "Tezkor havolalar",
+    "support": "Yordam",
+    "about": "QuickMeds haqida",
+    "regions": "Hududlar",
+    "copyright": "© {{year}} QuickMeds. Barcha huquqlar himoyalangan.",
+    "legal": "Maxfiylik · Shartlar · Sayt xaritasi"
   }
 }

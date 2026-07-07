@@ -158,5 +158,219 @@
         "close": "Close"
       }
     }
+  },
+  "nav": {
+    "home": "홈",
+    "pharmacies": "약국",
+    "community": "커뮤니티",
+    "myPage": "마이 페이지",
+    "cs": "고객센터",
+    "login": "로그인",
+    "register": "가입",
+    "messages": "메시지",
+    "notifications": "알림",
+    "accountMenu": "계정 메뉴",
+    "homeAria": "quickMeds 홈",
+    "openMenu": "내비게이션 메뉴 열기",
+    "closeMenu": "내비게이션 메뉴 닫기",
+    "mobileNavigation": "모바일 내비게이션",
+    "primaryNavigation": "기본 내비게이션",
+    "navigateQuickMeds": "QuickMeds 탐색",
+    "language": "언어",
+    "loginOrCreate": "로그인 또는 계정 만들기"
+  },
+  "pharmacyType": {
+    "RETAIL": "소매",
+    "HOSPITAL": "병원",
+    "COMPOUNDING": "조제",
+    "ONLINE": "온라인"
+  },
+  "boardCategory": {
+    "FREE": "토론",
+    "RECOMMEND": "추천",
+    "NEWS": "뉴스",
+    "HUMOR": "커뮤니티 코너"
+  },
+  "commonActions": {
+    "search": "검색",
+    "viewAll": "전체 보기",
+    "viewAllArticles": "글 전체 보기",
+    "browsePharmacies": "약국 둘러보기",
+    "readArticle": "글 읽기"
+  },
+  "home": {
+    "meta": {
+      "title": "quickMeds"
+    },
+    "common": {
+      "comingSoon": "곧 제공 예정"
+    },
+    "hero": {
+      "kicker": "일상 케어를 위한 약국 찾기",
+      "title": "가까운 신뢰할 수 있는 약국을 찾아보세요.",
+      "description": "약국 이름, 주소 또는 지역으로 검색하고 방문 전에 필요한 서비스를 비교하세요."
+    },
+    "search": {
+      "pharmacy": "약국",
+      "desktopPlaceholder": "약국 또는 주소",
+      "mobilePlaceholder": "약국 이름 또는 주소 검색",
+      "searchAria": "약국 이름 또는 주소 검색",
+      "chooseRegionAria": "약국 지역 선택",
+      "chooseTypeAria": "약국 유형 선택",
+      "region": "지역",
+      "pharmacyType": "약국 유형",
+      "allRegions": "전체 지역",
+      "allPharmacyTypes": "전체 약국 유형",
+      "filters": "필터",
+      "openAdvancedAria": "고급 약국 필터 열기",
+      "searchButtonAria": "약국 검색",
+      "optionsAria": "약국 찾기 옵션",
+      "open247": "24시간 약국",
+      "nearMe": "내 주변",
+      "useCurrentLocation": "현재 위치 사용",
+      "currentLocationComingSoon": "현재 위치 기능은 곧 제공됩니다",
+      "closeAdvancedAria": "고급 필터 닫기",
+      "findPharmacy": "약국 찾기",
+      "modalPlaceholder": "약국 이름 또는 주소",
+      "services": "서비스",
+      "minimum": "최소",
+      "maximum": "최대",
+      "resetAll": "모든 필터 초기화"
+    },
+    "sections": {
+      "featured": {
+        "title": "추천 약국",
+        "description": "일상적인 건강 관리를 도울 준비가 된 높은 평가의 약국입니다.",
+        "loadingAria": "추천 약국 불러오는 중"
+      },
+      "trending": {
+        "kicker": "커뮤니티가 좋아한 약국",
+        "title": "인기 약국",
+        "description": "인기는 약국 좋아요와 커뮤니티 반응을 기준으로 합니다.",
+        "loadingAria": "인기 약국 불러오는 중",
+        "summary": "{{name}}은(는) {{serviceMode}}, {{insurance}} 및 명확한 운영 상태를 제공하는 {{type}} 약국입니다.",
+        "signal": "QuickMeds 신호",
+        "chooseFeatureAria": "대표로 표시할 인기 약국 선택",
+        "featureAria": "{{name}} 대표 표시"
+      },
+      "why": {
+        "kicker": "QuickMeds를 쓰는 이유",
+        "title": "약국을 고르기 전에 필요한 정보를 확인하세요.",
+        "description": "QuickMeds는 약국 위치, 배달, 보험, 인증 상태, 운영시간 정보를 차분한 검색 경험 안에 모아 보여줍니다.",
+        "comingSoonText": "현재 위치 기반 거리 검색, 인증 약국 필터, 알림, 채팅은 백엔드 동작이 준비되면 추가됩니다.",
+        "items": {
+          "realSignals": {
+            "title": "실제 약국 신호",
+            "copy": "인증 상태는 약국이 인증 정보를 제공한 경우에만 표시됩니다."
+          },
+          "delivery": {
+            "title": "배달과 수수료의 명확성",
+            "copy": "결정하기 전에 배달 가능 여부와 UZS 수수료를 확인하세요."
+          },
+          "hours": {
+            "title": "운영시간 상태",
+            "copy": "실제 약국 데이터에서 24시간, 영업 중, 영업 종료, 운영시간 미제공 상태를 확인하세요."
+          },
+          "regions": {
+            "title": "지역별 탐색",
+            "copy": "막연한 위치 구분 대신 지원되는 우즈베키스탄 지역 전체에서 검색하세요."
+          }
+        }
+      },
+      "locations": {
+        "title": "지원 지역 둘러보기",
+        "description": "지역을 선택하면 해당 우즈베키스탄 지역이 적용된 약국 검색이 열립니다."
+      },
+      "articles": {
+        "title": "커뮤니티 건강 읽을거리",
+        "description": "QuickMeds 커뮤니티의 유용한 업데이트와 약국 찾기 노트를 확인하세요.",
+        "defaultExcerpt": "QuickMeds 커뮤니티의 실용적인 업데이트를 읽어보세요.",
+        "emptyTitle": "더 많은 실용적인 읽을거리가 준비 중입니다.",
+        "emptyText": "건강 관련 커뮤니티 글이 게시되면 여기에 표시됩니다.",
+        "views_one": "{{count}}회 조회",
+        "views_few": "{{count}}회 조회",
+        "views_many": "{{count}}회 조회",
+        "views_other": "{{count}}회 조회"
+      },
+      "ownerCta": {
+        "imageAlt": "현대적인 약국 카운터와 진열대",
+        "overlayTitle": "더 쉽게 찾을 수 있는 약국",
+        "overlayText": "QuickMeds는 가까운 고객이 방문 전에 서비스를 비교하도록 돕습니다.",
+        "mobileAction": "약국 운영자로 가입",
+        "statTitle": "표시되는 서비스",
+        "statText": "운영시간, 배달, 보험",
+        "kicker": "약국 운영자용",
+        "title": "QuickMeds 약국 네트워크에 참여하세요.",
+        "description": "약국을 더 쉽게 찾을 수 있게 하고, 서비스를 명확히 보여주며, 근처에서 검색하는 사람들과 연결하세요.",
+        "benefits": {
+          "discovery": {
+            "title": "지역 발견 가능성 높이기",
+            "copy": "위치, 배달, 운영시간, 서비스를 하나의 검색 가능한 프로필에 표시하세요."
+          },
+          "trust": {
+            "title": "고객 신뢰 쌓기",
+            "copy": "운영 가능 여부와 연락 경로가 명확한 약국 프로필을 만드세요."
+          }
+        },
+        "primaryAction": "약국 운영자 되기",
+        "secondaryAction": "약국 운영자 보기"
+      }
+    },
+    "pharmacyCard": {
+      "open247": "24시간 운영",
+      "hoursNotProvided": "운영시간 미제공",
+      "openNow": "영업 중",
+      "closed": "영업 종료",
+      "pickupOnly": "픽업만 가능",
+      "pickupService": "픽업 서비스",
+      "delivery": "배달",
+      "deliveryAndPickup": "배달 및 픽업",
+      "deliveryFee": "배달 수수료",
+      "deliveryFeeAmount": "{{fee}}",
+      "deliveryWithFee": "{{fee}} UZS 배달",
+      "free": "무료",
+      "freeDelivery": "무료 배달",
+      "service": "서비스",
+      "insurance": "보험",
+      "insuranceSupport": "보험 지원",
+      "directPayVisits": "직접 결제 방문",
+      "verified": "인증됨",
+      "viewPharmacy": "약국 보기",
+      "viewPharmacyAria": "{{name}} 보기",
+      "imageAlt": "{{name}} 약국",
+      "saveFavoriteAria": "{{name}} 저장",
+      "removeFavoriteAria": "즐겨찾기에서 {{name}} 제거",
+      "likeAria": "{{name}} 좋아요",
+      "unlikeAria": "{{name}} 좋아요 취소",
+      "likeCount_one": "{{count}} 좋아요",
+      "likeCount_few": "{{count}} 좋아요",
+      "likeCount_many": "{{count}} 좋아요",
+      "likeCount_other": "{{count}} 좋아요"
+    },
+    "states": {
+      "pharmaciesLoadError": "약국을 불러올 수 없습니다.",
+      "trendingLoadError": "인기 약국을 불러올 수 없습니다.",
+      "noPharmaciesTitle": "아직 이용 가능한 약국이 없습니다.",
+      "noPharmaciesText": "전체 약국을 둘러보거나 다른 지역을 검색해 보세요.",
+      "noTrendingTitle": "아직 인기 약국이 없습니다.",
+      "noTrendingText": "커뮤니티 활동이 쌓이는 동안 전체 약국을 둘러보세요."
+    }
+  },
+  "footer": {
+    "brandText": "우즈베키스탄 전역에서 신뢰할 수 있는 약국, 배달 옵션, 보험 지원, 유용한 커뮤니티 정보를 찾아보세요.",
+    "customerCare": "고객 지원",
+    "supportText": "약국 찾기와 계정 관련 질문을 도와드립니다.",
+    "follow": "QuickMeds 팔로우",
+    "socialAria": "QuickMeds 소셜 링크",
+    "navigationAria": "푸터 내비게이션",
+    "discover": "둘러보기",
+    "deliveryPharmacies": "배달 약국",
+    "insuranceSupport": "보험 지원",
+    "quickLinks": "빠른 링크",
+    "support": "지원",
+    "about": "QuickMeds 소개",
+    "regions": "지역",
+    "copyright": "© {{year}} QuickMeds. 모든 권리 보유.",
+    "legal": "개인정보 · 약관 · 사이트맵"
   }
 }

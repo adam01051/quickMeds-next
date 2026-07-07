@@ -15,13 +15,13 @@ import { BoardArticle } from '../../types/board-article/board-article';
 import { T } from '../../types/common';
 import { REACT_APP_API_URL } from '../../config';
 import { PharmacyLocation } from '../../enums/property.enum';
-import { getPharmacyLocationLabel } from '../../utils/pharmacy-location';
+import { useTranslation } from 'next-i18next';
 
 const serviceItems = [
-	{ icon: <VerifiedUserOutlinedIcon />, title: 'Real pharmacy signals', copy: 'Verified status appears only when a pharmacy has provided verification.' },
-	{ icon: <LocalShippingOutlinedIcon />, title: 'Delivery and fee clarity', copy: 'Check delivery availability and UZS fees before you decide.' },
-	{ icon: <AccessTimeOutlinedIcon />, title: 'Operating-hours status', copy: 'See 24/7, open or closed, and hours-not-provided states from real pharmacy data.' },
-	{ icon: <HealthAndSafetyOutlinedIcon />, title: 'Regional discovery', copy: 'Search across supported Uzbekistan regions instead of vague location buckets.' },
+	{ icon: <VerifiedUserOutlinedIcon />, titleKey: 'home.sections.why.items.realSignals.title', copyKey: 'home.sections.why.items.realSignals.copy' },
+	{ icon: <LocalShippingOutlinedIcon />, titleKey: 'home.sections.why.items.delivery.title', copyKey: 'home.sections.why.items.delivery.copy' },
+	{ icon: <AccessTimeOutlinedIcon />, titleKey: 'home.sections.why.items.hours.title', copyKey: 'home.sections.why.items.hours.copy' },
+	{ icon: <HealthAndSafetyOutlinedIcon />, titleKey: 'home.sections.why.items.regions.title', copyKey: 'home.sections.why.items.regions.copy' },
 ];
 
 const locations = [
@@ -61,6 +61,7 @@ const itemMotion = {
 
 const HomeSupportingSections = () => {
 	const reduceMotion = useReducedMotion();
+	const { t } = useTranslation('common');
 	const [articles, setArticles] = useState<BoardArticle[]>([]);
 	const { loading } = useQuery(GET_BOARD_ARTICLES, {
 		fetchPolicy: 'cache-and-network',
@@ -71,14 +72,14 @@ const HomeSupportingSections = () => {
 	});
 	const getArticleExcerpt = (content: string) => {
 		const text = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-		if (!text) return 'Read a practical update from the QuickMeds Community.';
+		if (!text) return t('home.sections.articles.defaultExcerpt');
 		return text.length > 130 ? `${text.slice(0, 127)}...` : text;
 	};
 	const getArticleLabel = (category: BoardArticleCategory) => {
-		if (category === BoardArticleCategory.NEWS) return 'News';
-		if (category === BoardArticleCategory.RECOMMEND) return 'Recommendations';
-		if (category === BoardArticleCategory.HUMOR) return 'Community Corner';
-		return 'Discussions';
+		if (category === BoardArticleCategory.NEWS) return t('boardCategory.NEWS');
+		if (category === BoardArticleCategory.RECOMMEND) return t('boardCategory.RECOMMEND');
+		if (category === BoardArticleCategory.HUMOR) return t('boardCategory.HUMOR');
+		return t('boardCategory.FREE');
 	};
 
 	return (
@@ -91,23 +92,23 @@ const HomeSupportingSections = () => {
 			>
 				<div className="home-shell home-why-layout">
 					<motion.div className="home-why-intro" variants={sectionMotion} transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}>
-						<span>Why QuickMeds</span>
-						<h2>Know the essentials before you choose a pharmacy.</h2>
-						<p>QuickMeds brings pharmacy location, delivery, insurance, verified status, and operating-hours information into one calm search experience.</p>
+						<span>{t('home.sections.why.kicker')}</span>
+						<h2>{t('home.sections.why.title')}</h2>
+						<p>{t('home.sections.why.description')}</p>
 					</motion.div>
 					<motion.div className="home-service-list" variants={reduceMotion ? undefined : listMotion}>
 						{serviceItems.map((item) => (
 							<motion.div
 								className="home-service-item"
-								key={item.title}
+								key={item.titleKey}
 								variants={reduceMotion ? undefined : itemMotion}
 								transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
 								whileHover={reduceMotion ? undefined : { x: 5 }}
 							>
 								<div>{item.icon}</div>
 								<span>
-									<strong>{item.title}</strong>
-									<p>{item.copy}</p>
+									<strong>{t(item.titleKey)}</strong>
+									<p>{t(item.copyKey)}</p>
 								</span>
 							</motion.div>
 						))}
@@ -116,8 +117,8 @@ const HomeSupportingSections = () => {
 							variants={reduceMotion ? undefined : itemMotion}
 							transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
 						>
-							<strong>Coming soon</strong>
-							<span>Current-location distance search, verified-only filtering, notifications, and chat will be added when their backend behavior is ready.</span>
+							<strong>{t('home.common.comingSoon')}</strong>
+							<span>{t('home.sections.why.comingSoonText')}</span>
 						</motion.div>
 					</motion.div>
 				</div>
@@ -130,8 +131,8 @@ const HomeSupportingSections = () => {
 			>
 				<div className="home-shell home-location-layout">
 					<motion.div variants={sectionMotion} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-						<h2>Explore supported areas</h2>
-						<p>Select a region to open pharmacy search with that Uzbekistan region already applied.</p>
+						<h2>{t('home.sections.locations.title')}</h2>
+						<p>{t('home.sections.locations.description')}</p>
 					</motion.div>
 					<motion.div className="home-location-links" variants={reduceMotion ? undefined : listMotion}>
 						{locations.map((location) => (
@@ -143,7 +144,7 @@ const HomeSupportingSections = () => {
 							>
 								<Link href={`/pharmacies?input=${encodeURIComponent(JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { pharmacyLocationList: [location] } }))}`}>
 									<PlaceOutlinedIcon />
-									{getPharmacyLocationLabel(location)}
+									{t(`pharmacyLocation.${location}`)}
 								</Link>
 							</motion.div>
 						))}
@@ -159,18 +160,18 @@ const HomeSupportingSections = () => {
 				<div className="home-shell">
 					<header className="home-section-heading">
 						<div>
-							<h2>Community health reading</h2>
-							<p>Useful updates and pharmacy-discovery notes from QuickMeds Community.</p>
+							<h2>{t('home.sections.articles.title')}</h2>
+							<p>{t('home.sections.articles.description')}</p>
 						</div>
-						<Link href="/community">View all articles <ArrowForwardRoundedIcon /></Link>
+						<Link href="/community">{t('commonActions.viewAllArticles')} <ArrowForwardRoundedIcon /></Link>
 					</header>
 					<motion.div className="home-article-grid" variants={reduceMotion ? undefined : listMotion}>
 						{loading && articles.length === 0 ? (
 							[0, 1, 2].map((item) => <div className="home-article-skeleton" key={item} />)
 						) : articles.length === 0 ? (
 							<div className="home-article-empty">
-								<strong>More practical reading is on the way.</strong>
-								<p>Health-related community articles will appear here as they are published.</p>
+								<strong>{t('home.sections.articles.emptyTitle')}</strong>
+								<p>{t('home.sections.articles.emptyText')}</p>
 							</div>
 						) : articles.map((article) => {
 							const image = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '';
@@ -188,8 +189,8 @@ const HomeSupportingSections = () => {
 										<h3>{article.articleTitle}</h3>
 										<strong>{getArticleExcerpt(article.articleContent)}</strong>
 										<p>
-											{article.articleViews} views
-											<em>Read article <ArrowForwardRoundedIcon /></em>
+											{t('home.sections.articles.views', { count: article.articleViews })}
+											<em>{t('commonActions.readArticle')} <ArrowForwardRoundedIcon /></em>
 										</p>
 									</Link>
 								</motion.div>
@@ -210,15 +211,15 @@ const HomeSupportingSections = () => {
 					>
 						<motion.img
 							src="/img/homepage/owner-pharmacy-spotlight.webp"
-							alt="Modern pharmacy counter and shelves"
+							alt={t('home.sections.ownerCta.imageAlt')}
 							whileHover={reduceMotion ? undefined : { scale: 1.025 }}
 							transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
 						/>
 						<div className="home-owner-cta__overlay">
-							<h2>Your pharmacy, easier to find</h2>
-							<p>QuickMeds helps nearby customers compare services before they visit.</p>
+							<h2>{t('home.sections.ownerCta.overlayTitle')}</h2>
+							<p>{t('home.sections.ownerCta.overlayText')}</p>
 							<Link className="home-owner-cta__mobile-link" href="/account/join?mode=signup">
-								Join as a pharmacy owner
+								{t('home.sections.ownerCta.mobileAction')}
 							</Link>
 						</div>
 						<motion.div
@@ -230,8 +231,8 @@ const HomeSupportingSections = () => {
 							whileHover={reduceMotion ? undefined : { y: -3 }}
 						>
 							<StorefrontOutlinedIcon />
-							<strong>Visible services</strong>
-							<span>Hours, delivery, insurance</span>
+							<strong>{t('home.sections.ownerCta.statTitle')}</strong>
+							<span>{t('home.sections.ownerCta.statText')}</span>
 						</motion.div>
 					</motion.div>
 
@@ -242,32 +243,32 @@ const HomeSupportingSections = () => {
 						viewport={{ once: true, amount: 0.3 }}
 						transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
 					>
-						<span>For Pharmacy Owners</span>
-						<h2>Join the QuickMeds pharmacy network.</h2>
-						<p>Make your pharmacy easier to find, keep services visible, and connect with people searching nearby.</p>
+						<span>{t('home.sections.ownerCta.kicker')}</span>
+						<h2>{t('home.sections.ownerCta.title')}</h2>
+						<p>{t('home.sections.ownerCta.description')}</p>
 						<div className="home-owner-cta__benefits">
 							<motion.div whileHover={reduceMotion ? undefined : { x: 4 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
 								<PlaceOutlinedIcon />
 								<span>
-									<strong>Boost local discovery</strong>
-									Show location, delivery, hours, and services in one searchable profile.
+									<strong>{t('home.sections.ownerCta.benefits.discovery.title')}</strong>
+									{t('home.sections.ownerCta.benefits.discovery.copy')}
 								</span>
 							</motion.div>
 							<motion.div whileHover={reduceMotion ? undefined : { x: 4 }} transition={{ duration: 0.2, ease: 'easeOut' }}>
 								<VerifiedUserOutlinedIcon />
 								<span>
-									<strong>Build patient trust</strong>
-									Create a clear pharmacy presence with availability and contact paths.
+									<strong>{t('home.sections.ownerCta.benefits.trust.title')}</strong>
+									{t('home.sections.ownerCta.benefits.trust.copy')}
 								</span>
 							</motion.div>
 						</div>
 						<div className="home-owner-cta__actions">
 							<Link className="home-owner-cta__action home-owner-cta__action--primary" href="/account/join?mode=signup">
-								Become a Pharmacy Owner
+								{t('home.sections.ownerCta.primaryAction')}
 								<ArrowForwardRoundedIcon />
 							</Link>
 							<Link className="home-owner-cta__action" href="/agent">
-								Explore Pharmacy Owners
+								{t('home.sections.ownerCta.secondaryAction')}
 								<ArrowForwardRoundedIcon />
 							</Link>
 						</div>
