@@ -17,7 +17,6 @@ import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import { CaretDown } from 'phosphor-react';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { socketVar, userVar } from '../../apollo/store';
@@ -204,9 +203,6 @@ const Top = () => {
 										<MailOutlineRoundedIcon />
 									</Badge>
 								</Link>
-								<button type="button" className="catalog-mobile-top__icon" aria-label={t('nav.notifications')}>
-									<NotificationsOutlinedIcon />
-								</button>
 								<button
 									type="button"
 									className="catalog-mobile-top__avatar"
@@ -374,7 +370,10 @@ const Top = () => {
 										</Badge>
 									</Link>
 								)}
+<<<<<<< HEAD
 								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} aria-label={t('nav.notifications')} />}
+=======
+>>>>>>> master
 								<button
 									type="button"
 									className="btn-lang"
